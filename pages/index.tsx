@@ -75,64 +75,83 @@ export default function Home() {
               <span className="sr-only">Toggle theme</span>
             </button>
 
-            {/* Social Icons */}
-            <a
-              href="https://github.com/ArsalanAnwer0"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-gray-600 dark:text-white hover:text-purple-700 transition"
-            >
-              <Github className="h-6 w-6" />
-            </a>
-            <a
-              href="https://www.linkedin.com/in/arsalan-anwer-272004310/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-gray-600 dark:text-white hover:text-purple-700 transition"
-            >
-              <Linkedin className="h-6 w-6" />
-            </a>
-            <a
-              href="https://www.instagram.com/_arsalan.ansari/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-gray-600 dark:text-white hover:text-purple-700 transition"
-            >
-              <Instagram className="h-6 w-6" />
-            </a>
-             {/* UPDATED: Contact Button to Trigger Modal */}
-             <Button onClick={() => setIsModalOpen(true)}>Contact</Button>
-              {isModalOpen && <ContactModal onClose={() => setIsModalOpen(false)} />}
+           {/* Social Icons */}
+<a
+  href="https://github.com/ArsalanAnwer0"
+  target="_blank"
+  rel="noopener noreferrer"
+  className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition"
+>
+  <Github className="h-6 w-6 text-gray-600 dark:text-white hover:text-purple-700 transition" />
+</a>
+<a
+  href="https://www.linkedin.com/in/arsalan-anwer-272004310/"
+  target="_blank"
+  rel="noopener noreferrer"
+  className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition"
+>
+  <Linkedin className="h-6 w-6 text-gray-600 dark:text-white hover:text-purple-700 transition" />
+</a>
+<a
+  href="https://www.instagram.com/_arsalan.ansari/"
+  target="_blank"
+  rel="noopener noreferrer"
+  className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition"
+>
+  <Instagram className="h-6 w-6 text-gray-600 dark:text-white hover:text-purple-700 transition" />
+</a>
+
+{/* Contact Button */}
+<Button
+  className="text-white bg-black dark:bg-gray-800 hover:bg-gray-900 dark:hover:bg-gray-700 transition"
+  onClick={() => setIsModalOpen(true)}
+>
+  Contact
+</Button>
+
+
+{isModalOpen && <ContactModal onClose={() => setIsModalOpen(false)} />}
 
           </div>
         </div>
       </header>
 
-      {/* Hero Section */}
-      <section className="py-16 text-center bg-white dark:bg-black">
-        <div className="container mx-auto px-4">
-          <h2 className="text-4xl md:text-5xl font-bold mb-6 max-w-2xl mx-auto dark:text-white">
-            Building the future with cloud technology
-          </h2>
-          <p className="text-gray-600 mb-8 max-w-xl mx-auto dark:text-gray-300">
-            Hi there! I’d love to connect, share ideas, and inspire each other—because great things happen when curious minds come together!
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center max-w-md mx-auto">
-            {/* Message Bar */}
-            <Input
-  type="text"
-  placeholder="Love it? Have ideas? Your thoughts inspire innovation."
-  value={message}
-  onChange={(e) => setMessage(e.target.value)}
-  className="w-full sm:w-[55rem] dark:bg-gray-800 dark:text-white text-sm placeholder-gray-500"
-  style={{ width: "55rem !important" }}
-/>
+      <section className="py-20 bg-white dark:bg-black">
+  <div className="container mx-auto px-6 text-center">
+    <h1 className="text-5xl md:text-7xl font-bold tracking-tight bg-gradient-to-r from-gray-900 to-gray-600 dark:from-gray-100 dark:to-gray-400 bg-clip-text text-transparent leading-tight">
+      Building the future<br /> with cloud technology
+    </h1>
+    <p className="text-gray-600 dark:text-gray-300 mt-6 text-lg md:text-xl max-w-2xl mx-auto">
+      Hi there! I’d love to connect, share ideas, and inspire each other—because great things happen when curious minds come together!
+    </p>
+    <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
+      {/* Input Box */}
+      <Input
+        type="text"
+        placeholder="Have ideas? Your thoughts inspire innovation"
+        value={message}
+        onChange={(e) => setMessage(e.target.value)}
+        className="w-full sm:w-[40rem] dark:bg-gray-800 dark:text-white text-sm placeholder-gray-500 px-6 py-3 rounded-lg shadow-md border border-gray-300 dark:border-gray-700 focus:ring focus:ring-purple-400"
+      />
+{/* Send Button */}
+<Button
+  onClick={handleSendMessage}
+  className="text-white bg-gray-900 dark:bg-gray-800 hover:bg-gray-700 dark:hover:bg-gray-700 px-4 py-2 rounded-lg transition-all"
+>
+  Send
+</Button>
 
-            <Button onClick={handleSendMessage}>Send</Button>
-          </div>
-          {status && <p className="mt-4 text-sm text-gray-600 dark:text-gray-300">{status}</p>}
-        </div>
-      </section>
+
+    </div>
+    {/* Feedback Status */}
+    {status && (
+      <p className="mt-4 text-sm text-gray-600 dark:text-gray-300">
+        {status}
+      </p>
+    )}
+  </div>
+</section>
+
 
       {/* About Section */}
       <section className="py-16 bg-white dark:bg-black">
@@ -158,119 +177,105 @@ export default function Home() {
           </div>
         </div>
       </section>
-
       {/* Projects Section */}
-      <section className="py-16 bg-gray-50 dark:bg-black">
+<section className="py-16 bg-gray-50 dark:bg-black">
   <div className="container mx-auto px-4">
     <h2 className="text-3xl font-bold mb-12 text-center text-gray-800 dark:text-white">Projects</h2>
     <div className="grid md:grid-cols-3 gap-8">
-      <div className="bg-white dark:bg-black rounded-lg shadow-md p-6">
+      {/* Project 1 */}
+      <div className="p-6 bg-white dark:bg-black rounded-lg shadow-md hover:shadow-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-all">
         <h3 className="text-xl font-semibold mb-2 text-gray-900 dark:text-white">Cloud Architecture</h3>
         <p className="text-gray-600 dark:text-gray-300 mb-4">
           Designing and implementing scalable cloud infrastructure solutions using modern technologies.
         </p>
-        <Button>
-        Read More
-</Button>
-
+        <button className="text-gray-900 dark:text-white hover:underline transition">Read More</button>
       </div>
-      <div className="bg-white dark:bg-black rounded-lg shadow-md p-6">
+      {/* Project 2 */}
+      <div className="p-6 bg-white dark:bg-black rounded-lg shadow-md hover:shadow-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-all">
         <h3 className="text-xl font-semibold mb-2 text-gray-900 dark:text-white">DevOps Practices</h3>
         <p className="text-gray-600 dark:text-gray-300 mb-4">
           Implementing CI/CD pipelines and automation workflows for efficient development processes.
         </p>
-        <Button>
-        Read More
-</Button>
-
+        <button className="text-gray-900 dark:text-white hover:underline transition">Read More</button>
       </div>
-      <div className="bg-white dark:bg-black rounded-lg shadow-md p-6">
+      {/* Project 3 */}
+      <div className="p-6 bg-white dark:bg-black rounded-lg shadow-md hover:shadow-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-all">
         <h3 className="text-xl font-semibold mb-2 text-gray-900 dark:text-white">Tech Content</h3>
         <p className="text-gray-600 dark:text-gray-300 mb-4">
           Sharing knowledge and insights about cloud engineering through articles and tutorials.
         </p>
-        <Button>
-  Read More
-</Button>
-
+        <button className="text-gray-900 dark:text-white hover:underline transition">Read More</button>
       </div>
     </div>
   </div>
 </section>
-      {/* Certificates Section */}
-      <section className="py-16 bg-gray-50 dark:bg-black">
+
+{/* Certificates Section */}
+<section className="py-16 bg-gray-50 dark:bg-black">
   <div className="container mx-auto px-4">
     <h2 className="text-3xl font-bold mb-12 text-center text-gray-800 dark:text-white">Certificates</h2>
     <div className="grid md:grid-cols-3 gap-8">
-      <div className="bg-white dark:bg-black rounded-lg shadow-md p-6">
+      {/* Certificate 1 */}
+      <div className="p-6 bg-white dark:bg-black rounded-lg shadow-md hover:shadow-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-all">
         <h3 className="text-xl font-semibold mb-2 text-gray-900 dark:text-white">AWS Cloud Practitioner</h3>
         <p className="text-gray-600 dark:text-gray-300 mb-4">
           Fundamental understanding of AWS Cloud concepts, services, and architecture.
         </p>
-        <Button>
-  View Certificate
-</Button>
+        <button className="text-gray-900 dark:text-white hover:underline transition">View Certificate</button>
       </div>
-      <div className="bg-white dark:bg-black rounded-lg shadow-md p-6">
+      {/* Certificate 2 */}
+      <div className="p-6 bg-white dark:bg-black rounded-lg shadow-md hover:shadow-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-all">
         <h3 className="text-xl font-semibold mb-2 text-gray-900 dark:text-white">Azure Fundamentals</h3>
         <p className="text-gray-600 dark:text-gray-300 mb-4">
           Core concepts and services of Microsoft Azure cloud platform.
         </p>
-        <Button>
-  View Certificate
-</Button>
+        <button className="text-gray-900 dark:text-white hover:underline transition">View Certificate</button>
       </div>
-      <div className="bg-white dark:bg-black rounded-lg shadow-md p-6">
+      {/* Certificate 3 */}
+      <div className="p-6 bg-white dark:bg-black rounded-lg shadow-md hover:shadow-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-all">
         <h3 className="text-xl font-semibold mb-2 text-gray-900 dark:text-white">Google Cloud Associate</h3>
         <p className="text-gray-600 dark:text-gray-300 mb-4">
           Essential knowledge of Google Cloud Platform services and operations.
         </p>
-        <Button>
-  View Certificate
-</Button>
+        <button className="text-gray-900 dark:text-white hover:underline transition">View Certificate</button>
       </div>
     </div>
   </div>
 </section>
 
-      {/* Currently Learning Section */}
-      <section className="py-16 bg-gray-50 dark:bg-black">
+{/* Currently Learning Section */}
+<section className="py-16 bg-gray-50 dark:bg-black">
   <div className="container mx-auto px-4">
     <h2 className="text-3xl font-bold mb-12 text-center text-gray-800 dark:text-white">Currently Learning</h2>
     <div className="grid md:grid-cols-3 gap-8">
-      <div className="bg-white dark:bg-black rounded-lg shadow-md p-6">
+      {/* Learning Item 1 */}
+      <div className="p-6 bg-white dark:bg-black rounded-lg shadow-md hover:shadow-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-all">
         <h3 className="text-xl font-semibold mb-2 text-gray-900 dark:text-white">Kubernetes</h3>
         <p className="text-gray-600 dark:text-gray-300 mb-4">
           Container orchestration and microservices architecture for cloud-native applications.
         </p>
-        <Button>
-  Track Progress
-</Button>
-
+        <button className="text-gray-900 dark:text-white hover:underline transition">Track Progress</button>
       </div>
-      <div className="bg-white dark:bg-black rounded-lg shadow-md p-6">
+      {/* Learning Item 2 */}
+      <div className="p-6 bg-white dark:bg-black rounded-lg shadow-md hover:shadow-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-all">
         <h3 className="text-xl font-semibold mb-2 text-gray-900 dark:text-white">Terraform</h3>
         <p className="text-gray-600 dark:text-gray-300 mb-4">
           Infrastructure as Code (IaC) for automated cloud resource management.
         </p>
-        <Button>
-  Track Progress
-</Button>
-
+        <button className="text-gray-900 dark:text-white hover:underline transition">Track Progress</button>
       </div>
-      <div className="bg-white dark:bg-black rounded-lg shadow-md p-6">
+      {/* Learning Item 3 */}
+      <div className="p-6 bg-white dark:bg-black rounded-lg shadow-md hover:shadow-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-all">
         <h3 className="text-xl font-semibold mb-2 text-gray-900 dark:text-white">Cloud Security</h3>
         <p className="text-gray-600 dark:text-gray-300 mb-4">
           Best practices and tools for securing cloud infrastructure and applications.
         </p>
-        <Button>
-  Track Progress
-</Button>
-
+        <button className="text-gray-900 dark:text-white hover:underline transition">Track Progress</button>
       </div>
     </div>
   </div>
 </section>
+
 
 
       {/* Footer */}
