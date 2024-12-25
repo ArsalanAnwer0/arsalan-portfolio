@@ -284,8 +284,6 @@ export default function Home() {
           Email - arsalan.anwer9050@gmail.com
         </p>
       </footer>
-       {/* NEW: Contact Modal Component */}
-       {isModalOpen && <ContactModal onClose={() => setIsModalOpen(false)} />}
     </div>
   );
 }
