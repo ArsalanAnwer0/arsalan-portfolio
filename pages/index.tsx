@@ -1,19 +1,21 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import Image from "next/image";
+import { motion, useAnimation } from "framer-motion"; // Import Framer Motion
 import { Github, Linkedin, Instagram, Sun, Moon } from "lucide-react";
+import { CustomCursor } from "@/components/ui/CustomCursor"; // Custom Cursor Component
+import ContactModal from "@/components/ui/ContactModal"; // Modal Component
+import HoverImage from "@/components/ui/HoverImage";
 
-// NEW: Modal Component Import
-import ContactModal from "@/components/ui/ContactModal";
 
 export default function Home() {
   const [darkMode, setDarkMode] = useState(false);
-  const [message, setMessage] = useState(""); // State for user input message
-  const [status, setStatus] = useState(""); // State for message submission status
-
-  // NEW: Modal State for Contact Form
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [hoveredImage, setHoveredImage] = useState<string | null>(null);
+  const [message, setMessage] = useState(""); // State for message input
+  const [status, setStatus] = useState(""); // State for status feedback
+  const controls = useAnimation(); // Controls for fading animations  
+
 
   useEffect(() => {
     if (darkMode) {
@@ -23,44 +25,47 @@ export default function Home() {
     }
   }, [darkMode]);
 
+
+  // Add handleSendMessage function
   const handleSendMessage = async () => {
     if (!message.trim()) {
-      setStatus("Please enter a message.");
+      setStatus("Message is required.");
       return;
     }
-  
+
     setStatus("Sending...");
-  
+
     try {
-      console.log("Sending message:", message); // Debugging
       const response = await fetch("/api/sendMessage", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ message }), // Only send `message`
+        body: JSON.stringify({ message }),
       });
-  
+
       if (response.ok) {
-        setStatus("Thanks for sharing! Your feedback means the world to me.");
+        setStatus("Message sent successfully!");
         setMessage(""); // Clear the input field
       } else {
-        const error = await response.json();
-        console.error("Response error:", error); // Debugging
         setStatus("Failed to send message. Please try again.");
       }
     } catch (error) {
-      console.error("Error in handleSendMessage:", error); // Debugging
-      setStatus("An error occurred. Please try again.");
+      console.error("Error:", error);
+      setStatus("An error occurred while sending the message.");
     }
   };
-  
-  
 
   return (
-    <div className="min-h-screen bg-white dark:bg-black">
+    <div
+      className="min-h-screen bg-white dark:bg-black snap-y snap-mandatory overflow-y-scroll"
+      style={{ scrollBehavior: "smooth" }}
+    >
+      {/* Custom Cursor */}
+      <CustomCursor />
+
       {/* Header */}
-      <header className="bg-white dark:bg-black shadow">
+      <header className="bg-white dark:bg-black shadow sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
           <h1 className="text-xl font-bold dark:text-white">Arsalan</h1>
           <div className="flex items-center space-x-4">
@@ -72,217 +77,596 @@ export default function Home() {
             >
               <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
               <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-              <span className="sr-only">Toggle theme</span>
             </button>
 
-           {/* Social Icons */}
-<a
-  href="https://github.com/ArsalanAnwer0"
-  target="_blank"
-  rel="noopener noreferrer"
-  className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition"
->
-  <Github className="h-6 w-6 text-gray-600 dark:text-white hover:text-purple-700 transition" />
-</a>
-<a
-  href="https://www.linkedin.com/in/arsalan-anwer-272004310/"
-  target="_blank"
-  rel="noopener noreferrer"
-  className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition"
->
-  <Linkedin className="h-6 w-6 text-gray-600 dark:text-white hover:text-purple-700 transition" />
-</a>
-<a
-  href="https://www.instagram.com/_arsalan.ansari/"
-  target="_blank"
-  rel="noopener noreferrer"
-  className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition"
->
-  <Instagram className="h-6 w-6 text-gray-600 dark:text-white hover:text-purple-700 transition" />
-</a>
+            {/* Social Icons */}
+            <a href="https://github.com/ArsalanAnwer0" target="_blank" rel="noopener noreferrer">
+              <Github className="h-6 w-6 text-gray-600 dark:text-white" />
+            </a>
+            <a href="https://www.linkedin.com/in/arsalan-anwer-272004310/" target="_blank" rel="noopener noreferrer">
+              <Linkedin className="h-6 w-6 text-gray-600 dark:text-white" />
+            </a>
+            <a href="https://www.instagram.com/_arsalan.ansari/" target="_blank" rel="noopener noreferrer">
+              <Instagram className="h-6 w-6 text-gray-600 dark:text-white" />
+            </a>
 
-{/* Contact Button */}
-<Button
-  className="text-white bg-black dark:bg-gray-800 hover:bg-gray-900 dark:hover:bg-gray-700 transition"
-  onClick={() => setIsModalOpen(true)}
->
-  Contact
-</Button>
+            {/* Contact Button */}
+            <Button
+              className="text-white bg-black dark:bg-gray-800 hover:bg-gray-900 dark:hover:bg-gray-700"
+              onClick={() => setIsModalOpen(true)}
+            >
+              Contact
+            </Button>
 
-
-{isModalOpen && <ContactModal onClose={() => setIsModalOpen(false)} />}
-
+            {isModalOpen && <ContactModal onClose={() => setIsModalOpen(false)} />}
           </div>
         </div>
       </header>
 
-      <section className="py-20 bg-white dark:bg-black">
-  <div className="container mx-auto px-6 text-center">
-    <h1 className="text-5xl md:text-7xl font-bold tracking-tight bg-gradient-to-r from-gray-900 to-gray-600 dark:from-gray-100 dark:to-gray-400 bg-clip-text text-transparent leading-tight">
-      Building the future<br /> with cloud technology
-    </h1>
-    <p className="text-gray-600 dark:text-gray-300 mt-6 text-lg md:text-xl max-w-2xl mx-auto">
-      Hi there! I’d love to connect, share ideas, and inspire each other—because great things happen when curious minds come together!
-    </p>
-    <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
-      {/* Input Box */}
-      <Input
-        type="text"
-        placeholder="Have ideas? Your thoughts inspire innovation"
-        value={message}
-        onChange={(e) => setMessage(e.target.value)}
-        className="w-full sm:w-[40rem] dark:bg-gray-800 dark:text-white text-sm placeholder-gray-500 px-6 py-3 rounded-lg shadow-md border border-gray-300 dark:border-gray-700 focus:ring focus:ring-purple-400"
-      />
-{/* Send Button */}
-<Button
-  onClick={handleSendMessage}
-  className="text-white bg-gray-900 dark:bg-gray-800 hover:bg-gray-700 dark:hover:bg-gray-700 px-4 py-2 rounded-lg transition-all"
->
-  Send
-</Button>
+      {/* Section 1 */}
+      <motion.section
+        className="min-h-screen flex flex-col justify-center items-center snap-start"
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        viewport={{ once: false, amount: 0.5 }} // Trigger fade at 50% visibility
+        transition={{ duration: 1 }}
+      >
+        <h1 className="text-6xl md:text-8xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 dark:from-gray-100 dark:to-gray-400 bg-clip-text text-transparent text-center">
+          Building the future<br /> with cloud technology
+        </h1>
+        <p className="text-gray-600 dark:text-gray-300 mt-8 text-xl md:text-2xl max-w-3xl text-center">
+          Hi there! I’d love to connect, share ideas, and inspire each other—because great things happen when curious minds come together!
+        </p>
+        <div className="mt-12 flex flex-col sm:flex-row gap-6 justify-center">
+        <Input
+  type="text"
+  value={message}
+  onChange={(e) => setMessage(e.target.value)} // Updates the state
+  placeholder="Have ideas? Your thoughts inspire innovation"
+  className="w-full sm:w-[45rem] dark:bg-gray-800 dark:text-white text-lg md:text-xl"
+/>
 
-
-    </div>
-    {/* Feedback Status */}
-    {status && (
-      <p className="mt-4 text-sm text-gray-600 dark:text-gray-300">
-        {status}
-      </p>
-    )}
-  </div>
-</section>
-
-
-      {/* About Section */}
-      <section className="py-16 bg-white dark:bg-black">
-        <div className="container mx-auto px-4 grid md:grid-cols-2 gap-12 items-center">
-          <div>
-            <h2 className="text-3xl font-bold mb-6 dark:text-white">
-              Hi, I'm Arsalan
-            </h2>
-            <p className="text-lg leading-relaxed text-gray-600 dark:text-gray-300">
-              I'm an aspiring cloud engineer, and I absolutely love diving into the world of technology. I'm excited to learn, grow, and explore everything cloud-related while sharing my journey through content and connecting with amazing people in the tech community. The future is bright, and I can't wait to be a part of it!
-            </p>
-          </div>
-          <div className="relative">
-            <div className="relative h-[250px] w-[250px] mx-auto md:ml-auto rounded-full overflow-hidden">
-              <Image
-                src="/profile.jpg"
-                alt="Arsalan's Profile Picture"
-                width={300}
-                height={300}
-                className="object-cover"
-              />
-            </div>
-          </div>
+          <Button
+            onClick={handleSendMessage} // Call the function when button is clicked
+            className="text-white bg-gray-900 dark:bg-gray-800 hover:bg-gray-700 dark:hover:bg-gray-700 px-6 py-4 text-lg md:text-xl"
+          >
+            Send
+          </Button>
         </div>
-      </section>
-      {/* Projects Section */}
-<section className="py-16 bg-gray-50 dark:bg-black">
-  <div className="container mx-auto px-4">
-    <h2 className="text-3xl font-bold mb-12 text-center text-gray-800 dark:text-white">Projects</h2>
-    <div className="grid md:grid-cols-3 gap-8">
-      {/* Project 1 */}
-      <div className="p-6 bg-white dark:bg-black rounded-lg shadow-md hover:shadow-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-all">
-        <h3 className="text-xl font-semibold mb-2 text-gray-900 dark:text-white">Cloud Architecture</h3>
-        <p className="text-gray-600 dark:text-gray-300 mb-4">
-          Designing and implementing scalable cloud infrastructure solutions using modern technologies.
-        </p>
-        <button className="text-gray-900 dark:text-white hover:underline transition">Read More</button>
-      </div>
-      {/* Project 2 */}
-      <div className="p-6 bg-white dark:bg-black rounded-lg shadow-md hover:shadow-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-all">
-        <h3 className="text-xl font-semibold mb-2 text-gray-900 dark:text-white">DevOps Practices</h3>
-        <p className="text-gray-600 dark:text-gray-300 mb-4">
-          Implementing CI/CD pipelines and automation workflows for efficient development processes.
-        </p>
-        <button className="text-gray-900 dark:text-white hover:underline transition">Read More</button>
-      </div>
-      {/* Project 3 */}
-      <div className="p-6 bg-white dark:bg-black rounded-lg shadow-md hover:shadow-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-all">
-        <h3 className="text-xl font-semibold mb-2 text-gray-900 dark:text-white">Tech Content</h3>
-        <p className="text-gray-600 dark:text-gray-300 mb-4">
-          Sharing knowledge and insights about cloud engineering through articles and tutorials.
-        </p>
-        <button className="text-gray-900 dark:text-white hover:underline transition">Read More</button>
-      </div>
-    </div>
+        {/* Status Message */}
+        {status && <p className="mt-4 text-gray-600 dark:text-gray-300">{status}</p>}
+      </motion.section>
+
+
+
+
+
+
+
+      <motion.section
+  className="min-h-screen flex flex-col justify-center bg-gray-50 dark:bg-black snap-start"
+  initial={{ opacity: 0 }}
+  whileInView={{ opacity: 1 }}
+  viewport={{ once: false, amount: 0.3 }}
+  transition={{ duration: 0.8, ease: "easeInOut" }}
+  style={{ fontFamily: "Helvetica Neue, Arial, sans-serif", padding: "4rem" }}
+>
+  <div className="container mx-auto flex flex-col md:flex-row gap-10 items-center">
+    {/* Left Content - Text */}
+    <motion.div
+      className="text-content md:w-1/2"
+      initial={{ opacity: 0, x: -50 }}
+      whileInView={{ opacity: 1, x: 0 }}
+      viewport={{ once: false, amount: 0.3 }}
+      transition={{ duration: 0.8, ease: "easeInOut" }}
+    >
+      <h2 className="text-2xl md:text-3xl font-light dark:text-white mb-6">
+        Greetings
+      </h2>
+      <p className="text-4xl md:text-5xl font-bold leading-tight text-gray-900 dark:text-white">
+        I am{" "}
+        <HoverImage
+          word="Arsalan"
+          image="/Arsalan.jpg"
+          setHoveredImage={setHoveredImage}
+        />
+        , an aspiring cloud engineer from{" "}
+        <HoverImage
+          word="Pakistan"
+          image="/Pakistan3.jpg"
+          setHoveredImage={setHoveredImage}
+        />
+        , currently pursuing my undergraduate studies at{" "}
+        <HoverImage
+          word="SCSU"
+          image="/SCSU.jpg"
+          setHoveredImage={setHoveredImage}
+        />{""}
+        ,{" "}
+        <HoverImage
+          word="US"
+          image="/USA.jpg"
+          setHoveredImage={setHoveredImage}
+        />
+        .
+      </p>
+    </motion.div>
+
+    {/* Right Content - Hover Image */}
+    <motion.div
+      className="image-content md:w-1/2 flex justify-center items-center"
+      initial={{ opacity: 0, x: 50 }}
+      whileInView={{ opacity: 1, x: 0 }}
+      viewport={{ once: false, amount: 0.3 }}
+      transition={{ duration: 0.8, ease: "easeInOut" }}
+    >
+      {hoveredImage && (
+        <motion.img
+          src={hoveredImage}
+          alt="Hovered content"
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1.1 }}
+          exit={{ opacity: 0, scale: 0.95 }}
+          transition={{ duration: 0.3, ease: "easeOut" }}
+          className="rounded-3xl shadow-2xl"
+          style={{
+            width: "28rem", // Consistent image size
+            height: "auto",
+            maxWidth: "100%",
+            maxHeight: "100%",
+          }}
+        />
+      )}
+    </motion.div>
   </div>
-</section>
+</motion.section>
 
-{/* Certificates Section */}
-<section className="py-16 bg-gray-50 dark:bg-black">
-  <div className="container mx-auto px-4">
-    <h2 className="text-3xl font-bold mb-12 text-center text-gray-800 dark:text-white">Certificates</h2>
-    <div className="grid md:grid-cols-3 gap-8">
-      {/* Certificate 1 */}
-      <div className="p-6 bg-white dark:bg-black rounded-lg shadow-md hover:shadow-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-all">
-        <h3 className="text-xl font-semibold mb-2 text-gray-900 dark:text-white">AWS Cloud Practitioner</h3>
-        <p className="text-gray-600 dark:text-gray-300 mb-4">
-          Fundamental understanding of AWS Cloud concepts, services, and architecture.
-        </p>
-        <button className="text-gray-900 dark:text-white hover:underline transition">View Certificate</button>
-      </div>
-      {/* Certificate 2 */}
-      <div className="p-6 bg-white dark:bg-black rounded-lg shadow-md hover:shadow-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-all">
-        <h3 className="text-xl font-semibold mb-2 text-gray-900 dark:text-white">Azure Fundamentals</h3>
-        <p className="text-gray-600 dark:text-gray-300 mb-4">
-          Core concepts and services of Microsoft Azure cloud platform.
-        </p>
-        <button className="text-gray-900 dark:text-white hover:underline transition">View Certificate</button>
-      </div>
-      {/* Certificate 3 */}
-      <div className="p-6 bg-white dark:bg-black rounded-lg shadow-md hover:shadow-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-all">
-        <h3 className="text-xl font-semibold mb-2 text-gray-900 dark:text-white">Google Cloud Associate</h3>
-        <p className="text-gray-600 dark:text-gray-300 mb-4">
-          Essential knowledge of Google Cloud Platform services and operations.
-        </p>
-        <button className="text-gray-900 dark:text-white hover:underline transition">View Certificate</button>
-      </div>
-    </div>
+
+
+
+
+
+      <div
+  className="bg-gray-50 dark:bg-black min-h-screen snap-y snap-mandatory overflow-y-scroll"
+  style={{ scrollBehavior: "smooth" }}
+>
+
+
+
+ {/* Section 3 - Projects */}
+<motion.section
+  id="projects"
+  className="snap-start"
+  style={{
+    height: "100vh",
+    padding: "6rem 3rem",
+    display: "flex",
+    alignItems: "flex-start",
+    gap: "3rem",
+  }}
+  initial={{ opacity: 0 }}
+  whileInView={{ opacity: 1 }}
+  exit={{ opacity: 0 }}
+  viewport={{ once: false, amount: 0.5 }}
+  transition={{ duration: 0.8 }}
+>
+  <h2
+    style={{
+      flex: 1,
+      fontSize: "3rem",
+      fontWeight: "bold",
+      textAlign: "left",
+    }}
+    className="text-black dark:text-white"
+  >
+    Projects
+  </h2>
+  <div
+    style={{
+      flex: 2,
+      display: "grid",
+      gap: "2.5rem",
+      gridTemplateColumns: "repeat(2, 1fr)",
+    }}
+  >
+    {/* Card 1 */}
+    <motion.div
+      initial={{ opacity: 0, y: 50 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: false, amount: 0.3 }}
+      transition={{ duration: 0.8 }}
+      style={{
+        padding: "2rem",
+        borderRadius: "12px",
+        boxShadow: "0 8px 12px rgba(0, 0, 0, 0.1)",
+      }}
+      className="bg-white dark:bg-black text-black dark:text-white"
+    >
+      <h3 style={{ fontWeight: "bold", fontSize: "1.5rem" }}>
+        Infrastructure & Automation
+      </h3>
+      <p>
+        Building infrastructure with Terraform and CloudFormation, designing
+        scalable VPCs with subnets, and creating CI/CD pipelines.
+      </p>
+    </motion.div>
+    {/* Card 2 */}
+    <motion.div
+      initial={{ opacity: 0, y: 50 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: false, amount: 0.3 }}
+      transition={{ duration: 0.8 }}
+      style={{
+        padding: "2rem",
+        borderRadius: "12px",
+        boxShadow: "0 8px 12px rgba(0, 0, 0, 0.1)",
+      }}
+      className="bg-white dark:bg-black text-black dark:text-white"
+    >
+      <h3 style={{ fontWeight: "bold", fontSize: "1.5rem" }}>
+        Security & Compliance
+      </h3>
+      <p>
+        Configuring secure IAM roles, encrypting data for storage, and adhering
+        to compliance frameworks like GDPR and HIPAA.
+      </p>
+    </motion.div>
+    {/* Card 3 */}
+    <motion.div
+      initial={{ opacity: 0, y: 50 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: false, amount: 0.3 }}
+      transition={{ duration: 0.8 }}
+      style={{
+        padding: "2rem",
+        borderRadius: "12px",
+        boxShadow: "0 8px 12px rgba(0, 0, 0, 0.1)",
+      }}
+      className="bg-white dark:bg-black text-black dark:text-white"
+    >
+      <h3 style={{ fontWeight: "bold", fontSize: "1.5rem" }}>
+        Deployment & Management
+      </h3>
+      <p>
+        Deploying Kubernetes clusters, managing serverless applications, and
+        containerizing workloads with Docker and ECS.
+      </p>
+    </motion.div>
+    {/* Card 4 */}
+    <motion.div
+      initial={{ opacity: 0, y: 50 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: false, amount: 0.3 }}
+      transition={{ duration: 0.8 }}
+      style={{
+        padding: "2rem",
+        borderRadius: "12px",
+        boxShadow: "0 8px 12px rgba(0, 0, 0, 0.1)",
+      }}
+      className="bg-white dark:bg-black text-black dark:text-white"
+    >
+      <h3 style={{ fontWeight: "bold", fontSize: "1.5rem" }}>
+        Monitoring & Optimization
+      </h3>
+      <p>
+        Optimizing cloud costs, monitoring systems with CloudWatch, and
+        designing disaster recovery strategies.
+      </p>
+    </motion.div>
   </div>
-</section>
+</motion.section>
 
-{/* Currently Learning Section */}
-<section className="py-16 bg-gray-50 dark:bg-black">
-  <div className="container mx-auto px-4">
-    <h2 className="text-3xl font-bold mb-12 text-center text-gray-800 dark:text-white">Currently Learning</h2>
-    <div className="grid md:grid-cols-3 gap-8">
-      {/* Learning Item 1 */}
-      <div className="p-6 bg-white dark:bg-black rounded-lg shadow-md hover:shadow-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-all">
-        <h3 className="text-xl font-semibold mb-2 text-gray-900 dark:text-white">Kubernetes</h3>
-        <p className="text-gray-600 dark:text-gray-300 mb-4">
-          Container orchestration and microservices architecture for cloud-native applications.
-        </p>
-        <button className="text-gray-900 dark:text-white hover:underline transition">Track Progress</button>
-      </div>
-      {/* Learning Item 2 */}
-      <div className="p-6 bg-white dark:bg-black rounded-lg shadow-md hover:shadow-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-all">
-        <h3 className="text-xl font-semibold mb-2 text-gray-900 dark:text-white">Terraform</h3>
-        <p className="text-gray-600 dark:text-gray-300 mb-4">
-          Infrastructure as Code (IaC) for automated cloud resource management.
-        </p>
-        <button className="text-gray-900 dark:text-white hover:underline transition">Track Progress</button>
-      </div>
-      {/* Learning Item 3 */}
-      <div className="p-6 bg-white dark:bg-black rounded-lg shadow-md hover:shadow-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-all">
-        <h3 className="text-xl font-semibold mb-2 text-gray-900 dark:text-white">Cloud Security</h3>
-        <p className="text-gray-600 dark:text-gray-300 mb-4">
-          Best practices and tools for securing cloud infrastructure and applications.
-        </p>
-        <button className="text-gray-900 dark:text-white hover:underline transition">Track Progress</button>
-      </div>
-    </div>
+{/* Section 4 - Certificates */}
+<motion.section
+  id="certificates"
+  className="snap-start"
+  style={{
+    height: "100vh",
+    padding: "6rem 3rem",
+    display: "flex",
+    alignItems: "flex-start",
+    gap: "3rem",
+  }}
+  initial={{ opacity: 0 }}
+  whileInView={{ opacity: 1 }}
+  exit={{ opacity: 0 }}
+  viewport={{ once: false, amount: 0.5 }}
+  transition={{ duration: 0.8 }}
+>
+  <h2
+    style={{
+      flex: 1,
+      fontSize: "3rem",
+      fontWeight: "bold",
+      textAlign: "left",
+    }}
+    className="text-black dark:text-white"
+  >
+    Certificates
+  </h2>
+  <div
+    style={{
+      flex: 2,
+      display: "grid",
+      gap: "2.5rem",
+      gridTemplateColumns: "repeat(2, 1fr)",
+    }}
+  >
+    {/* Card 1 */}
+    <motion.div
+      initial={{ opacity: 0, y: 50 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: false, amount: 0.3 }}
+      transition={{ duration: 0.8 }}
+      style={{
+        padding: "2rem",
+        borderRadius: "12px",
+        boxShadow: "0 8px 12px rgba(0, 0, 0, 0.1)",
+      }}
+      className="bg-white dark:bg-black text-black dark:text-white"
+    >
+      <h3 style={{ fontWeight: "bold", fontSize: "1.5rem" }}>
+        AWS Certified Cloud Practitioner
+      </h3>
+      <p>
+        Ideal for beginners to understand cloud concepts, billing, and core AWS
+        services.
+      </p>
+    </motion.div>
+    {/* Card 2 */}
+    <motion.div
+      initial={{ opacity: 0, y: 50 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: false, amount: 0.3 }}
+      transition={{ duration: 0.8 }}
+      style={{
+        padding: "2rem",
+        borderRadius: "12px",
+        boxShadow: "0 8px 12px rgba(0, 0, 0, 0.1)",
+      }}
+      className="bg-white dark:bg-black text-black dark:text-white"
+    >
+      <h3 style={{ fontWeight: "bold", fontSize: "1.5rem" }}>
+        AWS Certified Developer – Associate
+      </h3>
+      <p>
+        Covers building, deploying, and maintaining AWS-based applications.
+      </p>
+    </motion.div>
+    {/* Card 3 */}
+    <motion.div
+      initial={{ opacity: 0, y: 50 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: false, amount: 0.3 }}
+      transition={{ duration: 0.8 }}
+      style={{
+        padding: "2rem",
+        borderRadius: "12px",
+        boxShadow: "0 8px 12px rgba(0, 0, 0, 0.1)",
+      }}
+      className="bg-white dark:bg-black text-black dark:text-white"
+    >
+      <h3 style={{ fontWeight: "bold", fontSize: "1.5rem" }}>
+        AWS Certified Solutions Architect – Associate
+      </h3>
+      <p>
+        Focused on designing scalable, secure, and reliable cloud solutions in
+        AWS.
+      </p>
+    </motion.div>
   </div>
-</section>
+</motion.section>
 
 
+
+{/* Section 5 - Currently Learning */}
+<motion.section
+  id="currently-learning"
+  initial={{ opacity: 0 }}
+  whileInView={{ opacity: 1 }}
+  viewport={{ once: false, amount: 0.2 }} // Adjusting the viewport for fading in and out
+  transition={{ duration: 0.8 }}
+  style={{
+    height: "100vh",
+    padding: "5rem 3rem",
+    display: "flex",
+    alignItems: "flex-start",
+    gap: "2rem",
+  }}
+  className="snap-start"
+>
+  <h2
+    style={{
+      flex: 1,
+      fontSize: "3rem",
+      fontWeight: "bold",
+      textAlign: "left",
+    }}
+    className="text-black dark:text-white"
+  >
+    Currently Learning
+  </h2>
+  <div
+    style={{
+      flex: 2,
+      display: "grid",
+      gap: "2.5rem",
+      gridTemplateColumns: "repeat(auto-fit, minmax(350px, 1fr))",
+    }}
+  >
+    {/* Card 1 */}
+    <motion.div
+      initial={{ opacity: 0, y: 50 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: false, amount: 0.3 }}
+      transition={{ duration: 0.8 }}
+      style={{
+        padding: "2rem",
+        borderRadius: "12px",
+        boxShadow: "0 8px 12px rgba(0, 0, 0, 0.1)",
+      }}
+      className="bg-white dark:bg-black text-black dark:text-white"
+    >
+      <h3 style={{ fontWeight: "bold", fontSize: "1.5rem" }}>
+        Infrastructure as Code (IaC) Tools
+      </h3>
+      <ul>
+        <li>
+          <strong>Terraform:</strong> Learning to provision and manage
+          multi-cloud infrastructure efficiently.
+        </li>
+        <li>
+          <strong>AWS CloudFormation:</strong> Understanding AWS-specific
+          infrastructure automation with templates.
+        </li>
+      </ul>
+    </motion.div>
+
+    {/* Card 2 */}
+    <motion.div
+      initial={{ opacity: 0, y: 50 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: false, amount: 0.3 }}
+      transition={{ duration: 0.8 }}
+      style={{
+        padding: "2rem",
+        borderRadius: "12px",
+        boxShadow: "0 8px 12px rgba(0, 0, 0, 0.1)",
+      }}
+      className="bg-white dark:bg-black text-black dark:text-white"
+    >
+      <h3 style={{ fontWeight: "bold", fontSize: "1.5rem" }}>
+        Containerization and Orchestration Tools
+      </h3>
+      <ul>
+        <li>
+          <strong>Docker:</strong> Exploring containerized application
+          development with all dependencies.
+        </li>
+        <li>
+          <strong>Kubernetes:</strong> Practicing managing and scaling
+          containerized workloads.
+        </li>
+      </ul>
+    </motion.div>
+
+    {/* Card 3 */}
+    <motion.div
+      initial={{ opacity: 0, y: 50 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: false, amount: 0.3 }}
+      transition={{ duration: 0.8 }}
+      style={{
+        padding: "2rem",
+        borderRadius: "12px",
+        boxShadow: "0 8px 12px rgba(0, 0, 0, 0.1)",
+      }}
+      className="bg-white dark:bg-black text-black dark:text-white"
+    >
+      <h3 style={{ fontWeight: "bold", fontSize: "1.5rem" }}>CI/CD Tools</h3>
+      <ul>
+        <li>
+          <strong>Jenkins:</strong> Setting up automated build, test, and
+          deployment pipelines.
+        </li>
+        <li>
+          <strong>AWS CodePipeline:</strong> Creating CI/CD workflows for
+          AWS-native projects.
+        </li>
+      </ul>
+    </motion.div>
+
+    {/* Card 4 */}
+    <motion.div
+      initial={{ opacity: 0, y: 50 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: false, amount: 0.3 }}
+      transition={{ duration: 0.8 }}
+      style={{
+        padding: "2rem",
+        borderRadius: "12px",
+        boxShadow: "0 8px 12px rgba(0, 0, 0, 0.1)",
+      }}
+      className="bg-white dark:bg-black text-black dark:text-white"
+    >
+      <h3 style={{ fontWeight: "bold", fontSize: "1.5rem" }}>
+        Monitoring and Logging Tools
+      </h3>
+      <ul>
+        <li>
+          <strong>AWS CloudWatch:</strong> Analyzing performance, logs, and
+          metrics in AWS environments.
+        </li>
+        <li>
+          <strong>Prometheus + Grafana:</strong> Using open-source tools for
+          system monitoring and visualization.
+        </li>
+      </ul>
+    </motion.div>
+
+    {/* Card 5 */}
+    <motion.div
+      initial={{ opacity: 0, y: 50 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: false, amount: 0.3 }}
+      transition={{ duration: 0.8 }}
+      style={{
+        padding: "2rem",
+        borderRadius: "12px",
+        boxShadow: "0 8px 12px rgba(0, 0, 0, 0.1)",
+      }}
+      className="bg-white dark:bg-black text-black dark:text-white"
+    >
+      <h3 style={{ fontWeight: "bold", fontSize: "1.5rem" }}>
+        Cloud Security Tools
+      </h3>
+      <ul>
+        <li>
+          <strong>AWS IAM:</strong> Learning to manage user permissions and
+          secure resources.
+        </li>
+        <li>
+          <strong>AWS KMS:</strong> Practicing data encryption and key
+          management in AWS.
+        </li>
+      </ul>
+    </motion.div>
+
+    {/* Card 6 */}
+    <motion.div
+      initial={{ opacity: 0, y: 50 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: false, amount: 0.3 }}
+      transition={{ duration: 0.8 }}
+      style={{
+        padding: "2rem",
+        borderRadius: "12px",
+        boxShadow: "0 8px 12px rgba(0, 0, 0, 0.1)",
+      }}
+      className="bg-white dark:bg-black text-black dark:text-white"
+    >
+      <h3 style={{ fontWeight: "bold", fontSize: "1.5rem" }}>
+        Cloud Cost Management Tools
+      </h3>
+      <ul>
+        <li>
+          <strong>AWS Cost Explorer:</strong> Tracking AWS usage and optimizing
+          costs.
+        </li>
+        <li>
+          <strong>Spot.io:</strong> Learning to optimize EC2 spot instance
+          costs and cloud efficiency.
+        </li>
+      </ul>
+    </motion.div>
+  </div>
+</motion.section>
+</div>
 
       {/* Footer */}
       <footer className="py-12 bg-white dark:bg-black text-center">
-        <p className="text-gray-600 dark:text-gray-300">
-          Email - arsalan.anwer9050@gmail.com
-        </p>
+        <p className="text-gray-600 dark:text-gray-300">Email - arsalan.anwer9050@gmail.com</p>
       </footer>
     </div>
   );
