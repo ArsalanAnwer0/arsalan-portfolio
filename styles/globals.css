@@ -2,19 +2,30 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Smooth scrolling for anchor links */
-html {
-  scroll-behavior: smooth;
+html, body {
+  transition: background-color 0.7s ease-in-out, color 0.7s ease-in-out;
 }
 
 body {
-  font-family: 'Inter', sans-serif;
-  margin: 0;
-  overflow-y: scroll;
+  background-color: white;
+  color: black;
 }
 
+.dark body {
+  background-color: black;
+  color: white;
+}
+
+/* Add this to make all elements transition smoothly */
+*, *::before, *::after {
+  transition: background-color 0.7s ease-in-out, color 0.7s ease-in-out;
+}
+
+
+
+/* Smooth Snap Scrolling */
 main {
-  scroll-snap-type: y mandatory; /* Enables vertical snap scrolling */
+  scroll-snap-type: y mandatory;
 }
 
 .snap-start {
@@ -23,7 +34,7 @@ main {
 
 /* Sections */
 .section {
-  height: 100vh; /* Each section takes up full screen */
+  height: 100vh;
   scroll-snap-align: start;
   display: flex;
   flex-direction: column;
@@ -32,15 +43,16 @@ main {
   padding: 2rem;
 }
 
+/* Headings */
 .section-heading {
-  font-size: 2.5rem; /* Larger headings */
+  font-size: 2.5rem;
   font-weight: bold;
   margin-bottom: 2rem;
-  transition: color 0.3s;
+  transition: color 0.3s ease;
 }
 
-.section-heading.dark {
-  color: #f5f5f5; /* Dark mode heading color */
+.dark .section-heading {
+  color: #f5f5f5;
 }
 
 /* Cards */
@@ -52,19 +64,41 @@ main {
 }
 
 .card {
-  flex: 0 1 calc(45% - 2rem); /* Cards take up 45% of the row */
+  flex: 0 1 calc(45% - 2rem);
   padding: 1.5rem;
-  background-color: #fff; /* Default light background */
-  color: #000; /* Default text color */
+  background-color: white;
+  color: black;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
-  margin-bottom: 2rem; /* Adds consistent space between rows */
-  transition: background-color 0.3s, color 0.3s;
+  margin-bottom: 2rem;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-.card.dark {
-  background-color: #1a1a1a; /* Dark mode background */
-  color: #f5f5f5; /* Dark mode text color */
+/* Dark Mode Support for Cards */
+.dark .card {
+  background-color: #1a1a1a;
+  color: #f5f5f5;
+}
+
+/* Input Fields Fix */
+input {
+  background-color: white;
+  color: black;
+  border: 1px solid #ccc;
+  padding: 0.75rem;
+  border-radius: 4px;
+  transition: background-color 0.5s ease, color 0.5s ease;
+}
+
+.dark input {
+  background-color: #1a1a1a;
+  color: #f5f5f5;
+  border: 1px solid #444;
+}
+
+/* Buttons */
+button {
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 /* Responsive Design */
@@ -77,6 +111,8 @@ main {
     font-size: 2rem;
   }
 }
+
+/* Elegant Underline Effect */
 .elegant-underline {
   position: relative;
   display: inline-block;
@@ -98,4 +134,23 @@ main {
 .elegant-underline:hover::after {
   transform: scaleX(1);
   transform-origin: bottom left;
+}
+/* 🌙✨ Smooth Theme Transition */
+.theme-transition {
+  transition: background-color 1s ease-in-out, color 1s ease-in-out;
+}
+
+.fade-transition {
+  animation: fadeInDark 1s ease-in-out;
+}
+
+@keyframes fadeInDark {
+  0% {
+    opacity: 0.8;
+    filter: brightness(1.1);
+  }
+  100% {
+    opacity: 1;
+    filter: brightness(1);
+  }
 }
