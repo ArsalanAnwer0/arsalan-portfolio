@@ -154,3 +154,64 @@ button {
     filter: brightness(1);
   }
 }
+/* Mobile-only adjustments */
+@media (max-width: 640px) {
+  /* Projects section */
+  #projects {
+    flex-direction: column !important;
+    padding: 3rem 1.5rem !important;
+  }
+  
+  #projects h2, 
+  #certificates h2,
+  #currently-learning h2 {
+    margin-bottom: 2rem !important;
+  }
+  
+  /* Certificates section */
+  #certificates {
+    flex-direction: column !important;
+    padding: 3rem 1.5rem !important;
+  }
+  
+  #certificates > div {
+    grid-template-columns: 1fr !important;
+  }
+  
+  /* Currently Learning section */
+  #currently-learning {
+    flex-direction: column !important;
+    padding: 3rem 1.5rem !important;
+  }
+  
+  #currently-learning > div {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* Mobile-only improvements - separate media query */
+@media (max-width: 640px) {
+  /* Smoother scrolling */
+  html, body {
+    scroll-behavior: smooth;
+  }
+  
+  .snap-mandatory {
+    scroll-snap-type: y proximity !important;
+  }
+  
+  .overflow-y-scroll {
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  /* Better screen size adaptation */
+  .min-h-screen {
+    min-height: 100vh;
+    height: auto !important;
+  }
+  
+  #projects, #certificates, #currently-learning {
+    height: auto !important;
+    min-height: 100vh;
+  }
+}
