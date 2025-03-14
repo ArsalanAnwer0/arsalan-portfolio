@@ -6,6 +6,9 @@ import { Github, Linkedin, Instagram, Sun, Moon } from "lucide-react";
 import { CustomCursor } from "@/components/ui/CustomCursor"; // Custom Cursor Component
 import ContactModal from "@/components/ui/ContactModal"; // Modal Component
 import HoverImage from "@/components/ui/HoverImage";
+import DetailedInfoModal from "@/components/ui/DetailedInfoModal";
+import ClickableInfoCard from "@/components/ui/ClickableInfoCard";
+import { projectData, certificateData, learningData } from "../data/CardData";
 
 function throttle(
   func: (...args: any[]) => void, // or more specific type if you know it
@@ -77,6 +80,9 @@ export default function Home() {
   const scrollValue = useMotionValue(0);
   const smoothScroll = useSpring(scrollValue, { stiffness: 80, damping: 20 });
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const [selectedProject, setSelectedProject] = useState<string | null>(null);
+  const [selectedCertificate, setSelectedCertificate] = useState<string | null>(null);
+  const [selectedTopic, setSelectedTopic] = useState<string | null>(null);
   
   useEffect(() => {
     // Create a throttled version of your scroll handler
@@ -178,11 +184,11 @@ useEffect(() => {
 
       {/* Updated Header with Elegant Font */}
       <header className="bg-white dark:bg-black shadow sticky top-0 z-50">
-        <div className="container mx-auto px-4 py-3 flex justify-between items-center">
-          {/* Left - Name with Elegant Font */}
-          <h1 className="text-base md:text-xl font-light tracking-wide dark:text-white text-gray-900">
-            ARSALAN
-          </h1>
+  <div className="container mx-auto px-4 py-3 flex justify-between items-center">
+    {/* Left - Name with Elegant Font */}
+    <h1 className="text-base md:text-xl font-light tracking-wide dark:text-white text-gray-900">
+      ARSALAN
+    </h1>
 
           {/* Center - Location - Hide on very small screens */}
           <h2 className="hidden sm:block text-xs md:text-base dark:text-white text-gray-800">
@@ -256,38 +262,35 @@ useEffect(() => {
               Hello
             </h2>
             <p className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-light leading-tight text-gray-900 dark:text-white">
-  Arsalan is an aspiring cloud<br className="hidden xs:inline" />
-  engineer, pursuing his<br className="hidden xs:inline" />
+  Arsalan is an aspiring cloud <br className="hidden xs:inline" />
+  engineer, pursuing his <br className="hidden xs:inline" />
   undergraduate studies at <br className="hidden xs:inline" />
   SCSU, US.
 </p>
           </motion.div>
 
-          {/* Right Content - Hover Image */}
-          <motion.div
-            className="image-content md:w-1/2 flex justify-center items-center"
-            initial={{ opacity: 0, x: 50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: false, amount: 0.3 }}
-            transition={{ duration: 0.8, ease: "easeInOut" }}
-          >
-            {hoveredImage && (
-              <motion.img
-                src={hoveredImage}
-                alt="Hovered content"
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1.1 }}
-                exit={{ opacity: 0, scale: 0.95 }}
-                transition={{ duration: 0.3, ease: "easeOut" }}
-                className="rounded-3xl shadow-2xl"
-                style={{
-                  width: "100%", // Use percentage width
-                  maxWidth: "28rem", // Limit maximum width
-                  height: "auto",
-                }}
-              />
-            )}
-          </motion.div>
+ {/* Right Content - Image */}
+<motion.div
+  className="image-content md:w-1/2 flex justify-center items-center"
+  initial={{ opacity: 0, x: 50 }}
+  whileInView={{ opacity: 1, x: 0 }}
+  viewport={{ once: false, amount: 0.3 }}
+  transition={{ duration: 0.8, ease: "easeInOut" }}
+>
+  <motion.img
+    src="/Arsalan.jpg" // Update this path to your actual image
+    alt="Arsalan"
+    initial={{ opacity: 0, scale: 0.95 }}
+    animate={{ opacity: 1, scale: 1 }}
+    transition={{ duration: 0.5, ease: "easeOut" }}
+    className="rounded-3xl shadow-2xl"
+    style={{
+      width: "100%", // Use percentage width
+      maxWidth: "28rem", // Limit maximum width
+      height: "auto",
+    }}
+  />
+</motion.div>
         </div>
       </motion.section>
 
@@ -326,92 +329,26 @@ useEffect(() => {
 <div
   className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8"
 >
-            {/* Card 1 */}
-            <motion.div
-              initial={{ opacity: 0, y: 50 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: false, amount: 0.3 }}
-              transition={{ duration: 0.8 }}
-              style={{
-                padding: "2rem",
-                borderRadius: "12px",
-                boxShadow: "0 8px 12px rgba(0, 0, 0, 0.1)",
-              }}
-              className="bg-white dark:bg-black text-black dark:text-white"
-            >
-              <h3 style={{ fontWeight: "bold", fontSize: "1.5rem" }}>
-                Infrastructure & Automation
-              </h3>
-              <p>
-                Building infrastructure with Terraform and CloudFormation, designing
-                scalable VPCs with subnets, and creating CI/CD pipelines.
-              </p>
-            </motion.div>
-            {/* Card 2 */}
-            <motion.div
-              initial={{ opacity: 0, y: 50 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: false, amount: 0.3 }}
-              transition={{ duration: 0.8 }}
-              style={{
-                padding: "2rem",
-                borderRadius: "12px",
-                boxShadow: "0 8px 12px rgba(0, 0, 0, 0.1)",
-              }}
-              className="bg-white dark:bg-black text-black dark:text-white"
-            >
-              <h3 style={{ fontWeight: "bold", fontSize: "1.5rem" }}>
-                Security & Compliance
-              </h3>
-              <p>
-                Configuring secure IAM roles, encrypting data for storage, and adhering
-                to compliance frameworks like GDPR and HIPAA.
-              </p>
-            </motion.div>
-            {/* Card 3 */}
-            <motion.div
-              initial={{ opacity: 0, y: 50 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: false, amount: 0.3 }}
-              transition={{ duration: 0.8 }}
-              style={{
-                padding: "2rem",
-                borderRadius: "12px",
-                boxShadow: "0 8px 12px rgba(0, 0, 0, 0.1)",
-              }}
-              className="bg-white dark:bg-black text-black dark:text-white"
-            >
-              <h3 style={{ fontWeight: "bold", fontSize: "1.5rem" }}>
-                Deployment & Management
-              </h3>
-              <p>
-                Deploying Kubernetes clusters, managing serverless applications, and
-                containerizing workloads with Docker and ECS.
-              </p>
-            </motion.div>
-            {/* Card 4 */}
-            <motion.div
-              initial={{ opacity: 0, y: 50 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: false, amount: 0.3 }}
-              transition={{ duration: 0.8 }}
-              style={{
-                padding: "2rem",
-                borderRadius: "12px",
-                boxShadow: "0 8px 12px rgba(0, 0, 0, 0.1)",
-              }}
-              className="bg-white dark:bg-black text-black dark:text-white"
-            >
-              <h3 style={{ fontWeight: "bold", fontSize: "1.5rem" }}>
-                Monitoring & Optimization
-              </h3>
-              <p>
-                Optimizing cloud costs, monitoring systems with CloudWatch, and
-                designing disaster recovery strategies.
-              </p>
-            </motion.div>
-          </div>
-        </motion.section>
+{projectData.map((project) => (
+  <ClickableInfoCard
+    key={project.id}
+    title={project.title}
+    summary={project.summary}
+    onClick={() => setSelectedProject(project.id)}
+  />
+))}
+
+{/* Project Details Modal */}
+{selectedProject && (
+  <DetailedInfoModal
+    isOpen={!!selectedProject}
+    title={projectData.find(p => p.id === selectedProject)?.title || ""}
+    content={projectData.find(p => p.id === selectedProject)?.details || ""}
+    onClose={() => setSelectedProject(null)}
+  />
+)}
+   </div>
+   </motion.section>
 
         {/* Section 4 - Certificates */}
         <motion.section
@@ -450,68 +387,24 @@ useEffect(() => {
   }}
 >
     {/* Keep your existing certificate cards here */}
-    {/* Card 1 */}
-    <motion.div
-      initial={{ opacity: 0, y: 50 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: false, amount: 0.3 }}
-      transition={{ duration: 0.8 }}
-      style={{
-        padding: "2rem",
-        borderRadius: "12px",
-        boxShadow: "0 8px 12px rgba(0, 0, 0, 0.1)",
-      }}
-      className="bg-white dark:bg-black text-black dark:text-white"
-    >
-      <h3 style={{ fontWeight: "bold", fontSize: "1.5rem" }}>
-        AWS Certified Cloud Practitioner
-      </h3>
-      <p>
-        Ideal for beginners to understand cloud concepts, billing, and core AWS
-        services.
-      </p>
-    </motion.div>
-    {/* Card 2 */}
-    <motion.div
-      initial={{ opacity: 0, y: 50 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: false, amount: 0.3 }}
-      transition={{ duration: 0.8 }}
-      style={{
-        padding: "2rem",
-        borderRadius: "12px",
-        boxShadow: "0 8px 12px rgba(0, 0, 0, 0.1)",
-      }}
-      className="bg-white dark:bg-black text-black dark:text-white"
-    >
-      <h3 style={{ fontWeight: "bold", fontSize: "1.5rem" }}>
-        AWS Certified Developer – Associate
-      </h3>
-      <p>
-        Covers building, deploying, and maintaining AWS-based applications.
-      </p>
-    </motion.div>
-    {/* Card 3 */}
-    <motion.div
-      initial={{ opacity: 0, y: 50 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: false, amount: 0.3 }}
-      transition={{ duration: 0.8 }}
-      style={{
-        padding: "2rem",
-        borderRadius: "12px",
-        boxShadow: "0 8px 12px rgba(0, 0, 0, 0.1)",
-      }}
-      className="bg-white dark:bg-black text-black dark:text-white"
-    >
-      <h3 style={{ fontWeight: "bold", fontSize: "1.5rem" }}>
-        AWS Certified Solutions Architect – Associate
-      </h3>
-      <p>
-        Focused on designing scalable, secure, and reliable cloud solutions in
-        AWS.
-      </p>
-    </motion.div>
+    {certificateData.map((certificate) => (
+  <ClickableInfoCard
+    key={certificate.id}
+    title={certificate.title}
+    summary={certificate.summary}
+    onClick={() => setSelectedCertificate(certificate.id)}
+  />
+))}
+
+{/* Certificate Details Modal */}
+{selectedCertificate && (
+  <DetailedInfoModal
+    isOpen={!!selectedCertificate}
+    title={certificateData.find(c => c.id === selectedCertificate)?.title || ""}
+    content={certificateData.find(c => c.id === selectedCertificate)?.details || ""}
+    onClose={() => setSelectedCertificate(null)}
+  />
+)}
   </div>
 </motion.section>
 
@@ -550,174 +443,26 @@ useEffect(() => {
     gridTemplateColumns: "repeat(auto-fit, minmax(350px, 1fr))",
   }}
 >
-            {/* Card 1 */}
-            <motion.div
-              initial={{ opacity: 0, y: 50 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: false, amount: 0.3 }}
-              transition={{ duration: 0.8 }}
-              style={{
-                padding: "2rem",
-                borderRadius: "12px",
-                boxShadow: "0 8px 12px rgba(0, 0, 0, 0.1)",
-              }}
-              className="bg-white dark:bg-black text-black dark:text-white"
-            >
-              <h3 style={{ fontWeight: "bold", fontSize: "1.5rem" }}>
-                Infrastructure as Code (IaC) Tools
-              </h3>
-              <ul>
-                <li>
-                  <strong>Terraform:</strong> Learning to provision and manage
-                  multi-cloud infrastructure efficiently.
-                </li>
-                <li>
-                  <strong>AWS CloudFormation:</strong> Understanding AWS-specific
-                  infrastructure automation with templates.
-                </li>
-              </ul>
-              
-            </motion.div>
+{learningData.map((topic) => (
+  <ClickableInfoCard
+    key={topic.id}
+    title={topic.title}
+    summary={<div dangerouslySetInnerHTML={{ __html: topic.summary }} />}
+    onClick={() => setSelectedTopic(topic.id)}
+  />
+))}
 
-            {/* Card 2 */}
-            <motion.div
-              initial={{ opacity: 0, y: 50 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: false, amount: 0.3 }}
-              transition={{ duration: 0.8 }}
-              style={{
-                padding: "2rem",
-                borderRadius: "12px",
-                boxShadow: "0 8px 12px rgba(0, 0, 0, 0.1)",
-              }}
-              className="bg-white dark:bg-black text-black dark:text-white"
-            >
-              <h3 style={{ fontWeight: "bold", fontSize: "1.5rem" }}>
-                Containerization and Orchestration Tools
-              </h3>
-              <ul>
-                <li>
-                  <strong>Docker:</strong> Exploring containerized application
-                  development with all dependencies.
-                </li>
-                <li>
-                  <strong>Kubernetes:</strong> Practicing managing and scaling
-                  containerized workloads.
-                </li>
-              </ul>
-            </motion.div>
-
-            {/* Card 3 */}
-            <motion.div
-              initial={{ opacity: 0, y: 50 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: false, amount: 0.3 }}
-              transition={{ duration: 0.8 }}
-              style={{
-                padding: "2rem",
-                borderRadius: "12px",
-                boxShadow: "0 8px 12px rgba(0, 0, 0, 0.1)",
-              }}
-              className="bg-white dark:bg-black text-black dark:text-white"
-            >
-              <h3 style={{ fontWeight: "bold", fontSize: "1.5rem" }}>CI/CD Tools</h3>
-              <ul>
-                <li>
-                  <strong>Jenkins:</strong> Setting up automated build, test, and
-                  deployment pipelines.
-                </li>
-                <li>
-                  <strong>AWS CodePipeline:</strong> Creating CI/CD workflows for
-                  AWS-native projects.
-                </li>
-              </ul>
-            </motion.div>
-
-            {/* Card 4 */}
-            <motion.div
-              initial={{ opacity: 0, y: 50 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: false, amount: 0.3 }}
-              transition={{ duration: 0.8 }}
-              style={{
-                padding: "2rem",
-                borderRadius: "12px",
-                boxShadow: "0 8px 12px rgba(0, 0, 0, 0.1)",
-              }}
-              className="bg-white dark:bg-black text-black dark:text-white"
-            >
-              <h3 style={{ fontWeight: "bold", fontSize: "1.5rem" }}>
-                Monitoring and Logging Tools
-              </h3>
-              <ul>
-                <li>
-                  <strong>AWS CloudWatch:</strong> Analyzing performance, logs, and
-                  metrics in AWS environments.
-                </li>
-                <li>
-                  <strong>Prometheus + Grafana:</strong> Using open-source tools for
-                  system monitoring and visualization.
-                </li>
-              </ul>
-            </motion.div>
-
-            {/* Card 5 */}
-            <motion.div
-              initial={{ opacity: 0, y: 50 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: false, amount: 0.3 }}
-              transition={{ duration: 0.8 }}
-              style={{
-                padding: "2rem",
-                borderRadius: "12px",
-                boxShadow: "0 8px 12px rgba(0, 0, 0, 0.1)",
-              }}
-              className="bg-white dark:bg-black text-black dark:text-white"
-            >
-              <h3 style={{ fontWeight: "bold", fontSize: "1.5rem" }}>
-                Cloud Security Tools
-              </h3>
-              <ul>
-                <li>
-                  <strong>AWS IAM:</strong> Learning to manage user permissions and
-                  secure resources.
-                </li>
-                <li>
-                  <strong>AWS KMS:</strong> Practicing data encryption and key
-                  management in AWS.
-                </li>
-              </ul>
-            </motion.div>
-
-            {/* Card 6 */}
-            <motion.div
-              initial={{ opacity: 0, y: 50 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: false, amount: 0.3 }}
-              transition={{ duration: 0.8 }}
-              style={{
-                padding: "2rem",
-                borderRadius: "12px",
-                boxShadow: "0 8px 12px rgba(0, 0, 0, 0.1)",
-              }}
-              className="bg-white dark:bg-black text-black dark:text-white"
-            >
-              <h3 style={{ fontWeight: "bold", fontSize: "1.5rem" }}>
-                Cloud Cost Management Tools
-              </h3>
-              <ul>
-                <li>
-                  <strong>AWS Cost Explorer:</strong> Tracking AWS usage and optimizing
-                  costs.
-                </li>
-                <li>
-                  <strong>Spot.io:</strong> Learning to optimize EC2 spot instance
-                  costs and cloud efficiency.
-                </li>
-              </ul>
-            </motion.div>
-          </div>
-        </motion.section>
+{/* Learning Topic Details Modal */}
+{selectedTopic && (
+  <DetailedInfoModal
+    isOpen={!!selectedTopic}
+    title={learningData.find(t => t.id === selectedTopic)?.title || ""}
+    content={learningData.find(t => t.id === selectedTopic)?.details || ""}
+    onClose={() => setSelectedTopic(null)}
+  />
+)}
+        </div>
+</motion.section>
       </div>
        {/* Section 6 - My Skills */}
        <motion.section
