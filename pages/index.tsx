@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { motion, useAnimation, useSpring, useMotionValue } from "framer-motion";
 import { Github, Linkedin, Instagram, Sun, Moon } from "lucide-react";
-import { CustomCursor } from "@/components/ui/CustomCursor"; // Custom Cursor Component
+import { CloudCursor } from "@/components/ui/CloudCursor"; // Custom Cursor Component
 import ContactModal from "@/components/ui/ContactModal"; // Modal Component
 import HoverImage from "@/components/ui/HoverImage";
 import DetailedInfoModal from "@/components/ui/DetailedInfoModal";
@@ -178,9 +178,8 @@ const handleSendMessage = async () => {
 
   return (
     <div className="min-h-screen snap-y snap-mandatory overflow-y-scroll transition-all duration-1000 ease-in-out">
-      {/* Custom Cursor */}
-      <CustomCursor />
-
+{/* Cloud Cursor */}
+<CloudCursor />
       {/* Updated Header with Elegant Font */}
       <header className="bg-white dark:bg-black shadow sticky top-0 z-50">
   <div className="container mx-auto px-4 py-3 flex justify-between items-center">
@@ -300,167 +299,123 @@ const handleSendMessage = async () => {
         {/* Section 3 - Projects */}
         <motion.section
   id="projects"
-  className="snap-start"
-  style={{
-    height: "100vh",
-    padding: "6rem 3rem",
-    display: "flex",
-    alignItems: "flex-start",
-    gap: "3rem",
-  }}
+  className="snap-start min-h-screen py-16 px-6 md:px-10 flex flex-col items-center"
   initial={{ opacity: 0 }}
   whileInView={{ opacity: 1 }}
   exit={{ opacity: 0 }}
   viewport={{ once: false, amount: 0.5 }}
   transition={{ duration: 0.8 }}
 >
-<h2
-  style={{
-    flex: 1,
-    fontSize: "3rem",
-    fontWeight: "bold",
-    textAlign: "left",
-  }}
-  className="text-black dark:text-white"
->
-  Projects
-</h2>
-<div
-  className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8"
->
-{projectData.map((project) => (
-  <ClickableInfoCard
-    key={project.id}
-    title={project.title}
-    summary={project.summary}
-    onClick={() => setSelectedProject(project.id)}
-  />
-))}
+  <div className="text-center mb-12">
+    <h2 className="text-5xl md:text-6xl font-bold text-black dark:text-white mb-3">
+      Projects
+    </h2>
+    <p className="text-xl text-gray-600 dark:text-gray-400">
+      Explore my cloud engineering projects and implementations
+    </p>
+  </div>
+  
+  <div className="w-full max-w-7xl grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+    {projectData.map((project) => (
+      <ClickableInfoCard
+        key={project.id}
+        title={project.title}
+        summary={project.summary}
+        onClick={() => setSelectedProject(project.id)}
+      />
+    ))}
+  </div>
 
-{/* Project Details Modal */}
-{selectedProject && (
-  <DetailedInfoModal
-    isOpen={!!selectedProject}
-    title={projectData.find(p => p.id === selectedProject)?.title || ""}
-    content={projectData.find(p => p.id === selectedProject)?.details || ""}
-    onClose={() => setSelectedProject(null)}
-  />
-)}
-   </div>
-   </motion.section>
+  {/* Project Details Modal */}
+  {selectedProject && (
+    <DetailedInfoModal
+      isOpen={!!selectedProject}
+      title={projectData.find(p => p.id === selectedProject)?.title || ""}
+      content={projectData.find(p => p.id === selectedProject)?.details || ""}
+      onClose={() => setSelectedProject(null)}
+    />
+  )}
+</motion.section>
 
         {/* Section 4 - Certificates */}
         <motion.section
   id="certificates"
-  className="snap-start"
-  style={{
-    height: "100vh",
-    padding: "6rem 3rem",
-    display: "flex",
-    alignItems: "flex-start",
-    gap: "3rem",
-  }}
+  className="snap-start min-h-screen py-16 px-6 md:px-10 flex flex-col items-center"
   initial={{ opacity: 0 }}
   whileInView={{ opacity: 1 }}
   exit={{ opacity: 0 }}
   viewport={{ once: false, amount: 0.5 }}
   transition={{ duration: 0.8 }}
 >
-  <h2
-    style={{
-      flex: 1,
-      fontSize: "3rem",
-      fontWeight: "bold",
-      textAlign: "left",
-    }}
-    className="text-black dark:text-white"
-  >
-    Certificates
-  </h2>
-  <div
-  style={{
-    flex: 2,
-    display: "grid",
-    gap: "2.5rem",
-    gridTemplateColumns: "repeat(2, 1fr)",
-  }}
->
-    {/* Keep your existing certificate cards here */}
-    {certificateData.map((certificate) => (
-  <ClickableInfoCard
-    key={certificate.id}
-    title={certificate.title}
-    summary={certificate.summary}
-    onClick={() => setSelectedCertificate(certificate.id)}
-  />
-))}
-
-{/* Certificate Details Modal */}
-{selectedCertificate && (
-  <DetailedInfoModal
-    isOpen={!!selectedCertificate}
-    title={certificateData.find(c => c.id === selectedCertificate)?.title || ""}
-    content={certificateData.find(c => c.id === selectedCertificate)?.details || ""}
-    onClose={() => setSelectedCertificate(null)}
-  />
-)}
+  <div className="text-center mb-12">
+    <h2 className="text-5xl md:text-6xl font-bold text-black dark:text-white mb-3">
+      Certificates
+    </h2>
+    <p className="text-xl text-gray-600 dark:text-gray-400">
+      Professional certifications and credentials
+    </p>
   </div>
+  
+  <div className="w-full max-w-7xl grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+    {certificateData.map((certificate) => (
+      <ClickableInfoCard
+        key={certificate.id}
+        title={certificate.title}
+        summary={certificate.summary}
+        onClick={() => setSelectedCertificate(certificate.id)}
+      />
+    ))}
+  </div>
+
+  {/* Certificate Details Modal */}
+  {selectedCertificate && (
+    <DetailedInfoModal
+      isOpen={!!selectedCertificate}
+      title={certificateData.find(c => c.id === selectedCertificate)?.title || ""}
+      content={certificateData.find(c => c.id === selectedCertificate)?.details || ""}
+      onClose={() => setSelectedCertificate(null)}
+    />
+  )}
 </motion.section>
 
         {/* Section 5 - Currently Learning */}
         <motion.section
   id="currently-learning"
+  className="snap-start min-h-screen py-16 px-6 md:px-10 flex flex-col items-center"
   initial={{ opacity: 0 }}
   whileInView={{ opacity: 1 }}
   viewport={{ once: false, amount: 0.2 }}
   transition={{ duration: 0.8 }}
-  style={{
-    height: "100vh",
-    padding: "5rem 3rem",
-    display: "flex",
-    alignItems: "flex-start",
-    gap: "2rem",
-  }}
-  className="snap-start"
 >
-<h2
-  style={{
-    flex: 1,
-    fontSize: "3rem",
-    fontWeight: "bold",
-    textAlign: "left",
-  }}
-  className="text-black dark:text-white"
->
-  Currently Learning
-</h2>
-<div
-  style={{
-    flex: 2,
-    display: "grid",
-    gap: "2.5rem",
-    gridTemplateColumns: "repeat(auto-fit, minmax(350px, 1fr))",
-  }}
->
-{learningData.map((topic) => (
-  <ClickableInfoCard
-    key={topic.id}
-    title={topic.title}
-    summary={<div dangerouslySetInnerHTML={{ __html: topic.summary }} />}
-    onClick={() => setSelectedTopic(topic.id)}
-  />
-))}
+  <div className="text-center mb-12">
+    <h2 className="text-5xl md:text-6xl font-bold text-black dark:text-white mb-3">
+      Currently Learning
+    </h2>
+    <p className="text-xl text-gray-600 dark:text-gray-400">
+      Technologies and tools I'm currently exploring
+    </p>
+  </div>
+  
+  <div className="w-full max-w-7xl grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+    {learningData.map((topic) => (
+      <ClickableInfoCard
+        key={topic.id}
+        title={topic.title}
+        summary={<div dangerouslySetInnerHTML={{ __html: topic.summary }} />}
+        onClick={() => setSelectedTopic(topic.id)}
+      />
+    ))}
+  </div>
 
-{/* Learning Topic Details Modal */}
-{selectedTopic && (
-  <DetailedInfoModal
-    isOpen={!!selectedTopic}
-    title={learningData.find(t => t.id === selectedTopic)?.title || ""}
-    content={learningData.find(t => t.id === selectedTopic)?.details || ""}
-    onClose={() => setSelectedTopic(null)}
-  />
-)}
-        </div>
+  {/* Learning Topic Details Modal */}
+  {selectedTopic && (
+    <DetailedInfoModal
+      isOpen={!!selectedTopic}
+      title={learningData.find(t => t.id === selectedTopic)?.title || ""}
+      content={learningData.find(t => t.id === selectedTopic)?.details || ""}
+      onClose={() => setSelectedTopic(null)}
+    />
+  )}
 </motion.section>
       </div>
       {/* Section 6 - My Skills */}
@@ -470,9 +425,12 @@ const handleSendMessage = async () => {
   whileInView={{ opacity: 1 }}
   viewport={{ once: false, amount: 0.2 }}
   transition={{ duration: 0.8 }}
-  className="snap-start min-h-screen flex flex-col justify-center items-center bg-black text-white px-8"
+  className="snap-start min-h-screen py-16 px-6 md:px-10 flex flex-col items-center bg-black text-white"
 >
-  <h2 className="text-4xl font-semibold mb-12 self-start">My Skills</h2>
+  <div className="text-center mb-12">
+    <h2 className="text-5xl md:text-6xl font-bold mb-3">My Skills</h2>
+    <p className="text-xl text-gray-400">Technical expertise and competencies</p>
+  </div>
 
   {/* Timeline Container */}
   <div className="w-full max-w-5xl grid grid-cols-1 md:grid-cols-2 relative">
