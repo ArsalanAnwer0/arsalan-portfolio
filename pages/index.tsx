@@ -147,35 +147,34 @@ useEffect(() => {
 }, []);
   
   
-  // Add handleSendMessage function
-  const handleSendMessage = async () => {
-    if (!message.trim()) {
-      setStatus("Message is required.");
-      return;
+const handleSendMessage = async () => {
+  if (!message.trim()) {
+    setStatus("Message is required.");
+    return;
+  }
+
+  setStatus("Sending...");
+
+  try {
+    const response = await fetch("/api/sendIdea", {  // Changed from sendMessage to sendIdea
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ message }),
+    });
+
+    if (response.ok) {
+      setStatus("Message sent successfully!");
+      setMessage(""); // Clear the input field
+    } else {
+      setStatus("Failed to send message. Please try again.");
     }
-
-    setStatus("Sending...");
-
-    try {
-      const response = await fetch("/api/sendMessage", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ message }),
-      });
-
-      if (response.ok) {
-        setStatus("Message sent successfully!");
-        setMessage(""); // Clear the input field
-      } else {
-        setStatus("Failed to send message. Please try again.");
-      }
-    } catch (error) {
-      console.error("Error:", error);
-      setStatus("An error occurred while sending the message.");
-    }
-  };
+  } catch (error) {
+    console.error("Error:", error);
+    setStatus("An error occurred while sending the message.");
+  }
+};
 
   return (
     <div className="min-h-screen snap-y snap-mandatory overflow-y-scroll transition-all duration-1000 ease-in-out">
@@ -464,8 +463,8 @@ useEffect(() => {
         </div>
 </motion.section>
       </div>
-       {/* Section 6 - My Skills */}
-       <motion.section
+      {/* Section 6 - My Skills */}
+<motion.section
   id="my-skills"
   initial={{ opacity: 0 }}
   whileInView={{ opacity: 1 }}
@@ -479,73 +478,85 @@ useEffect(() => {
   <div className="w-full max-w-5xl grid grid-cols-1 md:grid-cols-2 relative">
     
     {/* Left Side */}
-    <div className="space-y-8 text-right pr-8 md:text-right md:pr-8">
+    <div className="space-y-6 text-right pr-8 md:text-right md:pr-8">
       <div>
         <h3 className="text-lg font-bold">AWS</h3>
         <p className="text-sm text-gray-400">Expert</p>
-        <p className="text-sm">4 years</p>
       </div>
       <div>
         <h3 className="text-lg font-bold">Kubernetes</h3>
         <p className="text-sm text-gray-400">Intermediate</p>
-        <p className="text-sm">4 years</p>
       </div>
       <div>
         <h3 className="text-lg font-bold">CI/CD</h3>
         <p className="text-sm text-gray-400">Advanced</p>
-        <p className="text-sm">3 years</p>
       </div>
       <div>
         <h3 className="text-lg font-bold">Linux</h3>
         <p className="text-sm text-gray-400">Advanced</p>
-        <p className="text-sm">4 years</p>
       </div>
       <div>
         <h3 className="text-lg font-bold">Security</h3>
         <p className="text-sm text-gray-400">Intermediate</p>
-        <p className="text-sm">2 years</p>
       </div>
       <div>
         <h3 className="text-lg font-bold">Ansible</h3>
         <p className="text-sm text-gray-400">Advanced</p>
-        <p className="text-sm">4 years</p>
+      </div>
+      <div>
+        <h3 className="text-lg font-bold">Git/GitHub</h3>
+        <p className="text-sm text-gray-400">Advanced</p>
+      </div>
+      <div>
+        <h3 className="text-lg font-bold">Bash/Shell Scripting</h3>
+        <p className="text-sm text-gray-400">Intermediate</p>
+      </div>
+      <div>
+        <h3 className="text-lg font-bold">Prometheus</h3>
+        <p className="text-sm text-gray-400">Advanced</p>
       </div>
     </div>
 
-    {/* Bigger Timeline */}
+    {/* Vertical Timeline */}
     <div className="absolute left-4 md:left-1/2 top-0 bottom-0 md:transform md:-translate-x-1/2 w-[2px] h-full bg-gray-500 rounded-lg"></div>
 
     {/* Right Side */}
-    <div className="space-y-6 md:space-y-8 pl-8">
+    <div className="space-y-6 pl-8">
+      <div>
+        <h3 className="text-lg font-bold">Azure</h3>
+        <p className="text-sm text-gray-400">Intermediate</p>
+      </div>
       <div>
         <h3 className="text-lg font-bold">Docker</h3>
         <p className="text-sm text-gray-400">Advanced</p>
-        <p className="text-sm">5 years</p>
       </div>
       <div>
         <h3 className="text-lg font-bold">Terraform</h3>
         <p className="text-sm text-gray-400">Advanced</p>
-        <p className="text-sm">3 years</p>
       </div>
       <div>
         <h3 className="text-lg font-bold">Python</h3>
         <p className="text-sm text-gray-400">Intermediate</p>
-        <p className="text-sm">5 years</p>
       </div>
       <div>
         <h3 className="text-lg font-bold">Networking</h3>
         <p className="text-sm text-gray-400">Intermediate</p>
-        <p className="text-sm">3 years</p>
-      </div>
-      <div>
-        <h3 className="text-lg font-bold">Azure</h3>
-        <p className="text-sm text-gray-400">Intermediate</p>
-        <p className="text-sm">3 years</p>
       </div>
       <div>
         <h3 className="text-lg font-bold">Monitoring</h3>
         <p className="text-sm text-gray-400">Advanced</p>
-        <p className="text-sm">3 years</p>
+      </div>
+      <div>
+        <h3 className="text-lg font-bold">Jenkins</h3>
+        <p className="text-sm text-gray-400">Advanced</p>
+      </div>
+      <div>
+        <h3 className="text-lg font-bold">Grafana</h3>
+        <p className="text-sm text-gray-400">Advanced</p>
+      </div>
+      <div>
+        <h3 className="text-lg font-bold">LitmusChaos</h3>
+        <p className="text-sm text-gray-400">Intermediate</p>
       </div>
     </div>
   </div>

@@ -1,13 +1,14 @@
 // pages/api/sendMessage.ts
 import type { NextApiRequest, NextApiResponse } from "next";
 import nodemailer from "nodemailer";
+import clientPromise from "../../lib/mongodb"; // Add this import
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== "POST") {
     return res.status(405).json({ message: "Method not allowed" });
   }
 
-  const { email, message } = req.body;
+  const { name, email, message } = req.body; // Add name to destructuring
 
   // Validate input: Only `message` is mandatory for feedback
   if (!message) {
@@ -15,6 +16,26 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   try {
+    // 1. Store message in MongoDB (NEW CODE - ADD THIS SECTION)
+    try {
+      const client = await clientPromise;
+      const db = client.db("portfolio");
+      
+      await db.collection("contact_messages").insertOne({
+        name: name || "Anonymous",
+        email: email || "Not provided",
+        message,
+        timestamp: new Date()
+      });
+      
+      console.log("Message stored in database");
+    } catch (dbError) {
+      console.error("Error storing in database:", dbError);
+      // Continue with email sending even if DB storage fails
+    }
+    // END OF NEW CODE
+
+    // 2. Send email (your existing functionality - no changes here)
     const transporter = nodemailer.createTransport({
       host: process.env.EMAIL_HOST,
       port: parseInt(process.env.EMAIL_PORT || "587"),
