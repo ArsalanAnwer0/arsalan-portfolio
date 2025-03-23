@@ -9,6 +9,7 @@ import HoverImage from "@/components/ui/HoverImage";
 import DetailedInfoModal from "@/components/ui/DetailedInfoModal";
 import ClickableInfoCard from "@/components/ui/ClickableInfoCard";
 import { projectData, certificateData, learningData } from "../data/CardData";
+import SkillsSection from "@/components/ui/SkillsSection";
 
 function throttle(
   func: (...args: any[]) => void, // or more specific type if you know it
@@ -418,136 +419,44 @@ const handleSendMessage = async () => {
   )}
 </motion.section>
       </div>
-      {/* Section 6 - My Skills */}
-<motion.section
-  id="my-skills"
-  initial={{ opacity: 0 }}
-  whileInView={{ opacity: 1 }}
-  viewport={{ once: false, amount: 0.2 }}
-  transition={{ duration: 0.8 }}
-  className="snap-start min-h-screen py-16 px-6 md:px-10 flex flex-col items-center bg-black text-white"
->
-  <div className="text-center mb-12">
-    <h2 className="text-5xl md:text-6xl font-bold mb-3">My Skills</h2>
-    <p className="text-xl text-gray-400">Technical expertise and competencies</p>
-  </div>
-
-  {/* Timeline Container */}
-  <div className="w-full max-w-5xl grid grid-cols-1 md:grid-cols-2 relative">
-    
-    {/* Left Side */}
-    <div className="space-y-6 text-right pr-8 md:text-right md:pr-8">
-      <div>
-        <h3 className="text-lg font-bold">AWS</h3>
-        <p className="text-sm text-gray-400">Expert</p>
-      </div>
-      <div>
-        <h3 className="text-lg font-bold">Kubernetes</h3>
-        <p className="text-sm text-gray-400">Intermediate</p>
-      </div>
-      <div>
-        <h3 className="text-lg font-bold">CI/CD</h3>
-        <p className="text-sm text-gray-400">Advanced</p>
-      </div>
-      <div>
-        <h3 className="text-lg font-bold">Linux</h3>
-        <p className="text-sm text-gray-400">Advanced</p>
-      </div>
-      <div>
-        <h3 className="text-lg font-bold">Security</h3>
-        <p className="text-sm text-gray-400">Intermediate</p>
-      </div>
-      <div>
-        <h3 className="text-lg font-bold">Ansible</h3>
-        <p className="text-sm text-gray-400">Advanced</p>
-      </div>
-      <div>
-        <h3 className="text-lg font-bold">Git/GitHub</h3>
-        <p className="text-sm text-gray-400">Advanced</p>
-      </div>
-      <div>
-        <h3 className="text-lg font-bold">Bash/Shell Scripting</h3>
-        <p className="text-sm text-gray-400">Intermediate</p>
-      </div>
-      <div>
-        <h3 className="text-lg font-bold">Prometheus</h3>
-        <p className="text-sm text-gray-400">Advanced</p>
-      </div>
-    </div>
-
-    {/* Vertical Timeline */}
-    <div className="absolute left-4 md:left-1/2 top-0 bottom-0 md:transform md:-translate-x-1/2 w-[2px] h-full bg-gray-500 rounded-lg"></div>
-
-    {/* Right Side */}
-    <div className="space-y-6 pl-8">
-      <div>
-        <h3 className="text-lg font-bold">Azure</h3>
-        <p className="text-sm text-gray-400">Intermediate</p>
-      </div>
-      <div>
-        <h3 className="text-lg font-bold">Docker</h3>
-        <p className="text-sm text-gray-400">Advanced</p>
-      </div>
-      <div>
-        <h3 className="text-lg font-bold">Terraform</h3>
-        <p className="text-sm text-gray-400">Advanced</p>
-      </div>
-      <div>
-        <h3 className="text-lg font-bold">Python</h3>
-        <p className="text-sm text-gray-400">Intermediate</p>
-      </div>
-      <div>
-        <h3 className="text-lg font-bold">Networking</h3>
-        <p className="text-sm text-gray-400">Intermediate</p>
-      </div>
-      <div>
-        <h3 className="text-lg font-bold">Monitoring</h3>
-        <p className="text-sm text-gray-400">Advanced</p>
-      </div>
-      <div>
-        <h3 className="text-lg font-bold">Jenkins</h3>
-        <p className="text-sm text-gray-400">Advanced</p>
-      </div>
-      <div>
-        <h3 className="text-lg font-bold">Grafana</h3>
-        <p className="text-sm text-gray-400">Advanced</p>
-      </div>
-      <div>
-        <h3 className="text-lg font-bold">LitmusChaos</h3>
-        <p className="text-sm text-gray-400">Intermediate</p>
-      </div>
-    </div>
-  </div>
-</motion.section>
+      <SkillsSection />
 
 {/* Footer */}
 <footer className="w-full py-6 bg-black text-white flex justify-center items-center border-t border-gray-700 px-4">
-  <div className="flex flex-wrap items-center justify-center gap-4 md:gap-6">
-    {/* GitHub */}
-    <a href="https://github.com/ArsalanAnwer0" target="_blank" rel="noopener noreferrer">
-      <Github className="h-6 w-6 text-gray-400 hover:text-white transition" />
-    </a>
+  <div className="w-full max-w-7xl flex flex-col md:flex-row justify-between items-center">
+    {/* Copyright */}
+    <div className="mb-4 md:mb-0 text-gray-400 text-sm">
+      © {new Date().getFullYear()} Arsalan. All rights reserved.
+    </div>
 
-    {/* LinkedIn */}
-    <a href="https://www.linkedin.com/in/arsalan-anwer-272004310/" target="_blank" rel="noopener noreferrer">
-      <Linkedin className="h-6 w-6 text-gray-400 hover:text-white transition" />
-    </a>
+    {/* Social Links and Contact */}
+    <div className="flex items-center gap-6">
+      {/* GitHub */}
+      <a href="https://github.com/ArsalanAnwer0" target="_blank" rel="noopener noreferrer">
+        <Github className="h-6 w-6 text-gray-400 hover:text-white transition" />
+      </a>
 
-    {/* Instagram */}
-    <a href="https://www.instagram.com/_arsalan.ansari/" target="_blank" rel="noopener noreferrer">
-      <Instagram className="h-6 w-6 text-gray-400 hover:text-white transition" />
-    </a>
+      {/* LinkedIn */}
+      <a href="https://www.linkedin.com/in/arsalan-anwer-272004310/" target="_blank" rel="noopener noreferrer">
+        <Linkedin className="h-6 w-6 text-gray-400 hover:text-white transition" />
+      </a>
 
-    {/* Contact Button */}
-    <Button
-      className="text-white bg-gray-800 hover:bg-gray-700 px-4 py-2 rounded-lg border border-gray-600 transition"
-      onClick={() => setIsModalOpen(true)}
-    >
-      Contact
-    </Button>
+      {/* Instagram */}
+      <a href="https://www.instagram.com/_arsalan.ansari/" target="_blank" rel="noopener noreferrer">
+        <Instagram className="h-6 w-6 text-gray-400 hover:text-white transition" />
+      </a>
 
-    {isModalOpen && <ContactModal onClose={() => setIsModalOpen(false)} />}
+      {/* Contact Button */}
+      <Button
+        className="text-white bg-gray-800 hover:bg-gray-700 px-6 py-2 rounded-lg border border-gray-600 transition"
+        onClick={() => setIsModalOpen(true)}
+      >
+        Contact
+      </Button>
+    </div>
   </div>
+  
+  {isModalOpen && <ContactModal onClose={() => setIsModalOpen(false)} />}
 </footer>
     </div>
   );
