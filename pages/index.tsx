@@ -10,6 +10,8 @@ import DetailedInfoModal from "@/components/ui/DetailedInfoModal";
 import ClickableInfoCard from "@/components/ui/ClickableInfoCard";
 import { projectData, certificateData, learningData } from "../data/CardData";
 import SkillsSection from "@/components/ui/SkillsSection";
+import ParticleBackground from "@/components/ui/ParticleBackground";
+
 
 function throttle(
   func: (...args: any[]) => void, // or more specific type if you know it
@@ -58,6 +60,7 @@ const SkillItem: React.FC<{ title: string; level: string; years: string }> = ({ 
       initial={{ opacity: 0, y: 10 }}
       whileInView={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
+      style={{ position: 'relative', zIndex: 2 }}
     >
       <div className="flex justify-between items-center mb-2">
         <h3 className="text-lg font-bold">{title}</h3>
@@ -178,8 +181,9 @@ const handleSendMessage = async () => {
 };
 
   return (
-    <div className="min-h-screen snap-y snap-mandatory overflow-y-scroll transition-all duration-1000 ease-in-out">
+    <div className="min-h-screen snap-y snap-mandatory overflow-y-scroll transition-all duration-1000 ease-in-out" style={{ position: 'relative', zIndex: 1 }}>
 {/* Cloud Cursor */}
+<ParticleBackground />
 <CloudCursor />
       {/* Updated Header with Elegant Font */}
       <header className="bg-white dark:bg-black shadow sticky top-0 z-50">
@@ -209,6 +213,7 @@ const handleSendMessage = async () => {
         exit={{ opacity: 0 }}
         viewport={{ once: false, amount: 0.5 }}
         transition={{ duration: 1 }}
+        style={{ position: 'relative', zIndex: 2 }}
       >
         <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-8xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 dark:from-gray-100 dark:to-gray-400 bg-clip-text text-transparent text-center">
           Building the future<br /> with cloud technology
@@ -256,6 +261,7 @@ const handleSendMessage = async () => {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: false, amount: 0.3 }}
             transition={{ duration: 0.8, ease: "easeInOut" }}
+            style={{ position: 'relative', zIndex: 2 }}
           >
             <h2 className="text-3xl md:text-4xl font-light dark:text-white mb-6">
               Hello
@@ -275,6 +281,7 @@ const handleSendMessage = async () => {
   whileInView={{ opacity: 1, x: 0 }}
   viewport={{ once: false, amount: 0.3 }}
   transition={{ duration: 0.8, ease: "easeInOut" }}
+  style={{ position: 'relative', zIndex: 2 }}
 >
   <motion.img
     src="/Arsalan.jpg" // Update this path to your actual image
@@ -294,9 +301,9 @@ const handleSendMessage = async () => {
       </motion.section>
 
       <div
-        className="bg-gray-50 dark:bg-black min-h-screen snap-y snap-mandatory overflow-y-scroll"
-        style={{ scrollBehavior: "smooth" }}
-      >
+  className="bg-gray-50/90 dark:bg-black/90 min-h-screen snap-y snap-mandatory overflow-y-scroll"
+  style={{ scrollBehavior: "smooth", zIndex: 10 }}
+>
         {/* Section 3 - Projects */}
         <motion.section
   id="projects"
@@ -306,6 +313,7 @@ const handleSendMessage = async () => {
   exit={{ opacity: 0 }}
   viewport={{ once: false, amount: 0.5 }}
   transition={{ duration: 0.8 }}
+  style={{ position: 'relative', zIndex: 2 }}
 >
   <div className="text-center mb-12">
     <h2 className="text-5xl md:text-6xl font-bold text-black dark:text-white mb-3">
@@ -347,6 +355,7 @@ const handleSendMessage = async () => {
   exit={{ opacity: 0 }}
   viewport={{ once: false, amount: 0.5 }}
   transition={{ duration: 0.8 }}
+  style={{ position: 'relative', zIndex: 2 }}
 >
   <div className="text-center mb-12">
     <h2 className="text-5xl md:text-6xl font-bold text-black dark:text-white mb-3">
@@ -387,6 +396,7 @@ const handleSendMessage = async () => {
   whileInView={{ opacity: 1 }}
   viewport={{ once: false, amount: 0.2 }}
   transition={{ duration: 0.8 }}
+  style={{ position: 'relative', zIndex: 2 }}
 >
   <div className="text-center mb-12">
     <h2 className="text-5xl md:text-6xl font-bold text-black dark:text-white mb-3">
@@ -422,7 +432,7 @@ const handleSendMessage = async () => {
       <SkillsSection />
 
 {/* Footer */}
-<footer className="w-full py-6 bg-black text-white flex justify-center items-center border-t border-gray-700 px-4">
+<footer className="w-full py-6 bg-black text-white flex justify-center items-center border-t border-gray-700 px-4" style={{ position: 'relative', zIndex: 2 }}>
   <div className="w-full max-w-7xl flex flex-col md:flex-row justify-between items-center">
     {/* Copyright */}
     <div className="mb-4 md:mb-0 text-gray-400 text-sm">
