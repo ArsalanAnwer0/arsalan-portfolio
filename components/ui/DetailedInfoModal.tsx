@@ -33,16 +33,14 @@ const DetailedInfoModal: React.FC<DetailedInfoModalProps> = ({
     return () => window.removeEventListener("keydown", handleEscKey);
   }, [isOpen, onClose]);
 
-  // Lock scrolling when modal is open
   useEffect(() => {
     if (isOpen) {
+      const originalStyle = document.body.style.overflow;
       document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
+      return () => {
+        document.body.style.overflow = originalStyle;
+      };
     }
-    return () => {
-      document.body.style.overflow = "";
-    };
   }, [isOpen]);
 
   return (

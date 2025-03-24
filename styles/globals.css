@@ -194,10 +194,14 @@ button {
   /* Smoother scrolling */
   html, body {
     scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-y: contain;
   }
-  
+  .snap-start {
+    scroll-snap-align: none !important;
+  }
   .snap-mandatory {
-    scroll-snap-type: y proximity !important;
+    scroll-snap-type: none !important;
   }
   
   .overflow-y-scroll {

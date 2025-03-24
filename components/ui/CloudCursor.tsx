@@ -1,5 +1,7 @@
 'use client';
 
+
+
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, useSpring, useTransform } from 'framer-motion';
 
@@ -11,25 +13,39 @@ export function CloudCursor() {
   const prevPosition = useRef({ x: 0, y: 0 });
   const velocity = useRef({ x: 0, y: 0 });
   const lastUpdateTime = useRef(performance.now());
-  
+
+  const [isMobile, setIsMobile] = useState(true);
+
   // Create more natural cursor movement with separate springs
   // Main cursor spring - fast and responsive
   const mainSpringConfig = { damping: 15, stiffness: 400, mass: 0.15 };
   const mainX = useSpring(0, mainSpringConfig);
   const mainY = useSpring(0, mainSpringConfig);
-  
+    
   // Trail springs - progressively more relaxed for natural trailing
   const trailSpringConfig1 = { damping: 20, stiffness: 250, mass: 0.3 };
   const trailX1 = useSpring(0, trailSpringConfig1);
   const trailY1 = useSpring(0, trailSpringConfig1);
-  
+    
   const trailSpringConfig2 = { damping: 25, stiffness: 180, mass: 0.4 };
   const trailX2 = useSpring(0, trailSpringConfig2);
   const trailY2 = useSpring(0, trailSpringConfig2);
-  
+    
   const trailSpringConfig3 = { damping: 30, stiffness: 120, mass: 0.5 };
   const trailX3 = useSpring(0, trailSpringConfig3);
   const trailY3 = useSpring(0, trailSpringConfig3);
+  
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const checkMobile = () => window.innerWidth <= 768;
+      setIsMobile(checkMobile());
+      
+      // Add window resize listener to update on orientation change
+      window.addEventListener('resize', () => setIsMobile(window.innerWidth <= 768));
+      return () => window.removeEventListener('resize', () => setIsMobile(window.innerWidth <= 768));
+    }
+  }, []);
+
 
   // Handle mouse movement with improved natural motion
   useEffect(() => {
@@ -189,6 +205,10 @@ export function CloudCursor() {
   const speed = getSpeed();
   const trailOpacityBase = 0.7;
   const trailOpacityDelta = 0.25;
+
+    
+  // Move this after all hooks
+  if (isMobile) return null;
 
   return (
     <>

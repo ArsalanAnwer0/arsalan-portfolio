@@ -43,11 +43,11 @@ export default function ContactModal({ onClose }: { onClose: () => void }) {
     }
   };
 
-  // Lock scrolling when modal is open
   useEffect(() => {
+    const originalStyle = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     return () => {
-      document.body.style.overflow = "";
+      document.body.style.overflow = originalStyle;
     };
   }, []);
 
