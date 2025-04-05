@@ -7,9 +7,11 @@ if (!process.env.MONGODB_URI) {
 
 const uri = process.env.MONGODB_URI;
 const options = {
-  tls: true, // use this instead of ssl
-  tlsAllowInvalidCertificates: false,
-  tlsAllowInvalidHostnames: false,
+  tls: true,
+  tlsAllowInvalidCertificates: true, // Changed to true
+  tlsAllowInvalidHostnames: true,    // Changed to true
+  connectTimeoutMS: 5000,            // 5 second timeout
+  socketTimeoutMS: 30000             // 30 second timeout
 };
 
 let client: MongoClient;
