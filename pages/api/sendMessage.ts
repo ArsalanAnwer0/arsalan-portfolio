@@ -41,7 +41,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       // Continue with email even if DB fails
     }
 
-    // Rest of your code remains the same
     const transporter = nodemailer.createTransport({
       host: process.env.EMAIL_HOST,
       port: parseInt(process.env.EMAIL_PORT || "587"),
@@ -49,6 +48,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS,
+      },
+      tls: {
+        rejectUnauthorized: false
       },
       connectionTimeout: 5000,
       greetingTimeout: 5000,
