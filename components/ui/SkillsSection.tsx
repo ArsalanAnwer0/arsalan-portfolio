@@ -178,13 +178,6 @@ const SkillsSection: React.FC = () => {
       transition={{ duration: 0.8 }}
       className="snap-start min-h-screen py-16 px-6 md:px-10 flex flex-col items-center bg-black text-white"
     >
-      <div className="text-center mb-12">
-        <h2 className="text-5xl md:text-6xl font-bold mb-3">Skills</h2>
-        <p className="text-xl text-gray-400">
-          Technical expertise across software development and cloud engineering
-        </p>
-      </div>
-
       <div className="grid grid-cols-1 md:grid-cols-3 gap-12 w-full max-w-7xl">
         {skillsData.map((category) => (
           <div key={category.name} className="space-y-4">
