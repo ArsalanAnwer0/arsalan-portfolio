@@ -5,4 +5,6 @@ node_modules
 public/.DS_Store
 package.json.backup
 tsconfig.tsbuildinfo
-
+.env.local
+.env
+.env.*.local

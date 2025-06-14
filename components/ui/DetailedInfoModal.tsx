@@ -7,13 +7,15 @@ interface DetailedInfoModalProps {
   content: React.ReactNode;
   onClose: () => void;
   isOpen: boolean;
+  scrollProgress?: number;
 }
 
 const DetailedInfoModal: React.FC<DetailedInfoModalProps> = ({
   title,
   content,
   onClose,
-  isOpen
+  isOpen,
+  scrollProgress = 0
 }) => {
   // Handle backdrop click
   const handleBackdropClick = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -55,7 +57,7 @@ const DetailedInfoModal: React.FC<DetailedInfoModalProps> = ({
         >
           {/* Backdrop with blur effect */}
           <motion.div 
-            className="absolute inset-0 bg-black/60 dark:bg-black/70 backdrop-blur-[2px]"
+            className="absolute inset-0 backdrop-blur-[2px] bg-black/70"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -63,9 +65,14 @@ const DetailedInfoModal: React.FC<DetailedInfoModalProps> = ({
             onClick={handleBackdropClick}
           />
           
-          {/* Modal container */}
+          {/* Modal container - Force Grey Background with Inline Styles */}
           <motion.div
-            className="bg-white dark:bg-black rounded-xl shadow-[0_10px_40px_-15px_rgba(0,0,0,0.3)] dark:shadow-[0_10px_40px_-15px_rgba(0,0,0,0.7)] w-full max-w-2xl max-h-[85vh] overflow-hidden relative z-10 border border-gray-200/30 dark:border-gray-800/30"
+            className="rounded-xl w-full max-w-2xl max-h-[85vh] overflow-hidden relative z-10 shadow-2xl"
+            style={{ 
+              backgroundColor: 'rgba(45, 45, 45, 0.85)',
+              borderColor: 'rgba(45, 45, 45, 0.85)',
+              border: '1px solid rgba(45, 45, 45, 0.85)'
+            }}
             initial={{ scale: 0.95, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.98, opacity: 0 }}
@@ -75,26 +82,33 @@ const DetailedInfoModal: React.FC<DetailedInfoModalProps> = ({
               stiffness: 350
             }}
           >
-            {/* Header with elegant styling */}
-            <div className="px-6 py-5 border-b border-gray-200/50 dark:border-gray-800/50 flex justify-between items-center relative">
-              <h2 className="text-xl font-bold text-gray-800 dark:text-white">
+            {/* Header */}
+            <div 
+              className="px-6 py-5 flex justify-between items-center"
+              style={{ 
+                borderBottom: '1px solid rgba(45, 45, 45, 0.85)',
+                backgroundColor: 'rgba(45, 45, 45, 0.85)'
+              }}
+            >
+              <h2 className="text-xl font-semibold" style={{ color: 'white' }}>
                 {title}
               </h2>
               
               <button
                 onClick={onClose}
-                className="w-8 h-8 flex items-center justify-center rounded-full text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-200"
+                className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-700 transition-all duration-300"
+                style={{ color: '#9ca3af' }}
                 aria-label="Close modal"
               >
                 <X size={18} />
               </button>
             </div>
 
-            {/* Content area with custom scrollbar */}
-            <div className="overflow-y-auto modal-scrollbar" style={{ maxHeight: "calc(85vh - 130px)" }}>
-              <div className="p-6">
+            {/* Content area */}
+            <div className="overflow-y-auto" style={{ maxHeight: "calc(85vh - 130px)" }}>
+              <div className="p-6" style={{ backgroundColor: 'rgba(45, 45, 45, 0.85)' }}>
                 <div 
-                  className="prose dark:prose-invert prose-headings:font-bold prose-a:text-blue-600 dark:prose-a:text-blue-400 max-w-none" 
+                  style={{ color: 'white' }}
                   dangerouslySetInnerHTML={{ __html: content as string }} 
                 />
               </div>

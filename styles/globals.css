@@ -2,7 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+/* MINIMAL FIX FOR WHITE LINE ISSUE */
 html, body {
+  margin: 0;
+  padding: 0;
   transition: background-color 0.7s ease-in-out, color 0.7s ease-in-out;
 }
 
@@ -20,8 +23,6 @@ body {
 *, *::before, *::after {
   transition: background-color 0.7s ease-in-out, color 0.7s ease-in-out;
 }
-
-
 
 /* Smooth Snap Scrolling */
 main {

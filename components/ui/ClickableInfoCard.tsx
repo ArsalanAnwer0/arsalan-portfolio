@@ -5,45 +5,72 @@ interface ClickableInfoCardProps {
   title: string;
   summary: string | React.ReactNode;
   onClick: () => void;
+  scrollProgress?: number;
 }
 
 const ClickableInfoCard: React.FC<ClickableInfoCardProps> = ({
   title,
   summary,
-  onClick
+  onClick,
+  scrollProgress = 0
 }) => {
+  // Dynamic styling based on scroll progress
+  const getTitleColor = () => {
+    return scrollProgress > 0.4 ? 'text-white' : 'text-gray-900';
+  };
+
+  const getSummaryColor = () => {
+    return scrollProgress > 0.4 ? 'text-gray-200' : 'text-gray-700';
+  };
+
+  const getLearnMoreColor = () => {
+    return scrollProgress > 0.4 ? 'text-gray-300 hover:text-white' : 'text-gray-500 hover:text-gray-900';
+  };
+
+  const getHoverBg = () => {
+    return scrollProgress > 0.4 
+      ? 'hover:bg-white/5' 
+      : 'hover:bg-black/5';
+  };
+
   return (
     <motion.div
       onClick={onClick}
-      className="p-6 md:p-8 rounded-xl bg-white dark:bg-black text-black dark:text-white shadow-md cursor-pointer hover:shadow-xl transition-all duration-300 border border-transparent hover:border-gray-200 dark:hover:border-gray-800"
+      className={`p-6 md:p-8 cursor-pointer transition-all duration-700 rounded-lg ${getHoverBg()}`}
       initial={{ opacity: 0, y: 50 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: false, amount: 0.3 }}
       transition={{ duration: 0.8 }}
       whileHover={{ 
-        scale: 1.02,
-        boxShadow: "0 10px 25px rgba(0, 0, 0, 0.1)"
+        scale: 1.01,
+        y: -2
       }}
-      whileTap={{ scale: 0.98 }}
+      whileTap={{ scale: 0.99 }}
     >
-      <h3 className="font-bold text-xl mb-4">{title}</h3>
+      <h3 className={`font-bold text-xl md:text-2xl mb-4 transition-colors duration-700 ${getTitleColor()}`}>
+        {title}
+      </h3>
       
       {typeof summary === "string" ? (
-        <p>{summary}</p>
+        <p className={`text-base md:text-lg leading-relaxed mb-6 transition-colors duration-700 ${getSummaryColor()}`}>
+          {summary}
+        </p>
       ) : (
-        <div>{summary}</div>
+        <div className={`text-base md:text-lg leading-relaxed mb-6 transition-colors duration-700 ${getSummaryColor()}`}>
+          {summary}
+        </div>
       )}
       
-      <div className="mt-4 flex justify-end">
+      <div className="flex justify-end">
         <motion.div
-          className="text-sm font-medium text-gray-500 dark:text-gray-400 flex items-center"
-          initial={{ opacity: 0.6 }}
-          whileHover={{ opacity: 1 }}
+          className={`text-sm font-medium flex items-center transition-all duration-700 ${getLearnMoreColor()}`}
+          initial={{ opacity: 0.7 }}
+          whileHover={{ opacity: 1, x: 5 }}
         >
           Learn more
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            className="h-4 w-4 ml-1"
+            className="h-4 w-4 ml-1 transition-transform duration-300"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"

@@ -1,194 +1,301 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import ContactModal from "@/components/ui/ContactModal";
-import { Github, Linkedin, Instagram } from "lucide-react";
+import { Github, Linkedin, Instagram, Heart, Compass, Target, Sparkles } from "lucide-react";
 import ParticleBackground from "@/components/ui/ParticleBackground";
-import { CloudCursor } from "@/components/ui/CloudCursor";
 
 export default function Info() {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [scrollProgress, setScrollProgress] = useState(0);
 
-  // Sample data for Interests and Hobbies
-  const [interests] = useState([
-    { title: "Art Direction", desc: "Leading the visual direction for projects and campaigns." },
-    { title: "Digital-First Branding", desc: "Crafting brand identities for the modern, digital era." },
-    { title: "Visual Design", desc: "Designing engaging visuals that captivate audiences." },
-    { title: "UI Design", desc: "Creating interfaces with clarity and usability in mind." },
-  ]);
+  // Track scroll progress for gradient transition
+  useEffect(() => {
+    const handleScroll = () => {
+      const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = Math.min(window.scrollY / totalHeight, 1);
+      setScrollProgress(progress);
+    };
 
-  const [hobbies] = useState([
-    { title: "Photography", desc: "Capturing life’s moments through a camera lens." },
-    { title: "Traveling", desc: "Exploring diverse cultures and cuisines around the globe." },
-    { title: "Cooking", desc: "Experimenting with recipes and flavors in the kitchen." },
-    { title: "Gaming", desc: "Diving into interactive worlds for fun and relaxation." },
-  ]);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
-  // Expand/Collapse states for Interests and Hobbies
-  const [expandedInterest, setExpandedInterest] = useState<number | null>(null);
-  const [expandedHobby, setExpandedHobby] = useState<number | null>(null);
-
-  const toggleInterest = (index: number) => {
-    setExpandedInterest(prev => (prev === index ? null : index));
+  // Calculate background color based on scroll progress
+  const getBackgroundStyle = () => {
+    const greyIntensity = Math.min(scrollProgress * 1.2, 0.85); // Max 85% grey, smoother transition
+    return {
+      background: `linear-gradient(180deg, 
+        rgba(255, 255, 255, ${1 - greyIntensity}) 0%, 
+        rgba(45, 45, 45, ${greyIntensity}) 100%)`
+    };
   };
 
-  const toggleHobby = (index: number) => {
-    setExpandedHobby(prev => (prev === index ? null : index));
+  // Calculate text colors based on scroll progress
+  const getTextColor = (threshold = 0.3) => {
+    return scrollProgress > threshold ? 'text-white' : 'text-black';
   };
 
-  // Inline style for the Inter font (adjust fontFamily as needed)
-  const interStyle = { fontFamily: "'Inter', sans-serif" };
+  const getSubTextColor = (threshold = 0.3) => {
+    return scrollProgress > threshold ? 'text-gray-200' : 'text-gray-600';
+  };
+
+  const getBorderColor = (threshold = 0.3) => {
+    return scrollProgress > threshold ? 'border-gray-500' : 'border-gray-200';
+  };
+
+  const getHeaderBg = () => {
+    // Use a consistent transparent background instead of switching colors
+    return 'bg-transparent backdrop-blur-sm';
+  };
+
+  // Animation variants
+  const fadeInUp = {
+    initial: { opacity: 0, y: 60 },
+    animate: { opacity: 1, y: 0 },
+    transition: { duration: 0.8, ease: "easeOut" }
+  };
+
+  const staggerChildren = {
+    animate: {
+      transition: {
+        staggerChildren: 0.1
+      }
+    }
+  };
+
+  const slideInLeft = {
+    initial: { opacity: 0, x: -60 },
+    animate: { opacity: 1, x: 0 },
+    transition: { duration: 0.8, ease: "easeOut" }
+  };
+
+  const slideInRight = {
+    initial: { opacity: 0, x: 60 },
+    animate: { opacity: 1, x: 0 },
+    transition: { duration: 0.8, ease: "easeOut" }
+  };
 
   return (
-    <div
-      className="snap-y snap-mandatory overflow-y-scroll bg-white text-black"
-      style={{ position: "relative", zIndex: 1 }}
-    >
-      {/* Background Effects & Custom Cursor */}
+    <div className="text-black overflow-x-hidden transition-all duration-1000 ease-in-out" style={{ ...getBackgroundStyle(), position: "relative", zIndex: 1 }}>
+      {/* Background Effects */}
       <ParticleBackground />
-      <CloudCursor />
 
-      {/* HEADER (Sticky & Centered, no bottom border) */}
-      <header className="sticky top-0 z-50 bg-white border-none shadow-none">
-        <nav className="max-w-7xl mx-auto px-6 py-6 flex justify-center gap-12 text-xl font-light" style={{ textDecoration: "none" }}>
-          <a href="/" className="hover:opacity-70 transition-opacity duration-300">Home</a>
-          <a href="/info" className="hover:opacity-70 transition-opacity duration-300">Info</a>
+      {/* HEADER */}
+      <header className={`sticky top-0 z-50 backdrop-blur-sm transition-all duration-500 ${getHeaderBg()}`}>
+        <nav className={`max-w-7xl mx-auto px-6 py-10 flex justify-center gap-16 text-lg font-light tracking-wide transition-colors duration-500 ${getTextColor(0.2)}`} style={{ fontFamily: "'Inter', 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" }}>
+          <a href="/" className="hover:opacity-60 transition-all duration-300">Home</a>
+          <a href="/info" className="opacity-60">Info</a>
         </nav>
       </header>
 
-      {/* SECTION 1: ABOUT – Fullscreen snap */}
-      <motion.section
-        className="snap-start h-screen flex flex-col justify-center px-8 py-16"
-        initial={{ opacity: 0, y: 10 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8 }}
-        viewport={{ once: true, amount: 0.8 }}
-      >
-        <h2 className="text-5xl font-bold mb-8" style={interStyle}>About</h2>
-        <motion.p
-          className="text-5xl font-light leading-tight"
-          style={interStyle}
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true, amount: 0.8 }}
-        >
-          Arsalan is a digital thinker & creative technologist on a mission to inspire emotional connection between brands and humans in the digital realm.
-        </motion.p>
-      </motion.section>
-
-      {/* SECTION 2: INTERESTS – Fullscreen snap */}
-      <motion.section
-        className="snap-start h-screen flex flex-col justify-center px-8 py-16"
-        initial={{ opacity: 0, y: 10 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8 }}
-        viewport={{ once: true, amount: 0.8 }}
-      >
-        <h2 className="text-5xl font-bold mb-8" style={interStyle}>Interests</h2>
-        <div className="space-y-6">
-          {interests.map((item, idx) => {
-            const isExpanded = expandedInterest === idx;
-            return (
-              <motion.div
-                key={idx}
-                className="border-b border-gray-300 pb-4"
-                initial={{ opacity: 0, y: 10 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: idx * 0.05 }}
-                viewport={{ once: true }}
-              >
-                <div className="flex justify-between items-center">
-                  <span className="text-3xl font-normal" style={interStyle}>{item.title}</span>
-                  <button
-                    onClick={() => toggleInterest(idx)}
-                    className="text-4xl font-bold text-gray-500 hover:text-gray-800 transition-colors"
-                  >
-                    {isExpanded ? "–" : "+"}
-                  </button>
-                </div>
-                {isExpanded && (
-                  <motion.p
-                    className="mt-2 text-gray-700 text-xl"
-                    style={interStyle}
-                    initial={{ height: 0, opacity: 0 }}
-                    animate={{ height: "auto", opacity: 1 }}
-                    transition={{ duration: 0.3 }}
-                  >
-                    {item.desc}
-                  </motion.p>
-                )}
-              </motion.div>
-            );
-          })}
+      {/* HERO SECTION */}
+      <section className="min-h-screen flex items-center justify-center px-6 py-20">
+        <div className="max-w-6xl mx-auto text-center">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 1, ease: "easeOut" }}
+          >
+            <h1 className={`text-6xl md:text-8xl font-light mb-8 tracking-tight transition-colors duration-500 ${getTextColor()}`}>
+              Beyond the Code
+            </h1>
+            <p className={`text-xl md:text-2xl max-w-3xl mx-auto leading-relaxed transition-colors duration-500 ${getSubTextColor()}`}>
+            I’m trying to live a meaningful life.
+            A life filled with peace, true relationships, and beautiful memories.
+            </p>
+          </motion.div>
         </div>
-      </motion.section>
+      </section>
 
-      {/* SECTION 3: HOBBIES – Fullscreen snap */}
-      <motion.section
-        className="snap-start h-screen flex flex-col justify-center px-8 py-16"
-        initial={{ opacity: 0, y: 10 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8 }}
-        viewport={{ once: true, amount: 0.8 }}
-      >
-        <h2 className="text-5xl font-bold mb-8" style={interStyle}>Hobbies</h2>
-        <div className="space-y-6">
-          {hobbies.map((item, idx) => {
-            const isExpanded = expandedHobby === idx;
-            return (
-              <motion.div
-                key={idx}
-                className="border-b border-gray-300 pb-4"
-                initial={{ opacity: 0, y: 10 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: idx * 0.05 }}
-                viewport={{ once: true }}
-              >
-                <div className="flex justify-between items-center">
-                  <span className="text-3xl font-normal" style={interStyle}>{item.title}</span>
-                  <button
-                    onClick={() => toggleHobby(idx)}
-                    className="text-4xl font-bold text-gray-500 hover:text-gray-800 transition-colors"
-                  >
-                    {isExpanded ? "–" : "+"}
-                  </button>
-                </div>
-                {isExpanded && (
-                  <motion.p
-                    className="mt-2 text-gray-700 text-xl"
-                    style={interStyle}
-                    initial={{ height: 0, opacity: 0 }}
-                    animate={{ height: "auto", opacity: 1 }}
-                    transition={{ duration: 0.3 }}
-                  >
-                    {item.desc}
-                  </motion.p>
-                )}
-              </motion.div>
-            );
-          })}
+      {/* PHILOSOPHY SECTION */}
+      <section className="py-32 px-6">
+        <div className="max-w-4xl mx-auto">
+          <motion.div
+            {...fadeInUp}
+            whileInView="animate"
+            initial="initial"
+            viewport={{ once: true, amount: 0.3 }}
+          >
+            <h2 className={`text-5xl md:text-6xl font-light mb-16 text-center transition-colors duration-500 ${getTextColor()}`}>My Philosophy</h2>
+            <div className="text-center">
+              <p className={`text-2xl md:text-3xl font-light leading-relaxed mb-8 transition-colors duration-500 ${getTextColor(0.25)}`}>
+                Living with <em className="italic">kindness</em>, <em className="italic">love</em>, and <em className="italic">peace</em> at the core of everything.
+              </p>
+              <p className={`text-lg max-w-2xl mx-auto transition-colors duration-500 ${getSubTextColor(0.25)}`}>
+              I believe life finds its true meaning when we live with fairness and kindness.
+              It’s not just about doing what’s right, but about showing care through simple, thoughtful actions.
+              When balance and respect guide us, peace and purpose follow naturally.
+              </p>
+            </div>
+          </motion.div>
         </div>
-      </motion.section>
+      </section>
 
-      {/* FOOTER – Normal section (Not full-screen snap) */}
-      <footer className="bg-white border-t border-gray-200 px-8 py-6">
+      {/* PASSIONS SECTION */}
+      <section className="py-32 px-6">
+        <div className="max-w-7xl mx-auto">
+          <motion.h2
+            className={`text-5xl md:text-6xl font-light mb-20 text-center transition-colors duration-500 ${getTextColor(0.4)}`}
+            {...fadeInUp}
+            whileInView="animate"
+            initial="initial"
+            viewport={{ once: true, amount: 0.3 }}
+          >
+            What Drives Me
+          </motion.h2>
+
+          <motion.div
+            className="grid grid-cols-1 md:grid-cols-2 gap-16 md:gap-24"
+            variants={staggerChildren}
+            whileInView="animate"
+            initial="initial"
+            viewport={{ once: true, amount: 0.2 }}
+          >
+            {/* Wellness */}
+            <motion.div variants={slideInLeft} className="space-y-6">
+              <div className="flex items-center gap-4 mb-6">
+                <Heart className={`w-8 h-8 transition-colors duration-500 ${getTextColor(0.4)}`} />
+                <h3 className={`text-3xl font-light transition-colors duration-500 ${getTextColor(0.4)}`}>Wellness & Balance</h3>
+              </div>
+              <p className={`text-lg leading-relaxed transition-colors duration-500 ${getSubTextColor(0.4)}`}>
+              I swim to stay active, walk every morning, and play cricket when I can. 
+              Journaling keeps me grounded, and I cook to relax.
+
+
+              </p>
+            </motion.div>
+
+            {/* Adventure */}
+            <motion.div variants={slideInRight} className="space-y-6">
+              <div className="flex items-center gap-4 mb-6">
+                <Compass className={`w-8 h-8 transition-colors duration-500 ${getTextColor(0.4)}`} />
+                <h3 className={`text-3xl font-light transition-colors duration-500 ${getTextColor(0.4)}`}>Exploration & Growth</h3>
+              </div>
+              <p className={`text-lg leading-relaxed transition-colors duration-500 ${getSubTextColor(0.4)}`}>
+              Traveling by myself gives me peace and a chance to see different cultures. 
+              I also like to study finance and reading books. It is more of a hobby and it helps me learn new things.
+              </p>
+            </motion.div>
+
+            {/* Community */}
+            <motion.div variants={slideInLeft} className="space-y-6">
+              <div className="flex items-center gap-4 mb-6">
+                <Sparkles className={`w-8 h-8 transition-colors duration-500 ${getTextColor(0.4)}`} />
+                <h3 className={`text-3xl font-light transition-colors duration-500 ${getTextColor(0.4)}`}>Connection & Care</h3>
+              </div>
+              <p className={`text-lg leading-relaxed transition-colors duration-500 ${getSubTextColor(0.4)}`}>
+                Being there for family and friends means a lot to me. I try to build real connections and stay close to the people who matter most.
+              </p>
+            </motion.div>
+
+            {/* Purpose */}
+            <motion.div variants={slideInRight} className="space-y-6">
+              <div className="flex items-center gap-4 mb-6">
+                <Target className={`w-8 h-8 transition-colors duration-500 ${getTextColor(0.4)}`} />
+                <h3 className={`text-3xl font-light transition-colors duration-500 ${getTextColor(0.4)}`}>Purpose & Legacy</h3>
+              </div>
+              <p className={`text-lg leading-relaxed transition-colors duration-500 ${getSubTextColor(0.4)}`}>
+               I just want to be a positive part of people’s lives, someone who brings calm, kindness, and a little bit of light.
+              </p>
+            </motion.div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* DREAMS SECTION */}
+      <section className="py-32 px-6">
+        <div className="max-w-4xl mx-auto">
+          <motion.div
+            {...fadeInUp}
+            whileInView="animate"
+            initial="initial"
+            viewport={{ once: true, amount: 0.3 }}
+            className="text-center mb-20"
+          >
+            <h2 className={`text-5xl md:text-6xl font-light transition-colors duration-500 ${getTextColor(0.6)}`}>Dreams & Aspirations</h2>
+          </motion.div>
+          
+          <motion.div
+            className="space-y-16"
+            variants={staggerChildren}
+            whileInView="animate"
+            initial="initial"
+            viewport={{ once: true, amount: 0.2 }}
+          >
+            <motion.div
+              className={`border-l-4 pl-8 max-w-3xl mx-auto transition-colors duration-500 ${getBorderColor(0.6)}`}
+              variants={slideInLeft}
+            >
+              <h3 className={`text-2xl md:text-3xl font-light mb-4 transition-colors duration-500 ${getTextColor(0.6)}`}>Freedom</h3>
+              <p className={`leading-relaxed text-lg transition-colors duration-500 ${getSubTextColor(0.6)}`}>
+              I want to live on my own terms and help others do the same. Making choices gently and with care means everything to me.              </p>
+            </motion.div>
+
+            <motion.div
+              className={`border-l-4 pl-8 max-w-3xl mx-auto transition-colors duration-500 ${getBorderColor(0.6)}`}
+              variants={slideInLeft}
+            >
+              <h3 className={`text-2xl md:text-3xl font-light mb-4 transition-colors duration-500 ${getTextColor(0.6)}`}>Compassion</h3>
+              <p className={`leading-relaxed text-lg transition-colors duration-500 ${getSubTextColor(0.6)}`}>
+              Kindness guides me. Understanding others helps build trust and connection. Even small acts of care can bring hope.
+              </p>
+            </motion.div>
+
+            <motion.div
+              className={`border-l-4 pl-8 max-w-3xl mx-auto transition-colors duration-500 ${getBorderColor(0.6)}`}
+              variants={slideInLeft}
+            >
+              <h3 className={`text-2xl md:text-3xl font-light mb-4 transition-colors duration-500 ${getTextColor(0.6)}`}>Balance</h3>
+              <p className={`leading-relaxed text-lg transition-colors duration-500 ${getSubTextColor(0.6)}`}>
+              I believe true peace comes from equality. Finding harmony is my goal. I want to support a world where everyone can grow and thrive.
+              </p>
+            </motion.div>
+          </motion.div>
+        </div>
+      </section>
+
+{/* CLOSING SECTION */}
+<section className="py-20 md:py-32 px-6">
+ <div className="max-w-4xl mx-auto text-center">
+   <motion.div
+     {...fadeInUp}
+     whileInView="animate"
+     initial="initial"
+     viewport={{ once: true, amount: 0.3 }}
+   >
+     <p className={`text-xl md:text-3xl font-light italic leading-relaxed mb-6 md:mb-8 transition-colors duration-500 ${getTextColor(0.7)}`} style={{ fontFamily: "'Playfair Display', 'Crimson Text', 'Old Standard TT', 'Book Antiqua', serif", letterSpacing: '0.5px' }}>
+       "To me, life is about learning and growing with patience, kindness, and faith."
+     </p>
+     <p className={`text-base md:text-lg max-w-2xl mx-auto leading-relaxed transition-colors duration-500 ${getSubTextColor(0.7)}`}>
+       Every day is a chance to be better, to help others, and to live with a calm and open heart.
+     </p>
+   </motion.div>
+ </div>
+</section>
+
+      {/* FOOTER */}
+      <footer className={`px-6 py-12 transition-all duration-500`}>
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center">
-          <div className="mb-4 md:mb-0 text-gray-500 text-sm">
+          <div className={`mb-6 md:mb-0 text-sm transition-colors duration-500 ${scrollProgress > 0.7 ? 'text-gray-300' : 'text-gray-500'}`}>
             © {new Date().getFullYear()} Arsalan. All rights reserved.
           </div>
           <div className="flex items-center gap-6">
             <a href="https://github.com/ArsalanAnwer0" target="_blank" rel="noopener noreferrer">
-              <Github className="h-6 w-6 text-gray-500 hover:text-black transition" />
+              <Github className={`h-6 w-6 transition-colors duration-300 ${scrollProgress > 0.7 ? 'text-gray-300 hover:text-white' : 'text-gray-400 hover:text-black'}`} />
             </a>
             <a href="https://www.linkedin.com/in/arsalan-anwer-272004310/" target="_blank" rel="noopener noreferrer">
-              <Linkedin className="h-6 w-6 text-gray-500 hover:text-black transition" />
+              <Linkedin className={`h-6 w-6 transition-colors duration-300 ${scrollProgress > 0.7 ? 'text-gray-300 hover:text-white' : 'text-gray-400 hover:text-black'}`} />
             </a>
             <a href="https://www.instagram.com/_arsalan.ansari/" target="_blank" rel="noopener noreferrer">
-              <Instagram className="h-6 w-6 text-gray-500 hover:text-black transition" />
+              <Instagram className={`h-6 w-6 transition-colors duration-300 ${scrollProgress > 0.7 ? 'text-gray-300 hover:text-white' : 'text-gray-400 hover:text-black'}`} />
             </a>
             <Button
-              className="text-black bg-gray-200 hover:bg-gray-300 px-6 py-2 rounded-lg border border-gray-300 transition"
+              className={`px-6 py-2 rounded-lg transition-all duration-700 hover:scale-105 ${
+                scrollProgress > 0.7 
+                  ? 'text-white bg-transparent border border-gray-400 hover:bg-white/10' 
+                  : 'text-black bg-transparent border border-gray-300 hover:bg-black/5'
+              }`}
               onClick={() => setIsModalOpen(true)}
             >
               Contact

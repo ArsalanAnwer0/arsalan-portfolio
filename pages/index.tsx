@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { motion, useAnimation, useSpring, useMotionValue } from "framer-motion";
 import { Github, Linkedin, Instagram, Sun, Moon } from "lucide-react";
-import { CloudCursor } from "@/components/ui/CloudCursor"; // Custom Cursor Component
+// import { CloudCursor } from "@/components/ui/CloudCursor"; // Custom Cursor Component
 import ContactModal from "@/components/ui/ContactModal"; // Modal Component
 import HoverImage from "@/components/ui/HoverImage";
 import DetailedInfoModal from "@/components/ui/DetailedInfoModal";
@@ -78,31 +78,52 @@ export default function Home() {
   const [scrollY, setScrollY] = useState(0);
   const scrollValue = useMotionValue(0);
   const smoothScroll = useSpring(scrollValue, { stiffness: 80, damping: 20 });
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [scrollProgress, setScrollProgress] = useState(0);
   const [selectedProject, setSelectedProject] = useState<string | null>(null);
   const [selectedCertificate, setSelectedCertificate] = useState<string | null>(null);
   const [selectedTopic, setSelectedTopic] = useState<string | null>(null);
 
   useEffect(() => {
-    // Throttled scroll handler to toggle dark mode.
     const handleScroll = throttle(() => {
-      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-      const scrollPosition = window.scrollY;
-      const threshold = docHeight * 0.2;
-      setIsDarkMode(scrollPosition > threshold);
-    }, 50);
-    
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+      const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = Math.min(window.scrollY / totalHeight, 1);
+      setScrollProgress(progress);
+    }, 16); // 60fps
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  useEffect(() => {
-    if (isDarkMode) {
-      document.documentElement.classList.add("dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-    }
-  }, [isDarkMode]);
+  // Calculate background color based on scroll progress
+  const getBackgroundStyle = () => {
+    const greyIntensity = Math.min(scrollProgress * 1.1, 0.88);
+    return {
+      background: `linear-gradient(180deg, 
+        rgba(255, 255, 255, ${1 - greyIntensity}) 0%, 
+        rgba(35, 35, 35, ${greyIntensity}) 100%)`,
+      transition: 'background 0.3s ease-out'
+    };
+  };
+
+  // Calculate text colors based on scroll progress
+  const getTextColor = (threshold = 0.25) => {
+    return scrollProgress > threshold ? 'text-white' : 'text-gray-900';
+  };
+
+  const getSubTextColor = (threshold = 0.25) => {
+    return scrollProgress > threshold ? 'text-gray-100' : 'text-gray-600';
+  };
+
+  const getHeaderBg = () => {
+    // Use a consistent transparent background instead of switching colors
+    return 'bg-transparent backdrop-blur-md';
+  };
+
+  const getGradientText = (threshold = 0.25) => {
+    return scrollProgress > threshold 
+      ? 'from-gray-50 to-gray-300' 
+      : 'from-gray-900 to-gray-600';
+  };
 
   useEffect(() => {
     // Intersection observer for mobile animations.
@@ -156,31 +177,33 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen snap-y snap-mandatory overflow-y-scroll transition-all duration-1000 ease-in-out" style={{ position: 'relative', zIndex: 1 }}>
+    <div 
+      className="min-h-screen snap-y snap-mandatory overflow-y-scroll transition-all duration-700 ease-in-out" 
+      style={{ ...getBackgroundStyle(), position: 'relative', zIndex: 1 }}
+    >
       {/* Background and Cursor Effects */}
       <ParticleBackground />
-      <CloudCursor />
+      {/* <CloudCursor /> */}
 
-{/* Header */}
-<header className="bg-white dark:bg-black sticky top-0 z-50 border-none shadow-none">
-  <nav className="max-w-7xl mx-auto px-6 py-8 flex justify-center gap-12 text-xl font-light dark:text-white text-black" style={{ textDecoration: "none" }}>
-    <Link
-      href="/"
-      className="hover:opacity-70 transition-opacity duration-300"
-      style={{ textDecoration: "none" }}
-    >
-      Home
-    </Link>
-    <Link
-      href="/info"
-      className="hover:opacity-70 transition-opacity duration-300"
-      style={{ textDecoration: "none" }}
-    >
-      Info
-    </Link>
-  </nav>
-</header>
-
+      {/* Header */}
+      <header className={`sticky top-0 z-50 transition-all duration-500 ${getHeaderBg()}`}>
+        <nav className={`max-w-7xl mx-auto px-6 py-10 flex justify-center gap-16 text-lg font-light tracking-wide transition-colors duration-500 ${getTextColor(0.15)}`} style={{ textDecoration: "none", fontFamily: "'Inter', 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" }}>
+          <Link
+            href="/"
+            className="hover:opacity-60 transition-all duration-300 hover:scale-105"
+            style={{ textDecoration: "none" }}
+          >
+            Home
+          </Link>
+          <Link
+            href="/info"
+            className="hover:opacity-60 transition-all duration-300 hover:scale-105"
+            style={{ textDecoration: "none" }}
+          >
+            Info
+          </Link>
+        </nav>
+      </header>
 
       {/* Section 1 - Hero */}
       <motion.section
@@ -192,10 +215,10 @@ export default function Home() {
         transition={{ duration: 1 }}
         style={{ position: 'relative', zIndex: 2 }}
       >
-        <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-8xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 dark:from-gray-100 dark:to-gray-400 bg-clip-text text-transparent text-center">
+        <h1 className={`text-4xl sm:text-5xl md:text-6xl lg:text-8xl font-bold bg-gradient-to-r ${getGradientText()} bg-clip-text text-transparent text-center transition-all duration-700`}>
           Building the future<br /> with cloud technology
         </h1>
-        <p className="text-gray-600 dark:text-gray-300 mt-6 text-base md:text-xl max-w-3xl text-center">
+        <p className={`mt-6 text-base md:text-xl max-w-3xl text-center transition-colors duration-700 ${getSubTextColor()}`}>
           Hi there! What does innovation mean to you? Share your thoughts and be part of shaping a future where ideas become timeless.
         </p>
         <div className="mt-12 flex flex-col sm:flex-row gap-6 justify-center">
@@ -204,21 +227,29 @@ export default function Home() {
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             placeholder="Have ideas? Your thoughts inspire innovation"
-            className="w-full sm:w-[45rem] bg-white text-black dark:bg-gray-800 dark:text-white text-lg md:text-xl"
+            className={`w-full sm:w-[45rem] text-lg md:text-xl transition-all duration-700 border-2 focus:ring-2 focus:ring-opacity-50 ${
+              scrollProgress > 0.1 
+                ? 'bg-gray-700/90 text-white border-gray-400 placeholder:text-gray-300' 
+                : 'bg-white text-black border-gray-300 placeholder:text-gray-500'
+            }`}
           />
           <Button
             onClick={handleSendMessage}
-            className="w-full sm:w-auto text-white bg-gray-900 dark:bg-gray-800 hover:bg-gray-700 dark:hover:bg-gray-700 px-6 py-4 text-lg md:text-xl"
+            className={`w-full sm:w-auto px-6 py-4 text-lg md:text-xl transition-all duration-700 border-2 ${
+              scrollProgress > 0.1 
+                ? 'text-white bg-gray-600 hover:bg-gray-500 border-gray-400' 
+                : 'text-white bg-gray-900 hover:bg-gray-800 border-gray-800'
+            }`}
           >
             Send
           </Button>
         </div>
-        {status && <p className="mt-4 text-gray-600 dark:text-gray-300">{status}</p>}
+        {status && <p className={`mt-4 transition-colors duration-700 ${getSubTextColor()}`}>{status}</p>}
       </motion.section>
 
       {/* Section 2 - Introduction */}
       <motion.section
-        className="min-h-screen flex flex-col justify-center bg-white dark:bg-black snap-start p-6 md:p-10"
+        className="min-h-screen flex flex-col justify-center snap-start p-6 md:p-10"
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
         viewport={{ once: false, amount: 0.3 }}
@@ -235,8 +266,10 @@ export default function Home() {
             transition={{ duration: 0.8, ease: "easeInOut" }}
             style={{ position: 'relative', zIndex: 2 }}
           >
-            <h2 className="text-3xl md:text-4xl font-light dark:text-white mb-6">Hello</h2>
-            <p className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-light leading-tight text-gray-900 dark:text-white">
+            <h2 className={`text-3xl md:text-4xl font-light mb-6 transition-colors duration-700 ${getTextColor(0.2)}`}>
+              Hello
+            </h2>           
+            <p className={`text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-light leading-tight transition-colors duration-700 ${getTextColor(0.2)}`}>
               Arsalan is an aspiring Cloud <br className="hidden xs:inline" />
               Engineer, pursuing his <br className="hidden xs:inline" />
               undergraduate studies at <br className="hidden xs:inline" />
@@ -266,39 +299,56 @@ export default function Home() {
       </motion.section>
       <div className="mt-20" />
 
-
       {/* New Tabbed Section for Projects/Certificates/Learning/Skills */}
-      <ProjectsCertificatesLearningSkills />
+      <ProjectsCertificatesLearningSkills scrollProgress={scrollProgress} />
 
-{/* Add extra spacing before the footer */}
-<div className="mb-16" />
+      {/* Add extra spacing before the footer */}
+      <div className="mb-16" />
 
       {/* Footer */}
-      <footer className="w-full py-10 bg-black text-white flex justify-center items-center border-t border-gray-700 px-4" style={{ position: 'relative', zIndex: 2 }}>
-        <div className="w-full max-w-7xl flex flex-col md:flex-row justify-between items-center">
-          <div className="mb-4 md:mb-0 text-gray-400 text-sm">
-            © {new Date().getFullYear()} Arsalan. All rights reserved.
-          </div>
-          <div className="flex items-center gap-6">
-            <a href="https://github.com/ArsalanAnwer0" target="_blank" rel="noopener noreferrer">
-              <Github className="h-6 w-6 text-gray-400 hover:text-white transition" />
-            </a>
-            <a href="https://www.linkedin.com/in/arsalan-anwer-272004310/" target="_blank" rel="noopener noreferrer">
-              <Linkedin className="h-6 w-6 text-gray-400 hover:text-white transition" />
-            </a>
-            <a href="https://www.instagram.com/_arsalan.ansari/" target="_blank" rel="noopener noreferrer">
-              <Instagram className="h-6 w-6 text-gray-400 hover:text-white transition" />
-            </a>
-            <Button
-              className="text-white bg-gray-800 hover:bg-gray-700 px-6 py-2 rounded-lg border border-gray-600 transition"
-              onClick={() => setIsModalOpen(true)}
-            >
-              Contact
-            </Button>
-          </div>
-        </div>
-        {isModalOpen && <ContactModal onClose={() => setIsModalOpen(false)} />}
-      </footer>
+<footer className={`w-full py-10 flex justify-center items-center px-4 transition-all duration-700`} style={{ position: 'relative', zIndex: 2 }}>
+  <div className="w-full max-w-7xl flex flex-col md:flex-row justify-between items-center">
+    <div className={`mb-4 md:mb-0 text-sm transition-colors duration-700 ${
+      scrollProgress > 0.65 ? 'text-gray-300' : 'text-gray-600'
+    }`}>
+      © {new Date().getFullYear()} Arsalan. All rights reserved.
+    </div>
+    <div className="flex items-center gap-6">
+      <a href="https://github.com/ArsalanAnwer0" target="_blank" rel="noopener noreferrer">
+        <Github className={`h-6 w-6 transition-all duration-500 hover:scale-110 ${
+          scrollProgress > 0.65 
+            ? 'text-gray-200 hover:text-white' 
+            : 'text-gray-500 hover:text-black'
+        }`} />
+      </a>
+      <a href="https://www.linkedin.com/in/arsalan-anwer-272004310/" target="_blank" rel="noopener noreferrer">
+        <Linkedin className={`h-6 w-6 transition-all duration-500 hover:scale-110 ${
+          scrollProgress > 0.65 
+            ? 'text-gray-200 hover:text-white' 
+            : 'text-gray-500 hover:text-black'
+        }`} />
+      </a>
+      <a href="https://www.instagram.com/_arsalan.ansari/" target="_blank" rel="noopener noreferrer">
+        <Instagram className={`h-6 w-6 transition-all duration-500 hover:scale-110 ${
+          scrollProgress > 0.65 
+            ? 'text-gray-200 hover:text-white' 
+            : 'text-gray-500 hover:text-black'
+        }`} />
+      </a>
+      <Button
+        className={`px-6 py-2 rounded-lg transition-all duration-700 hover:scale-105 ${
+          scrollProgress > 0.65 
+            ? 'text-white bg-transparent border border-gray-400 hover:bg-white/10' 
+            : 'text-black bg-transparent border border-gray-300 hover:bg-black/5'
+        }`}
+        onClick={() => setIsModalOpen(true)}
+      >
+        Contact
+      </Button>
+    </div>
+  </div>
+  {isModalOpen && <ContactModal onClose={() => setIsModalOpen(false)} scrollProgress={scrollProgress} />}
+</footer>
     </div>
   );
 }

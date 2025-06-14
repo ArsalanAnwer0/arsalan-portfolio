@@ -39,7 +39,7 @@ export default function App({ Component, pageProps }: AppProps) {
         <link rel="shortcut icon" href="/favicon.ico" />
         <link rel="apple-touch-icon" href="/favicon.ico" />
         <link rel="icon" href="/favicon.ico?v=2" type="image/x-icon" />
-        <title>Arsal</title>
+        <title>Arsal's Portfolio</title>
       </Head>
       
       {isMaintenance && (

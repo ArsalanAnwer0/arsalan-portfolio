@@ -2,7 +2,12 @@ import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X } from "lucide-react";
 
-export default function ContactModal({ onClose }: { onClose: () => void }) {
+interface ContactModalProps {
+  onClose: () => void;
+  scrollProgress?: number;
+}
+
+export default function ContactModal({ onClose, scrollProgress = 0 }: ContactModalProps) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
@@ -72,7 +77,7 @@ export default function ContactModal({ onClose }: { onClose: () => void }) {
   return (
     <AnimatePresence>
       <motion.div
-        className="fixed inset-0 flex items-center justify-center z-[100]"
+        className="fixed inset-0 flex items-center justify-center z-[100] px-4"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
@@ -81,7 +86,7 @@ export default function ContactModal({ onClose }: { onClose: () => void }) {
       >
         {/* Backdrop with blur effect */}
         <motion.div 
-          className="absolute inset-0 bg-black/60 dark:bg-black/70 backdrop-blur-[2px]"
+          className="absolute inset-0 bg-black/50 backdrop-blur-sm"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
@@ -90,41 +95,44 @@ export default function ContactModal({ onClose }: { onClose: () => void }) {
         
         {/* Modal container */}
         <motion.div
-          className="bg-white dark:bg-black rounded-xl shadow-[0_10px_40px_-15px_rgba(0,0,0,0.3)] dark:shadow-[0_10px_40px_-15px_rgba(0,0,0,0.7)] w-full max-w-md mx-4 overflow-hidden relative z-10 border border-gray-200/30 dark:border-gray-800/30"
-          initial={{ scale: 0.95, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          exit={{ scale: 0.98, opacity: 0 }}
+          className="bg-white rounded-3xl shadow-xl w-full max-w-lg mx-4 overflow-hidden relative z-10 border border-gray-100"
+          initial={{ scale: 0.9, opacity: 0, y: 20 }}
+          animate={{ scale: 1, opacity: 1, y: 0 }}
+          exit={{ scale: 0.95, opacity: 0, y: 10 }}
           transition={{ 
             type: "spring", 
             damping: 30, 
-            stiffness: 350
+            stiffness: 400,
+            duration: 0.5
           }}
         >
           {/* Close button */}
           <button
             onClick={onClose}
-            className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-200"
+            className="absolute top-6 right-6 w-8 h-8 flex items-center justify-center rounded-full text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-all duration-200 z-10"
             aria-label="Close modal"
           >
-            <X size={18} />
+            <X size={20} />
           </button>
 
           {/* Content */}
-          <div className="p-6">
-            <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-1">
-              Get in Touch
-            </h2>
-            <p className="text-sm text-gray-600 dark:text-gray-400 mb-6">
-              I'd love to hear from you. Send me a message, and I'll respond as soon as possible.
-            </p>
+          <div className="p-10 pt-12">
+            <div className="text-center mb-10">
+              <h2 className="text-3xl font-light text-gray-900 mb-4 tracking-wide">
+                Get in Touch
+              </h2>
+              <p className="text-gray-500 leading-relaxed text-[15px]">
+                I'd love to hear from you. Send me a message, and I'll respond as soon as possible.
+              </p>
+            </div>
 
             {/* Form */}
-            <form onSubmit={(e) => e.preventDefault()} className="space-y-4">
+            <form onSubmit={(e) => e.preventDefault()} className="space-y-8">
               {/* Name */}
               <div>
                 <label
                   htmlFor="name"
-                  className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                  className="block text-sm font-light text-gray-600 mb-3"
                 >
                   Name
                 </label>
@@ -134,7 +142,7 @@ export default function ContactModal({ onClose }: { onClose: () => void }) {
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   placeholder="Your name"
-                  className="mt-1 block w-full px-4 py-2 border rounded-lg shadow-sm focus:ring-2 focus:ring-gray-500 focus:border-gray-500 bg-gray-50 dark:bg-gray-900 dark:text-white border-gray-300 dark:border-gray-600 transition-all duration-200"
+                  className="w-full px-5 py-4 border border-gray-100 rounded-2xl focus:ring-1 focus:ring-gray-300 focus:border-gray-300 bg-gray-25 text-gray-900 placeholder:text-gray-400 transition-all duration-300 outline-none"
                 />
               </div>
 
@@ -142,7 +150,7 @@ export default function ContactModal({ onClose }: { onClose: () => void }) {
               <div>
                 <label
                   htmlFor="email"
-                  className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                  className="block text-sm font-light text-gray-600 mb-3"
                 >
                   Email
                 </label>
@@ -152,7 +160,7 @@ export default function ContactModal({ onClose }: { onClose: () => void }) {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="your@email.com"
-                  className="mt-1 block w-full px-4 py-2 border rounded-lg shadow-sm focus:ring-2 focus:ring-gray-500 focus:border-gray-500 bg-gray-50 dark:bg-gray-900 dark:text-white border-gray-300 dark:border-gray-600 transition-all duration-200"
+                  className="w-full px-5 py-4 border border-gray-100 rounded-2xl focus:ring-1 focus:ring-gray-300 focus:border-gray-300 bg-gray-25 text-gray-900 placeholder:text-gray-400 transition-all duration-300 outline-none"
                 />
               </div>
 
@@ -160,7 +168,7 @@ export default function ContactModal({ onClose }: { onClose: () => void }) {
               <div>
                 <label
                   htmlFor="message"
-                  className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                  className="block text-sm font-light text-gray-600 mb-3"
                 >
                   Message
                 </label>
@@ -169,24 +177,26 @@ export default function ContactModal({ onClose }: { onClose: () => void }) {
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
                   placeholder="Your message"
-                  rows={4}
-                  className="mt-1 block w-full px-4 py-2 border rounded-lg shadow-sm focus:ring-2 focus:ring-gray-500 focus:border-gray-500 bg-gray-50 dark:bg-gray-900 dark:text-white border-gray-300 dark:border-gray-600 resize-none transition-all duration-200"
+                  rows={5}
+                  className="w-full px-5 py-4 border border-gray-100 rounded-2xl focus:ring-1 focus:ring-gray-300 focus:border-gray-300 bg-gray-25 text-gray-900 placeholder:text-gray-400 resize-none transition-all duration-300 outline-none"
                 />
               </div>
 
               {/* Status */}
               {status && (
-                <p className={`text-sm ${status.includes("success") ? "text-green-600 dark:text-green-400" : "text-red-600 dark:text-red-400"}`}>
-                  {status}
-                </p>
+                <div className="text-center">
+                  <p className={`text-sm font-light ${status.includes("success") ? "text-green-500" : "text-red-400"}`}>
+                    {status}
+                  </p>
+                </div>
               )}
 
               {/* Send Button */}
-              <div className="mt-6">
+              <div className="pt-6">
                 <button
                   onClick={handleSendMessage}
                   disabled={isSubmitting}
-                  className="w-full bg-gradient-to-r from-gray-900 to-gray-600 dark:from-gray-100 dark:to-gray-400 text-white dark:text-gray-900 hover:opacity-90 transition-opacity px-6 py-3 rounded-xl shadow-lg disabled:opacity-70"
+                  className="w-full bg-white text-gray-900 border border-gray-200 hover:bg-gray-50 hover:border-gray-300 transition-all duration-300 px-6 py-4 rounded-2xl font-light text-lg disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
                 >
                   {isSubmitting ? "Sending..." : "Send Message"}
                 </button>

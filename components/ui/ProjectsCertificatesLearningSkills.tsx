@@ -11,7 +11,13 @@ const contentVariants = {
   exit: { opacity: 0, x: 50 },
 };
 
-const ProjectsCertificatesLearningSkills: React.FC = () => {
+interface ProjectsCertificatesLearningSkillsProps {
+  scrollProgress?: number;
+}
+
+const ProjectsCertificatesLearningSkills: React.FC<ProjectsCertificatesLearningSkillsProps> = ({ 
+  scrollProgress = 0 
+}) => {
   // State for current tab
   const [activeTab, setActiveTab] = useState<"projects" | "certificates" | "learning" | "skills">("projects");
   // Modal states for content cards
@@ -19,35 +25,47 @@ const ProjectsCertificatesLearningSkills: React.FC = () => {
   const [selectedCertificate, setSelectedCertificate] = useState<string | null>(null);
   const [selectedTopic, setSelectedTopic] = useState<string | null>(null);
 
+  // Dynamic styling functions based on scroll progress
+  const getTabTextColor = (isActive: boolean) => {
+    if (isActive) {
+      return scrollProgress > 0.4 ? 'text-white' : 'text-gray-900';
+    }
+    return scrollProgress > 0.4 ? 'text-gray-400' : 'text-gray-500';
+  };
+
+  const getSlashColor = () => {
+    return scrollProgress > 0.4 ? 'text-gray-300' : 'text-gray-600';
+  };
+
   return (
-    <div className="py-16">
+    <div className="py-16" style={{ position: 'relative', zIndex: 2 }}>
       {/* Fixed Tab Navigation Header */}
       <div className="text-center mb-8">
         <div className="flex justify-center items-center gap-4 text-3xl font-bold">
           <span
             onClick={() => setActiveTab("projects")}
-            className={`cursor-pointer ${activeTab === "projects" ? "text-white" : "text-gray-500"}`}
+            className={`cursor-pointer transition-colors duration-700 hover:opacity-70 ${getTabTextColor(activeTab === "projects")}`}
           >
             Projects
           </span>
-          <span>/</span>
+          <span className={`transition-colors duration-700 ${getSlashColor()}`}>/</span>
           <span
             onClick={() => setActiveTab("certificates")}
-            className={`cursor-pointer ${activeTab === "certificates" ? "text-white" : "text-gray-500"}`}
+            className={`cursor-pointer transition-colors duration-700 hover:opacity-70 ${getTabTextColor(activeTab === "certificates")}`}
           >
             Certificates
           </span>
-          <span>/</span>
+          <span className={`transition-colors duration-700 ${getSlashColor()}`}>/</span>
           <span
             onClick={() => setActiveTab("learning")}
-            className={`cursor-pointer ${activeTab === "learning" ? "text-white" : "text-gray-500"}`}
+            className={`cursor-pointer transition-colors duration-700 hover:opacity-70 ${getTabTextColor(activeTab === "learning")}`}
           >
             Learning
           </span>
-          <span>/</span>
+          <span className={`transition-colors duration-700 ${getSlashColor()}`}>/</span>
           <span
             onClick={() => setActiveTab("skills")}
-            className={`cursor-pointer ${activeTab === "skills" ? "text-white" : "text-gray-500"}`}
+            className={`cursor-pointer transition-colors duration-700 hover:opacity-70 ${getTabTextColor(activeTab === "skills")}`}
           >
             Skills
           </span>
@@ -74,6 +92,7 @@ const ProjectsCertificatesLearningSkills: React.FC = () => {
                       title={project.title}
                       summary={project.summary}
                       onClick={() => setSelectedProject(project.id)}
+                      scrollProgress={scrollProgress}
                     />
                   ))}
                 </div>
@@ -83,6 +102,7 @@ const ProjectsCertificatesLearningSkills: React.FC = () => {
                     title={projectData.find((p) => p.id === selectedProject)?.title || ""}
                     content={projectData.find((p) => p.id === selectedProject)?.details || ""}
                     onClose={() => setSelectedProject(null)}
+                    scrollProgress={scrollProgress}
                   />
                 )}
               </div>
@@ -106,6 +126,7 @@ const ProjectsCertificatesLearningSkills: React.FC = () => {
                       title={certificate.title}
                       summary={certificate.summary}
                       onClick={() => setSelectedCertificate(certificate.id)}
+                      scrollProgress={scrollProgress}
                     />
                   ))}
                 </div>
@@ -115,6 +136,7 @@ const ProjectsCertificatesLearningSkills: React.FC = () => {
                     title={certificateData.find((c) => c.id === selectedCertificate)?.title || ""}
                     content={certificateData.find((c) => c.id === selectedCertificate)?.details || ""}
                     onClose={() => setSelectedCertificate(null)}
+                    scrollProgress={scrollProgress}
                   />
                 )}
               </div>
@@ -138,6 +160,7 @@ const ProjectsCertificatesLearningSkills: React.FC = () => {
                       title={topic.title}
                       summary={<div dangerouslySetInnerHTML={{ __html: topic.summary }} />}
                       onClick={() => setSelectedTopic(topic.id)}
+                      scrollProgress={scrollProgress}
                     />
                   ))}
                 </div>
@@ -147,6 +170,7 @@ const ProjectsCertificatesLearningSkills: React.FC = () => {
                     title={learningData.find((t) => t.id === selectedTopic)?.title || ""}
                     content={learningData.find((t) => t.id === selectedTopic)?.details || ""}
                     onClose={() => setSelectedTopic(null)}
+                    scrollProgress={scrollProgress}
                   />
                 )}
               </div>
@@ -163,7 +187,7 @@ const ProjectsCertificatesLearningSkills: React.FC = () => {
               transition={{ duration: 0.5 }}
             >
               <div className="w-full max-w-7xl mx-auto">
-                <SkillsSection />
+                <SkillsSection scrollProgress={scrollProgress} />
               </div>
             </motion.div>
           )}
