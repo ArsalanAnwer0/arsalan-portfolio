@@ -321,7 +321,7 @@ export default function Home() {
             : 'text-gray-500 hover:text-black'
         }`} />
       </a>
-      <a href="https://www.linkedin.com/in/arsalan-anwer-272004310/" target="_blank" rel="noopener noreferrer">
+      <a href="https://www.linkedin.com/in/arsalan-anwer-cloud//" target="_blank" rel="noopener noreferrer">
         <Linkedin className={`h-6 w-6 transition-all duration-500 hover:scale-110 ${
           scrollProgress > 0.65 
             ? 'text-gray-200 hover:text-white' 
