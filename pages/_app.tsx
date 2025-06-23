@@ -21,15 +21,33 @@ export default function App({ Component, pageProps }: AppProps) {
   const isMaintenance = process.env.NEXT_PUBLIC_MAINTENANCE_MODE === "true";
 
   useEffect(() => {
-    // Display loading screen for 3 seconds on initial load
-    const timer = setTimeout(() => {
+    // Check if loading screen has already been shown in this session
+    const hasLoadedBefore = sessionStorage.getItem('portfolio-loaded');
+    
+    if (!hasLoadedBefore) {
+      // First time loading - show the loading screen
+      const timer = setTimeout(() => {
+        setIsLoading(false);
+        // Mark as loaded in session storage
+        sessionStorage.setItem('portfolio-loaded', 'true');
+      }, 16000);
+      return () => clearTimeout(timer);
+    } else {
+      // Already loaded before in this session - skip loading screen
       setIsLoading(false);
-    }, 3000);
-    return () => clearTimeout(timer);
+    }
   }, []);
 
   if (isLoading) {
-    return <LoadingPage />;
+    return (
+      <motion.div
+        initial={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: 1.5, ease: "easeOut" }}
+      >
+        <LoadingPage />
+      </motion.div>
+    );
   }
 
   return (
@@ -41,36 +59,35 @@ export default function App({ Component, pageProps }: AppProps) {
         <link rel="icon" href="/favicon.ico?v=2" type="image/x-icon" />
         <title>Arsal's Portfolio</title>
       </Head>
-      
+
       {isMaintenance && (
-  <div style={{
-    position: "fixed",
-    bottom: "20px",
-    left: "20px",
-    background: "linear-gradient(135deg, #e0c3fc, #8ec5fc)",
-    color: "#333",
-    padding: "12px 20px",
-    fontSize: "15px",
-    fontWeight: 500,
-    borderRadius: "8px",
-    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-    zIndex: 9999,
-  }}>
-    ⚠️ This site is under maintenance. Some features may not work.
-  </div>
-)}
+        <div
+          style={{
+            position: "fixed",
+            bottom: "20px",
+            left: "20px",
+            background: "linear-gradient(135deg, #e0c3fc, #8ec5fc)",
+            color: "#333",
+            padding: "12px 20px",
+            fontSize: "15px",
+            fontWeight: 500,
+            borderRadius: "8px",
+            boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+            zIndex: 9999,
+          }}
+        >
+          ⚠️ This site is under maintenance. Some features may not work.
+        </div>
+      )}
 
-
-
-      
       <AnimatePresence mode="wait">
         <motion.div
-          key={router.pathname} // The key ensures animation triggers on route change.
+          key={router.pathname}
           variants={pageVariants}
           initial="hidden"
           animate="enter"
           exit="exit"
-          transition={{ type: "tween", duration: 0.5 }}
+          transition={{ type: "tween", duration: 1.2, ease: "easeOut" }}
         >
           <Component {...pageProps} />
         </motion.div>

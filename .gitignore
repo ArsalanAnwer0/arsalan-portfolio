@@ -8,3 +8,4 @@ tsconfig.tsbuildinfo
 .env.local
 .env
 .env.*.local
+Guide/

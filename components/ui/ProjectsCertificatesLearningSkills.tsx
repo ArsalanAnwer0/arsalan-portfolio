@@ -25,16 +25,16 @@ const ProjectsCertificatesLearningSkills: React.FC<ProjectsCertificatesLearningS
   const [selectedCertificate, setSelectedCertificate] = useState<string | null>(null);
   const [selectedTopic, setSelectedTopic] = useState<string | null>(null);
 
-  // Dynamic styling functions based on scroll progress
+  // Dynamic styling functions based on scroll progress - Updated colors for better readability
   const getTabTextColor = (isActive: boolean) => {
     if (isActive) {
-      return scrollProgress > 0.4 ? 'text-white' : 'text-gray-900';
+      return scrollProgress > 0.80 ? 'text-white' : 'text-gray-200'; // Light silver instead of dark grey
     }
-    return scrollProgress > 0.4 ? 'text-gray-400' : 'text-gray-500';
+    return scrollProgress > 0.80 ? 'text-gray-400' : 'text-gray-500'; // Pure grey for inactive tabs
   };
 
   const getSlashColor = () => {
-    return scrollProgress > 0.4 ? 'text-gray-300' : 'text-gray-600';
+    return scrollProgress > 0.80 ? 'text-gray-200' : 'text-gray-300'; // Lighter slash color
   };
 
   return (
