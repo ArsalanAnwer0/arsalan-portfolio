@@ -15,7 +15,7 @@ const DetailedInfoModal: React.FC<DetailedInfoModalProps> = ({
   content,
   onClose,
   isOpen,
-  scrollProgress = 0
+  scrollProgress = 0,
 }) => {
   // Handle backdrop click
   const handleBackdropClick = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -56,7 +56,7 @@ const DetailedInfoModal: React.FC<DetailedInfoModalProps> = ({
           transition={{ duration: 0.3 }}
         >
           {/* Backdrop with blur effect */}
-          <motion.div 
+          <motion.div
             className="absolute inset-0 backdrop-blur-[2px] bg-black/70"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -64,40 +64,40 @@ const DetailedInfoModal: React.FC<DetailedInfoModalProps> = ({
             transition={{ duration: 0.3 }}
             onClick={handleBackdropClick}
           />
-          
+
           {/* Modal container - Force Grey Background with Inline Styles */}
           <motion.div
             className="rounded-xl w-full max-w-2xl max-h-[85vh] overflow-hidden relative z-10 shadow-2xl"
-            style={{ 
-              backgroundColor: 'rgba(45, 45, 45, 0.85)',
-              borderColor: 'rgba(45, 45, 45, 0.85)',
-              border: '1px solid rgba(45, 45, 45, 0.85)'
+            style={{
+              backgroundColor: "rgba(45, 45, 45, 0.85)",
+              borderColor: "rgba(45, 45, 45, 0.85)",
+              border: "1px solid rgba(45, 45, 45, 0.85)",
             }}
             initial={{ scale: 0.95, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.98, opacity: 0 }}
-            transition={{ 
-              type: "spring", 
-              damping: 30, 
-              stiffness: 350
+            transition={{
+              type: "spring",
+              damping: 30,
+              stiffness: 350,
             }}
           >
             {/* Header */}
-            <div 
+            <div
               className="px-6 py-5 flex justify-between items-center"
-              style={{ 
-                borderBottom: '1px solid rgba(45, 45, 45, 0.85)',
-                backgroundColor: 'rgba(45, 45, 45, 0.85)'
+              style={{
+                borderBottom: "1px solid rgba(45, 45, 45, 0.85)",
+                backgroundColor: "rgba(45, 45, 45, 0.85)",
               }}
             >
-              <h2 className="text-xl font-semibold" style={{ color: 'white' }}>
+              <h2 className="text-xl font-semibold" style={{ color: "white" }}>
                 {title}
               </h2>
-              
+
               <button
                 onClick={onClose}
                 className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-700 transition-all duration-300"
-                style={{ color: '#9ca3af' }}
+                style={{ color: "#9ca3af" }}
                 aria-label="Close modal"
               >
                 <X size={18} />
@@ -105,11 +105,17 @@ const DetailedInfoModal: React.FC<DetailedInfoModalProps> = ({
             </div>
 
             {/* Content area */}
-            <div className="overflow-y-auto" style={{ maxHeight: "calc(85vh - 130px)" }}>
-              <div className="p-6" style={{ backgroundColor: 'rgba(45, 45, 45, 0.85)' }}>
-                <div 
-                  style={{ color: 'white' }}
-                  dangerouslySetInnerHTML={{ __html: content as string }} 
+            <div
+              className="overflow-y-auto"
+              style={{ maxHeight: "calc(85vh - 130px)" }}
+            >
+              <div
+                className="p-6"
+                style={{ backgroundColor: "rgba(45, 45, 45, 0.85)" }}
+              >
+                <div
+                  style={{ color: "white" }}
+                  dangerouslySetInnerHTML={{ __html: content as string }}
                 />
               </div>
             </div>

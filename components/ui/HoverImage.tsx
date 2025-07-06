@@ -6,7 +6,11 @@ interface HoverImageProps {
   setHoveredImage: (image: string | null) => void;
 }
 
-const HoverImage: React.FC<HoverImageProps> = ({ word, image, setHoveredImage }) => {
+const HoverImage: React.FC<HoverImageProps> = ({
+  word,
+  image,
+  setHoveredImage,
+}) => {
   return (
     <span
       className="hoverable-word elegant-underline"

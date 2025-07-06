@@ -4,7 +4,11 @@ type CardProps = {
 };
 
 export const Card: React.FC<CardProps> = ({ children, className }) => {
-  return <div className={`bg-white shadow-md rounded-lg ${className}`}>{children}</div>;
+  return (
+    <div className={`bg-white shadow-md rounded-lg ${className}`}>
+      {children}
+    </div>
+  );
 };
 
 export const CardContent: React.FC<CardProps> = ({ children, className }) => {

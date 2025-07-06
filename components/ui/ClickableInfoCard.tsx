@@ -12,25 +12,25 @@ const ClickableInfoCard: React.FC<ClickableInfoCardProps> = ({
   title,
   summary,
   onClick,
-  scrollProgress = 0
+  scrollProgress = 0,
 }) => {
   // Dynamic styling based on scroll progress
   const getTitleColor = () => {
-    return scrollProgress > 0.4 ? 'text-white' : 'text-gray-900';
+    return scrollProgress > 0.4 ? "text-white" : "text-gray-900";
   };
 
   const getSummaryColor = () => {
-    return scrollProgress > 0.4 ? 'text-gray-200' : 'text-gray-700';
+    return scrollProgress > 0.4 ? "text-gray-200" : "text-gray-700";
   };
 
   const getLearnMoreColor = () => {
-    return scrollProgress > 0.4 ? 'text-gray-300 hover:text-white' : 'text-gray-500 hover:text-gray-900';
+    return scrollProgress > 0.4
+      ? "text-gray-300 hover:text-white"
+      : "text-gray-500 hover:text-gray-900";
   };
 
   const getHoverBg = () => {
-    return scrollProgress > 0.4 
-      ? 'hover:bg-white/5' 
-      : 'hover:bg-black/5';
+    return scrollProgress > 0.4 ? "hover:bg-white/5" : "hover:bg-black/5";
   };
 
   return (
@@ -41,26 +41,32 @@ const ClickableInfoCard: React.FC<ClickableInfoCardProps> = ({
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: false, amount: 0.3 }}
       transition={{ duration: 0.8 }}
-      whileHover={{ 
+      whileHover={{
         scale: 1.01,
-        y: -2
+        y: -2,
       }}
       whileTap={{ scale: 0.99 }}
     >
-      <h3 className={`font-bold text-xl md:text-2xl mb-4 transition-colors duration-700 ${getTitleColor()}`}>
+      <h3
+        className={`font-bold text-xl md:text-2xl mb-4 transition-colors duration-700 ${getTitleColor()}`}
+      >
         {title}
       </h3>
-      
+
       {typeof summary === "string" ? (
-        <p className={`text-base md:text-lg leading-relaxed mb-6 transition-colors duration-700 ${getSummaryColor()}`}>
+        <p
+          className={`text-base md:text-lg leading-relaxed mb-6 transition-colors duration-700 ${getSummaryColor()}`}
+        >
           {summary}
         </p>
       ) : (
-        <div className={`text-base md:text-lg leading-relaxed mb-6 transition-colors duration-700 ${getSummaryColor()}`}>
+        <div
+          className={`text-base md:text-lg leading-relaxed mb-6 transition-colors duration-700 ${getSummaryColor()}`}
+        >
           {summary}
         </div>
       )}
-      
+
       <div className="flex justify-end">
         <motion.div
           className={`text-sm font-medium flex items-center transition-all duration-700 ${getLearnMoreColor()}`}

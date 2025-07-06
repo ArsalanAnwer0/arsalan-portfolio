@@ -22,14 +22,14 @@ export default function App({ Component, pageProps }: AppProps) {
 
   useEffect(() => {
     // Check if loading screen has already been shown in this session
-    const hasLoadedBefore = sessionStorage.getItem('portfolio-loaded');
-    
+    const hasLoadedBefore = sessionStorage.getItem("portfolio-loaded");
+
     if (!hasLoadedBefore) {
       // First time loading - show the loading screen
       const timer = setTimeout(() => {
         setIsLoading(false);
         // Mark as loaded in session storage
-        sessionStorage.setItem('portfolio-loaded', 'true');
+        sessionStorage.setItem("portfolio-loaded", "true");
       }, 16000);
       return () => clearTimeout(timer);
     } else {

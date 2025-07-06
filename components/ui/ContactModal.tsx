@@ -7,7 +7,10 @@ interface ContactModalProps {
   scrollProgress?: number;
 }
 
-export default function ContactModal({ onClose, scrollProgress = 0 }: ContactModalProps) {
+export default function ContactModal({
+  onClose,
+  scrollProgress = 0,
+}: ContactModalProps) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
@@ -85,25 +88,25 @@ export default function ContactModal({ onClose, scrollProgress = 0 }: ContactMod
         onClick={handleBackdropClick}
       >
         {/* Backdrop with blur effect */}
-        <motion.div 
+        <motion.div
           className="absolute inset-0 bg-black/50 backdrop-blur-sm"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.3 }}
         />
-        
+
         {/* Modal container */}
         <motion.div
           className="bg-white rounded-3xl shadow-xl w-full max-w-lg mx-4 overflow-hidden relative z-10 border border-gray-100"
           initial={{ scale: 0.9, opacity: 0, y: 20 }}
           animate={{ scale: 1, opacity: 1, y: 0 }}
           exit={{ scale: 0.95, opacity: 0, y: 10 }}
-          transition={{ 
-            type: "spring", 
-            damping: 30, 
+          transition={{
+            type: "spring",
+            damping: 30,
             stiffness: 400,
-            duration: 0.5
+            duration: 0.5,
           }}
         >
           {/* Close button */}
@@ -122,7 +125,8 @@ export default function ContactModal({ onClose, scrollProgress = 0 }: ContactMod
                 Get in Touch
               </h2>
               <p className="text-gray-500 leading-relaxed text-[15px]">
-                I'd love to hear from you. Send me a message, and I'll respond as soon as possible.
+                I'd love to hear from you. Send me a message, and I'll respond
+                as soon as possible.
               </p>
             </div>
 
@@ -185,7 +189,13 @@ export default function ContactModal({ onClose, scrollProgress = 0 }: ContactMod
               {/* Status */}
               {status && (
                 <div className="text-center">
-                  <p className={`text-sm font-light ${status.includes("success") ? "text-green-500" : "text-red-400"}`}>
+                  <p
+                    className={`text-sm font-light ${
+                      status.includes("success")
+                        ? "text-green-500"
+                        : "text-red-400"
+                    }`}
+                  >
                     {status}
                   </p>
                 </div>

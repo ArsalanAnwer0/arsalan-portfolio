@@ -9,3 +9,5 @@ tsconfig.tsbuildinfo
 .env
 .env.*.local
 Guide/
+CloudCursor.tsx
+

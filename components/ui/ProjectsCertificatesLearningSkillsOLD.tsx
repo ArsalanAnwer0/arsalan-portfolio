@@ -1,6 +1,10 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { projectData, certificateData, learningData } from "../../data/CardData";
+import {
+  projectData,
+  certificateData,
+  learningData,
+} from "../../data/CardData";
 import DetailedInfoModal from "@/components/ui/DetailedInfoModal";
 import ClickableInfoCard from "@/components/ui/ClickableInfoCard";
 import SkillsSection from "@/components/ui/SkillsSection";
@@ -15,57 +19,75 @@ interface ProjectsCertificatesLearningSkillsProps {
   scrollProgress?: number;
 }
 
-const ProjectsCertificatesLearningSkills: React.FC<ProjectsCertificatesLearningSkillsProps> = ({ 
-  scrollProgress = 0 
-}) => {
+const ProjectsCertificatesLearningSkills: React.FC<
+  ProjectsCertificatesLearningSkillsProps
+> = ({ scrollProgress = 0 }) => {
   // State for current tab
-  const [activeTab, setActiveTab] = useState<"projects" | "certificates" | "learning" | "skills">("projects");
+  const [activeTab, setActiveTab] = useState<
+    "projects" | "certificates" | "learning" | "skills"
+  >("projects");
   // Modal states for content cards
   const [selectedProject, setSelectedProject] = useState<string | null>(null);
-  const [selectedCertificate, setSelectedCertificate] = useState<string | null>(null);
+  const [selectedCertificate, setSelectedCertificate] = useState<string | null>(
+    null
+  );
   const [selectedTopic, setSelectedTopic] = useState<string | null>(null);
 
   // Dynamic styling functions based on scroll progress - Updated colors for better readability
   const getTabTextColor = (isActive: boolean) => {
     if (isActive) {
-      return scrollProgress > 0.80 ? 'text-white' : 'text-gray-200'; // Light silver instead of dark grey
+      return scrollProgress > 0.8 ? "text-white" : "text-gray-200"; // Light silver instead of dark grey
     }
-    return scrollProgress > 0.80 ? 'text-gray-400' : 'text-gray-500'; // Pure grey for inactive tabs
+    return scrollProgress > 0.8 ? "text-gray-400" : "text-gray-500"; // Pure grey for inactive tabs
   };
 
   const getSlashColor = () => {
-    return scrollProgress > 0.80 ? 'text-gray-200' : 'text-gray-300'; // Lighter slash color
+    return scrollProgress > 0.8 ? "text-gray-200" : "text-gray-300"; // Lighter slash color
   };
 
   return (
-    <div className="py-16" style={{ position: 'relative', zIndex: 2 }}>
+    <div className="py-16" style={{ position: "relative", zIndex: 2 }}>
       {/* Fixed Tab Navigation Header */}
       <div className="text-center mb-8">
         <div className="flex justify-center items-center gap-4 text-3xl font-bold">
           <span
             onClick={() => setActiveTab("projects")}
-            className={`cursor-pointer transition-colors duration-700 hover:opacity-70 ${getTabTextColor(activeTab === "projects")}`}
+            className={`cursor-pointer transition-colors duration-700 hover:opacity-70 ${getTabTextColor(
+              activeTab === "projects"
+            )}`}
           >
             Projects
           </span>
-          <span className={`transition-colors duration-700 ${getSlashColor()}`}>/</span>
+          <span className={`transition-colors duration-700 ${getSlashColor()}`}>
+            /
+          </span>
           <span
             onClick={() => setActiveTab("certificates")}
-            className={`cursor-pointer transition-colors duration-700 hover:opacity-70 ${getTabTextColor(activeTab === "certificates")}`}
+            className={`cursor-pointer transition-colors duration-700 hover:opacity-70 ${getTabTextColor(
+              activeTab === "certificates"
+            )}`}
           >
             Certificates
           </span>
-          <span className={`transition-colors duration-700 ${getSlashColor()}`}>/</span>
+          <span className={`transition-colors duration-700 ${getSlashColor()}`}>
+            /
+          </span>
           <span
             onClick={() => setActiveTab("learning")}
-            className={`cursor-pointer transition-colors duration-700 hover:opacity-70 ${getTabTextColor(activeTab === "learning")}`}
+            className={`cursor-pointer transition-colors duration-700 hover:opacity-70 ${getTabTextColor(
+              activeTab === "learning"
+            )}`}
           >
             Learning
           </span>
-          <span className={`transition-colors duration-700 ${getSlashColor()}`}>/</span>
+          <span className={`transition-colors duration-700 ${getSlashColor()}`}>
+            /
+          </span>
           <span
             onClick={() => setActiveTab("skills")}
-            className={`cursor-pointer transition-colors duration-700 hover:opacity-70 ${getTabTextColor(activeTab === "skills")}`}
+            className={`cursor-pointer transition-colors duration-700 hover:opacity-70 ${getTabTextColor(
+              activeTab === "skills"
+            )}`}
           >
             Skills
           </span>
@@ -99,8 +121,14 @@ const ProjectsCertificatesLearningSkills: React.FC<ProjectsCertificatesLearningS
                 {selectedProject && (
                   <DetailedInfoModal
                     isOpen={!!selectedProject}
-                    title={projectData.find((p) => p.id === selectedProject)?.title || ""}
-                    content={projectData.find((p) => p.id === selectedProject)?.details || ""}
+                    title={
+                      projectData.find((p) => p.id === selectedProject)
+                        ?.title || ""
+                    }
+                    content={
+                      projectData.find((p) => p.id === selectedProject)
+                        ?.details || ""
+                    }
                     onClose={() => setSelectedProject(null)}
                     scrollProgress={scrollProgress}
                   />
@@ -133,8 +161,14 @@ const ProjectsCertificatesLearningSkills: React.FC<ProjectsCertificatesLearningS
                 {selectedCertificate && (
                   <DetailedInfoModal
                     isOpen={!!selectedCertificate}
-                    title={certificateData.find((c) => c.id === selectedCertificate)?.title || ""}
-                    content={certificateData.find((c) => c.id === selectedCertificate)?.details || ""}
+                    title={
+                      certificateData.find((c) => c.id === selectedCertificate)
+                        ?.title || ""
+                    }
+                    content={
+                      certificateData.find((c) => c.id === selectedCertificate)
+                        ?.details || ""
+                    }
                     onClose={() => setSelectedCertificate(null)}
                     scrollProgress={scrollProgress}
                   />
@@ -158,7 +192,11 @@ const ProjectsCertificatesLearningSkills: React.FC<ProjectsCertificatesLearningS
                     <ClickableInfoCard
                       key={topic.id}
                       title={topic.title}
-                      summary={<div dangerouslySetInnerHTML={{ __html: topic.summary }} />}
+                      summary={
+                        <div
+                          dangerouslySetInnerHTML={{ __html: topic.summary }}
+                        />
+                      }
                       onClick={() => setSelectedTopic(topic.id)}
                       scrollProgress={scrollProgress}
                     />
@@ -167,8 +205,14 @@ const ProjectsCertificatesLearningSkills: React.FC<ProjectsCertificatesLearningS
                 {selectedTopic && (
                   <DetailedInfoModal
                     isOpen={!!selectedTopic}
-                    title={learningData.find((t) => t.id === selectedTopic)?.title || ""}
-                    content={learningData.find((t) => t.id === selectedTopic)?.details || ""}
+                    title={
+                      learningData.find((t) => t.id === selectedTopic)?.title ||
+                      ""
+                    }
+                    content={
+                      learningData.find((t) => t.id === selectedTopic)
+                        ?.details || ""
+                    }
                     onClose={() => setSelectedTopic(null)}
                     scrollProgress={scrollProgress}
                   />

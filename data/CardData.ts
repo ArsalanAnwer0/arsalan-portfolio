@@ -1,10 +1,11 @@
 // Project data
 export const projectData = [
-    {
-      id: "infrastructure-automation",
-      title: "Infrastructure & Automation",
-      summary: "Building infrastructure with Terraform and CloudFormation, designing scalable VPCs with subnets, and creating CI/CD pipelines.",
-      details: `
+  {
+    id: "infrastructure-automation",
+    title: "Infrastructure & Automation",
+    summary:
+      "Building infrastructure with Terraform and CloudFormation, designing scalable VPCs with subnets, and creating CI/CD pipelines.",
+    details: `
         <h3 class="text-xl font-bold mb-4">Infrastructure as Code</h3>
         <p class="mb-4">Infrastructure as Code (IaC) is the practice of managing and provisioning computing infrastructure through machine-readable definition files, rather than physical hardware configuration or interactive configuration tools.</p>
         
@@ -30,13 +31,14 @@ export const projectData = [
             <p class="text-sm">Implemented GitLab CI/CD pipelines integrated with AWS CodePipeline for continuous deployment of infrastructure changes with approval workflows.</p>
           </li>
         </ol>
-      `
-    },
-    {
-      id: "security-compliance",
-      title: "Security & Compliance",
-      summary: "Configuring secure IAM roles, encrypting data for storage, and adhering to compliance frameworks like GDPR and HIPAA.",
-      details: `
+      `,
+  },
+  {
+    id: "security-compliance",
+    title: "Security & Compliance",
+    summary:
+      "Configuring secure IAM roles, encrypting data for storage, and adhering to compliance frameworks like GDPR and HIPAA.",
+    details: `
         <h3 class="text-xl font-bold mb-4">Cloud Security & Compliance</h3>
         <p class="mb-4">Cloud security encompasses the technologies, policies, controls, and services that protect cloud data, applications, and infrastructure from threats and data breaches.</p>
         
@@ -55,13 +57,14 @@ export const projectData = [
           <li>SOC 2 - Service Organization Control 2</li>
           <li>PCI DSS - Payment Card Industry Data Security Standard</li>
         </ul>
-      `
-    },
-    {
-      id: "deployment-management",
-      title: "Deployment & Management",
-      summary: "Deploying Kubernetes clusters, managing serverless applications, and containerizing workloads with Docker and ECS.",
-      details: `
+      `,
+  },
+  {
+    id: "deployment-management",
+    title: "Deployment & Management",
+    summary:
+      "Deploying Kubernetes clusters, managing serverless applications, and containerizing workloads with Docker and ECS.",
+    details: `
         <h3 class="text-xl font-bold mb-4">Deployment & Management</h3>
         <p class="mb-4">Modern application deployment requires expertise in container orchestration, serverless architectures, and immutable infrastructure principles.</p>
         
@@ -79,13 +82,14 @@ export const projectData = [
           <li>Step Functions for complex workflows</li>
           <li>DynamoDB for serverless databases</li>
         </ul>
-      `
-    },
-    {
-      id: "monitoring-optimization",
-      title: "Monitoring & Optimization",
-      summary: "Optimizing cloud costs, monitoring systems with CloudWatch, and designing disaster recovery strategies.",
-      details: `
+      `,
+  },
+  {
+    id: "monitoring-optimization",
+    title: "Monitoring & Optimization",
+    summary:
+      "Optimizing cloud costs, monitoring systems with CloudWatch, and designing disaster recovery strategies.",
+    details: `
         <h3 class="text-xl font-bold mb-4">Monitoring & Optimization</h3>
         <p class="mb-4">Effective cloud operations require comprehensive monitoring, cost optimization, and disaster recovery planning.</p>
         
@@ -104,17 +108,18 @@ export const projectData = [
           <li>Spot Instances for fault-tolerant, flexible workloads</li>
           <li>Auto Scaling for dynamic workloads</li>
         </ul>
-      `
-    }
-  ];
-  
-  // Certificate data
-  export const certificateData = [
-    {
-      id: "aws-cloud-practitioner",
-      title: "AWS Certified Cloud Practitioner",
-      summary: "Ideal for beginners to understand cloud concepts, billing, and core AWS services.",
-      details: `
+      `,
+  },
+];
+
+// Certificate data
+export const certificateData = [
+  {
+    id: "aws-cloud-practitioner",
+    title: "AWS Certified Cloud Practitioner",
+    summary:
+      "Ideal for beginners to understand cloud concepts, billing, and core AWS services.",
+    details: `
         <h3 class="text-xl font-bold mb-4">AWS Certified Cloud Practitioner</h3>
         <p class="mb-4">The AWS Certified Cloud Practitioner exam is designed for individuals who have the knowledge and skills necessary to effectively demonstrate an overall understanding of the AWS Cloud.</p>
         
@@ -133,13 +138,14 @@ export const projectData = [
           <li>Technology (33%)</li>
           <li>Billing and Pricing (16%)</li>
         </ul>
-      `
-    },
-    {
-      id: "aws-developer-associate",
-      title: "AWS Certified Developer – Associate",
-      summary: "Covers building, deploying, and maintaining AWS-based applications.",
-      details: `
+      `,
+  },
+  {
+    id: "aws-developer-associate",
+    title: "AWS Certified Developer – Associate",
+    summary:
+      "Covers building, deploying, and maintaining AWS-based applications.",
+    details: `
         <h3 class="text-xl font-bold mb-4">AWS Certified Developer – Associate</h3>
         <p class="mb-4">The AWS Certified Developer – Associate certification validates technical expertise in developing and maintaining applications on the AWS platform.</p>
         
@@ -157,13 +163,14 @@ export const projectData = [
           <li>Amazon API Gateway and SQS/SNS</li>
           <li>AWS CloudFormation and IAM</li>
         </ul>
-      `
-    },
-    {
-      id: "aws-solutions-architect-associate",
-      title: "AWS Certified Solutions Architect – Associate",
-      summary: "Focused on designing scalable, secure, and reliable cloud solutions in AWS.",
-      details: `
+      `,
+  },
+  {
+    id: "aws-solutions-architect-associate",
+    title: "AWS Certified Solutions Architect – Associate",
+    summary:
+      "Focused on designing scalable, secure, and reliable cloud solutions in AWS.",
+    details: `
         <h3 class="text-xl font-bold mb-4">AWS Certified Solutions Architect – Associate</h3>
         <p class="mb-4">The AWS Certified Solutions Architect – Associate certification validates the ability to design and implement distributed systems on AWS according to AWS best practices.</p>
         
@@ -181,20 +188,20 @@ export const projectData = [
           <li>Amazon S3, EBS, and EFS</li>
           <li>Amazon RDS, DynamoDB, and Redshift</li>
         </ul>
-      `
-    }
-  ];
-  
-  // Learning data
-  export const learningData = [
-    {
-      id: "iac-tools",
-      title: "Infrastructure as Code (IaC) Tools",
-      summary: `
+      `,
+  },
+];
+
+// Learning data
+export const learningData = [
+  {
+    id: "iac-tools",
+    title: "Infrastructure as Code (IaC) Tools",
+    summary: `
         <li><strong>Terraform:</strong> Learning to provision and manage multi-cloud infrastructure efficiently.</li>
         <li><strong>AWS CloudFormation:</strong> Understanding AWS-specific infrastructure automation with templates.</li>
       `,
-      details: `
+    details: `
         <h3 class="text-xl font-bold mb-4">Infrastructure as Code (IaC) Tools</h3>
         <p class="mb-4">Infrastructure as Code allows you to manage your infrastructure using configuration files rather than through a graphical user interface, treating your infrastructure setup as software development.</p>
         
@@ -215,16 +222,16 @@ export const projectData = [
           <li>Change sets to preview changes before execution</li>
           <li>Stack management for grouped resources</li>
         </ul>
-      `
-    },
-    {
-      id: "containerization-tools",
-      title: "Containerization and Orchestration Tools",
-      summary: `
+      `,
+  },
+  {
+    id: "containerization-tools",
+    title: "Containerization and Orchestration Tools",
+    summary: `
         <li><strong>Docker:</strong> Exploring containerized application development with all dependencies.</li>
         <li><strong>Kubernetes:</strong> Practicing managing and scaling containerized workloads.</li>
       `,
-      details: `
+    details: `
         <h3 class="text-xl font-bold mb-4">Containerization and Orchestration Tools</h3>
         <p class="mb-4">Containers package code and dependencies together, ensuring consistent operation across different computing environments. Container orchestration tools automate deployment, scaling, and management of these containers.</p>
         
@@ -245,16 +252,16 @@ export const projectData = [
           <li>Horizontal scaling based on resource usage</li>
           <li>Self-healing capabilities (restarts failed containers)</li>
         </ul>
-      `
-    },
-    {
-      id: "cicd-tools",
-      title: "CI/CD Tools",
-      summary: `
+      `,
+  },
+  {
+    id: "cicd-tools",
+    title: "CI/CD Tools",
+    summary: `
         <li><strong>Jenkins:</strong> Setting up automated build, test, and deployment pipelines.</li>
         <li><strong>AWS CodePipeline:</strong> Creating CI/CD workflows for AWS-native projects.</li>
       `,
-      details: `
+    details: `
         <h3 class="text-xl font-bold mb-4">CI/CD Tools</h3>
         <p class="mb-4">Continuous Integration and Continuous Deployment (CI/CD) tools automate the building, testing, and deployment of applications, enabling faster and more reliable software delivery.</p>
         
@@ -275,16 +282,16 @@ export const projectData = [
           <li>Parallel execution of stages</li>
           <li>Visual workflow editor</li>
         </ul>
-      `
-    },
-    {
-      id: "monitoring-tools",
-      title: "Monitoring and Logging Tools",
-      summary: `
+      `,
+  },
+  {
+    id: "monitoring-tools",
+    title: "Monitoring and Logging Tools",
+    summary: `
         <li><strong>AWS CloudWatch:</strong> Analyzing performance, logs, and metrics in AWS environments.</li>
         <li><strong>Prometheus + Grafana:</strong> Using open-source tools for system monitoring and visualization.</li>
       `,
-      details: `
+    details: `
         <h3 class="text-xl font-bold mb-4">Monitoring and Logging Tools</h3>
         <p class="mb-4">Effective monitoring and logging tools are essential for maintaining the health, performance, and security of cloud infrastructure and applications.</p>
         
@@ -305,16 +312,16 @@ export const projectData = [
           <li>Rich visualization capabilities</li>
           <li>Alerting and notification systems</li>
         </ul>
-      `
-    },
-    {
-      id: "cloud-security",
-      title: "Cloud Security Tools",
-      summary: `
+      `,
+  },
+  {
+    id: "cloud-security",
+    title: "Cloud Security Tools",
+    summary: `
         <li><strong>AWS IAM:</strong> Learning to manage user permissions and secure resources.</li>
         <li><strong>AWS KMS:</strong> Practicing data encryption and key management in AWS.</li>
       `,
-      details: `
+    details: `
         <h3 class="text-xl font-bold mb-4">Cloud Security Tools</h3>
         <p class="mb-4">Cloud security tools help protect cloud-based infrastructure and applications from threats, unauthorized access, and data breaches.</p>
         
@@ -335,16 +342,16 @@ export const projectData = [
           <li>Integration with AWS services for encryption</li>
           <li>Auditing and compliance capabilities</li>
         </ul>
-      `
-    },
-    {
-      id: "cost-management",
-      title: "Cloud Cost Management Tools",
-      summary: `
+      `,
+  },
+  {
+    id: "cost-management",
+    title: "Cloud Cost Management Tools",
+    summary: `
         <li><strong>AWS Cost Explorer:</strong> Tracking AWS usage and optimizing costs.</li>
         <li><strong>Spot.io:</strong> Learning to optimize EC2 spot instance costs and cloud efficiency.</li>
       `,
-      details: `
+    details: `
         <h3 class="text-xl font-bold mb-4">Cloud Cost Management Tools</h3>
         <p class="mb-4">Cost management tools help monitor, analyze, and optimize cloud spending to ensure efficient use of resources while maintaining performance.</p>
         
@@ -365,6 +372,6 @@ export const projectData = [
           <li>Cross-cloud cost optimization</li>
           <li>Reserved Instance management</li>
         </ul>
-      `
-    }
-  ];
+      `,
+  },
+];
