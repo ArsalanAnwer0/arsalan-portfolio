@@ -211,10 +211,19 @@ const VimSearch: React.FC<{
 };
 
 export default function Home() {
+  const [isFirstVisit, setIsFirstVisit] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [message, setMessage] = useState("");
   const [status, setStatus] = useState("");
   const [scrollProgress, setScrollProgress] = useState(0);
+
+  // Check if this is the first visit in this session
+  useEffect(() => {
+    const hasVisited = sessionStorage.getItem("hasVisitedLanding");
+    if (hasVisited) {
+      setIsFirstVisit(false);
+    }
+  }, []);
 
   // Add scroll memory functionality
   const { restoreScrollPosition } = useScrollMemory();
@@ -268,21 +277,113 @@ export default function Home() {
       : "from-gray-600 to-gray-500"; // Dark silver to medium silver gradient
   };
 
-  // Elegant Color Animation for Arsalan - Grey, Black, Silver
   const getArsalanStyle = () => {
     return {
       background:
-        "linear-gradient(-45deg, #2C2C2C, #808080, #1A1A1A, #C0C0C0, #404040, #A8A8A8)",
-      backgroundSize: "300% 300%",
+        "linear-gradient(-45deg, #0f0f0f, #2a2a2a, #4a4a4a, #6a6a6a, #8a8a8a, #aaaaaa, #cccccc, #eeeeee, #ffffff, #eeeeee, #cccccc, #aaaaaa, #8a8a8a, #6a6a6a, #4a4a4a, #2a2a2a)",
+      backgroundSize: "500% 500%",
       WebkitBackgroundClip: "text",
       WebkitTextFillColor: "transparent",
       backgroundClip: "text",
-      animation: "elegantFlow 8s ease-in-out infinite",
-      filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.3))",
+      animation: "liquidFlow 14s ease-in-out infinite",
+      filter:
+        "drop-shadow(0 4px 16px rgba(0,0,0,0.3)) drop-shadow(0 0 30px rgba(255,255,255,0.06))",
       fontFamily:
-        "'Inter', 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif",
-      fontWeight: "300",
+        "'SF Pro Display', 'Inter', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif",
+      fontWeight: "100",
+      letterSpacing: "-0.05em",
+      textShadow: "0 0 60px rgba(255,255,255,0.03)",
     };
+  };
+
+  const ElegantArsalanButton = () => {
+    return (
+      <motion.button
+        onClick={() => {
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        }}
+        className="text-8xl sm:text-9xl md:text-[12rem] lg:text-[15rem] xl:text-[18rem] font-light leading-none mb-6 cursor-pointer bg-transparent border-none p-0"
+        style={{
+          ...getArsalanStyle(),
+          position: "relative",
+          zIndex: 2,
+        }}
+        // Same smooth values as before
+        initial={
+          isFirstVisit
+            ? {
+                opacity: 0,
+                scale: 0.85,
+                y: 40,
+                filter: "blur(15px) brightness(0.6)",
+                letterSpacing: "0.08em",
+              }
+            : {
+                opacity: 1,
+                scale: 1,
+                y: 0,
+                filter: "blur(0px) brightness(1)",
+                letterSpacing: "-0.05em",
+              }
+        }
+        animate={{
+          opacity: 1,
+          scale: 1,
+          y: 0,
+          filter: "blur(0px) brightness(1)",
+          letterSpacing: "-0.05em",
+        }}
+        transition={
+          isFirstVisit
+            ? {
+                duration: 3.2,
+                ease: [0.19, 1.0, 0.22, 1.0],
+                opacity: {
+                  duration: 2.8,
+                  ease: [0.25, 0.1, 0.25, 1.0],
+                },
+                scale: {
+                  duration: 3.0,
+                  ease: [0.16, 1, 0.3, 1],
+                },
+                y: {
+                  duration: 2.9,
+                  ease: [0.23, 1, 0.32, 1],
+                },
+                filter: {
+                  duration: 3.1,
+                  ease: [0.25, 0.46, 0.45, 0.94],
+                },
+                letterSpacing: {
+                  duration: 3.3, // Just slightly longer to prevent snap
+                  ease: [0.19, 1.0, 0.22, 1.0],
+                  type: "tween", // Ensures smooth interpolation
+                },
+              }
+            : {
+                duration: 0,
+              }
+        }
+        // Same subtle breathing
+        whileInView={{
+          scale: [1, 1.003, 1],
+          transition: {
+            duration: 5,
+            repeat: Infinity,
+            ease: [0.4, 0.0, 0.6, 1],
+            delay: isFirstVisit ? 3.5 : 0,
+          },
+        }}
+        onAnimationComplete={() => {
+          if (isFirstVisit) {
+            sessionStorage.setItem("hasVisitedLanding", "true");
+            setIsFirstVisit(false);
+          }
+        }}
+      >
+        Arsalan
+      </motion.button>
+    );
   };
 
   useEffect(() => {
@@ -372,11 +473,6 @@ export default function Home() {
         className="min-h-screen snap-y snap-mandatory overflow-y-scroll transition-all duration-700 ease-in-out"
         style={{ ...getBackgroundStyle(), position: "relative", zIndex: 1 }}
       >
-        {/* Background and Cursor Effects */}
-        <ParticleBackground />
-        {/* <CloudCursor /> */}
-
-        {/* Section 1 - Landing/Hero */}
         <motion.section
           className="min-h-screen flex flex-col justify-center items-end snap-start px-8 md:px-16 lg:px-24 py-10 relative"
           initial={{ opacity: 0 }}
@@ -388,19 +484,7 @@ export default function Home() {
         >
           {/* Main content - right aligned */}
           <div className="text-right">
-            <button
-              onClick={() => {
-                window.scrollTo({ top: 0, behavior: "smooth" });
-              }}
-              className="text-8xl sm:text-9xl md:text-[12rem] lg:text-[15rem] xl:text-[18rem] font-light leading-none mb-6 cursor-pointer hover:opacity-80 transition-opacity duration-300 bg-transparent border-none p-0"
-              style={{
-                ...getArsalanStyle(),
-                position: "relative",
-                zIndex: 2,
-              }}
-            >
-              Arsalan
-            </button>
+            <ElegantArsalanButton />
             <div
               className={`text-lg md:text-xl lg:text-2xl font-light mb-2 transition-colors duration-700 ${getTextColor()}`}
             >
@@ -417,21 +501,36 @@ export default function Home() {
               PORTFOLIO_25/26
             </div>
           </div>
-
-          {/* Scroll indicator - just the animated line */}
-          <div className="absolute bottom-20 left-1/2 transform -translate-x-1/2 flex flex-col items-center">
+          {/* "Scroll to Explore" Indicator */}
+          <motion.div
+            className="absolute bottom-8 right-8 cursor-pointer"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 0.6, y: 0 }}
+            transition={{ delay: 3, duration: 2 }}
+            onClick={() =>
+              window.scrollTo({ top: window.innerHeight, behavior: "smooth" })
+            }
+            whileHover={{ opacity: 1, x: -4 }}
+          >
             <motion.div
-              animate={{ y: [0, 8, 0] }}
+              animate={{ x: [0, 8, 0] }}
               transition={{
-                duration: 2.5,
+                duration: 4,
                 repeat: Infinity,
                 ease: "easeInOut",
               }}
-              className={`w-[1px] h-6 transition-colors duration-700 opacity-60 ${
-                scrollProgress > 0.1 ? "bg-gray-400" : "bg-gray-600"
+              className={`text-sm transition-colors duration-700 ${
+                scrollProgress > 0.1 ? "text-gray-300" : "text-gray-600"
               }`}
-            />
-          </div>
+              style={{
+                fontFamily: "'Inter', sans-serif",
+                fontWeight: "300",
+                letterSpacing: "0.1em",
+              }}
+            >
+              Scroll to Explore
+            </motion.div>
+          </motion.div>
         </motion.section>
 
         {/* Section 2 - Introduction */}
@@ -465,10 +564,9 @@ export default function Home() {
                   0.8
                 )}`}
               >
-                I am an aspiring Technical <br className="hidden xs:inline" />
-                Architect, pursuing my <br className="hidden xs:inline" />
-                undergraduate studies at <br className="hidden xs:inline" />
-                SCSU, US.
+                I like to automate systems <br className="hidden xs:inline" />
+                and build infrastructure, <br className="hidden xs:inline" />
+                pursuing my undergraduate studies at SCSU.
               </p>
             </motion.div>
             {/* Right Content - Image */}

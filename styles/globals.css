@@ -284,3 +284,53 @@ button {
     transform: translateX(3px);
   }
 }
+/* Luxury Arsalan Animation */
+@keyframes luxuryFlow {
+  0% { 
+    background-position: 0% 50%;
+    filter: drop-shadow(0 4px 12px rgba(0,0,0,0.4)) drop-shadow(0 0 40px rgba(255,255,255,0.08));
+  }
+  25% { 
+    background-position: 100% 25%;
+    filter: drop-shadow(0 6px 16px rgba(0,0,0,0.5)) drop-shadow(0 0 60px rgba(255,255,255,0.12));
+  }
+  50% { 
+    background-position: 100% 75%;
+    filter: drop-shadow(0 8px 20px rgba(0,0,0,0.6)) drop-shadow(0 0 80px rgba(255,255,255,0.15));
+  }
+  75% { 
+    background-position: 0% 75%;
+    filter: drop-shadow(0 6px 16px rgba(0,0,0,0.5)) drop-shadow(0 0 60px rgba(255,255,255,0.12));
+  }
+  100% { 
+    background-position: 0% 50%;
+    filter: drop-shadow(0 4px 12px rgba(0,0,0,0.4)) drop-shadow(0 0 40px rgba(255,255,255,0.08));
+  }
+}
+
+/* Enhanced liquid flow animation */
+@keyframes liquidFlow {
+  0% { 
+    background-position: 0% 50%;
+  }
+  20% { 
+    background-position: 80% 20%;
+  }
+  40% { 
+    background-position: 100% 80%;
+  }
+  60% { 
+    background-position: 20% 100%;
+  }
+  80% { 
+    background-position: 0% 60%;
+  }
+  100% { 
+    background-position: 0% 50%;
+  }
+}
+
+
+
+
+
