@@ -1,9 +1,9 @@
-// pages/_app.tsx
 import "../styles/globals.css";
 import type { AppProps } from "next/app";
 import { useState, useEffect } from "react";
 import Head from "next/head";
-import LoadingPage from "@/components/ui/LoadingPage";
+// OLD: import LoadingPage from "@/components/ui/LoadingPage";
+import NewLoadingPage from "@/components/ui/NewLoadingPage"; // NEW sliding number loading page
 import { AnimatePresence, motion } from "framer-motion";
 import { useRouter } from "next/router";
 
@@ -25,13 +25,15 @@ export default function App({ Component, pageProps }: AppProps) {
     const hasLoadedBefore = sessionStorage.getItem("portfolio-loaded");
 
     if (!hasLoadedBefore) {
+      // Clear the landing page visit flag so Arsalan animates after loading
+      sessionStorage.removeItem("hasVisitedLanding");
+      
       // First time loading - show the loading screen
       const timer = setTimeout(() => {
         setIsLoading(false);
         // Mark as loaded in session storage
         sessionStorage.setItem("portfolio-loaded", "true");
-      }, 16000);
-      return () => clearTimeout(timer);
+      }, 3800);     return () => clearTimeout(timer);
     } else {
       // Already loaded before in this session - skip loading screen
       setIsLoading(false);
@@ -45,7 +47,7 @@ export default function App({ Component, pageProps }: AppProps) {
         exit={{ opacity: 0 }}
         transition={{ duration: 1.5, ease: "easeOut" }}
       >
-        <LoadingPage />
+        <NewLoadingPage />
       </motion.div>
     );
   }

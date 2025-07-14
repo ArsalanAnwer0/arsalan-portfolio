@@ -364,16 +364,6 @@ export default function Home() {
                 duration: 0,
               }
         }
-        // Same subtle breathing
-        whileInView={{
-          scale: [1, 1.003, 1],
-          transition: {
-            duration: 5,
-            repeat: Infinity,
-            ease: [0.4, 0.0, 0.6, 1],
-            delay: isFirstVisit ? 3.5 : 0,
-          },
-        }}
         onAnimationComplete={() => {
           if (isFirstVisit) {
             sessionStorage.setItem("hasVisitedLanding", "true");

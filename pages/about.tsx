@@ -145,7 +145,7 @@ export default function About() {
       style={{ ...getBackgroundStyle(), position: "relative", zIndex: 1 }}
     >
       {/* Background Effects */}
-      <ParticleBackground />
+      {/* <ParticleBackground /> */}
 
       {/* Elegant Arsalan Navigation */}
       <div className="fixed top-8 left-8 z-50">
