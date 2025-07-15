@@ -9,6 +9,30 @@ import TitleSections from "@/components/ui/TitleSections";
 import BackToTopButton from "@/components/ui/BackToTopButton";
 import { useScrollMemory } from "@/components/ui/useScrollMemory";
 
+interface GoogleCredentialResponse {
+  credential: string;
+}
+
+interface DecodedToken {
+  email: string;
+  name: string;
+  picture: string;
+}
+
+declare global {
+  interface Window {
+    google?: {
+      accounts: {
+        id: {
+          initialize: (config: any) => void;
+          renderButton: (element: HTMLElement, options: any) => void;
+          prompt: () => void;
+        };
+      };
+    };
+  }
+}
+
 function throttle(func: (...args: any[]) => void, delay: number) {
   let lastCall = 0;
   return function (...args: any[]) {
@@ -85,26 +109,33 @@ const SkillItem: React.FC<{ title: string; level: string; years: string }> = ({
   );
 };
 
-// Vim-style Search Component
 const VimSearch: React.FC<{
   message: string;
   setMessage: (msg: string) => void;
   onSend: () => void;
   scrollProgress: number;
   status: string;
-}> = ({ message, setMessage, onSend, scrollProgress, status }) => {
+  showGoogleSignIn: boolean;
+  signinContainerRef: React.RefObject<HTMLDivElement>;
+}> = ({
+  message,
+  setMessage,
+  onSend,
+  scrollProgress,
+  status,
+  showGoogleSignIn,
+  signinContainerRef,
+}) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
   // Auto-focus on mount without scrolling
   useEffect(() => {
-    // Delay the focus to prevent initial scroll
     const timer = setTimeout(() => {
       if (inputRef.current) {
         inputRef.current.focus({ preventScroll: true });
       }
     }, 100);
-
     return () => clearTimeout(timer);
   }, []);
 
@@ -153,10 +184,7 @@ const VimSearch: React.FC<{
         `}
         onClick={() => inputRef.current?.focus()}
       >
-        {/* Display the typed text */}
         <span>{message}</span>
-
-        {/* Blinking cursor positioned after text */}
         <motion.span
           className={`inline-block h-6 md:h-7 w-3 ${colors.cursor} ml-0`}
           style={{
@@ -167,8 +195,6 @@ const VimSearch: React.FC<{
           animate={{ opacity: [1, 0, 1] }}
           transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
         />
-
-        {/* Invisible input to capture keystrokes */}
         <input
           ref={inputRef}
           type="text"
@@ -179,6 +205,20 @@ const VimSearch: React.FC<{
           style={{ caretColor: "transparent" }}
         />
       </div>
+
+      {/* Google Sign-In Container */}
+      {showGoogleSignIn && (
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mt-6 flex justify-center"
+        >
+          <div
+            ref={signinContainerRef}
+            className="bg-white/10 backdrop-blur-sm rounded-lg p-4 border border-white/20"
+          />
+        </motion.div>
+      )}
 
       {/* Status message */}
       {status && (
@@ -194,28 +234,41 @@ const VimSearch: React.FC<{
         </motion.div>
       )}
 
-      {/* Always show "Press Enter to send" hint */}
-      <motion.div
-        className={`
-          mt-2 text-xs text-center opacity-40
-          ${scrollProgress > 0.65 ? "text-gray-400" : "text-gray-500"}
-        `}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 0.4 }}
-        transition={{ delay: 0.3 }}
-      >
-        Press Enter to send
-      </motion.div>
+      {!showGoogleSignIn && (
+        <motion.div
+          className={`mt-2 text-xs text-center opacity-40 ${
+            scrollProgress > 0.65 ? "text-gray-400" : "text-gray-500"
+          }`}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 0.4 }}
+          transition={{ delay: 0.3 }}
+        >
+          Press Enter to send
+        </motion.div>
+      )}
     </motion.div>
   );
 };
 
+
 export default function Home() {
+  useEffect(() => {
+    console.log(
+      "⏳ Google Client ID is:",
+      process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID
+    );
+  }, []);
+
   const [isFirstVisit, setIsFirstVisit] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [message, setMessage] = useState("");
   const [status, setStatus] = useState("");
   const [scrollProgress, setScrollProgress] = useState(0);
+  const [showGoogleSignIn, setShowGoogleSignIn] = useState(false);
+  const [isGoogleLoaded, setIsGoogleLoaded] = useState(false);
+  const signinContainerRef = useRef<HTMLDivElement>(
+    null
+  ) as React.RefObject<HTMLDivElement>;
 
   // Check if this is the first visit in this session
   useEffect(() => {
@@ -245,7 +298,24 @@ export default function Home() {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+  useEffect(() => {
+    if (typeof window !== "undefined" && !window.google) {
+      const script = document.createElement("script");
+      script.src = "https://accounts.google.com/gsi/client";
+      script.async = true;
+      script.defer = true;
+      script.onload = () => setIsGoogleLoaded(true);
+      document.head.appendChild(script);
 
+      return () => {
+        if (document.head.contains(script)) {
+          document.head.removeChild(script);
+        }
+      };
+    } else if (window.google) {
+      setIsGoogleLoaded(true);
+    }
+  }, []);
   // Calculate background color based on scroll progress
   const getBackgroundStyle = () => {
     const greyIntensity = Math.min(scrollProgress * 1.1, 0.88);
@@ -413,22 +483,45 @@ export default function Home() {
     }, 100);
     return () => clearInterval(interval);
   }, []);
-
-  const handleSendMessage = async () => {
-    if (!message.trim()) {
-      setStatus("Message is required.");
-      return;
-    }
-    setStatus("Sending...");
+  const decodeJWT = (token: string): DecodedToken => {
     try {
-      const response = await fetch("/api/sendIdea", {
+      const base64Url = token.split(".")[1];
+      const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+      const jsonPayload = decodeURIComponent(
+        atob(base64)
+          .split("")
+          .map((c) => "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2))
+          .join("")
+      );
+      return JSON.parse(jsonPayload);
+    } catch (error) {
+      throw new Error("Invalid token");
+    }
+  };
+
+  const handleGoogleResponse = async (response: GoogleCredentialResponse) => {
+    setStatus("Sending with Google Sign-In...");
+
+    try {
+      const payload = decodeJWT(response.credential);
+
+      const messageData = {
+        message: message.trim(),
+        email: payload.email,
+        name: payload.name,
+        timestamp: new Date().toISOString(),
+      };
+
+      const result = await fetch("/api/sendIdea", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message }),
+        body: JSON.stringify(messageData),
       });
-      if (response.ok) {
-        setStatus("Message sent successfully!");
+
+      if (result.ok) {
+        setStatus(`Message sent successfully, ${payload.name.split(" ")[0]}!`);
         setMessage("");
+        setShowGoogleSignIn(false);
       } else {
         setStatus("Failed to send message. Please try again.");
       }
@@ -436,6 +529,47 @@ export default function Home() {
       console.error("Error:", error);
       setStatus("An error occurred while sending the message.");
     }
+  };
+
+  const handleSendMessage = async () => {
+    console.log("Google Client ID:", process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID);
+    if (!message.trim()) {
+      setStatus("Message is required.");
+      return;
+    }
+
+    if (!isGoogleLoaded) {
+      setStatus("Loading Google Sign-In...");
+      return;
+    }
+
+    // Show Google Sign-In
+    setShowGoogleSignIn(true);
+    setStatus("Sign in with Google to send your message");
+
+    // Initialize Google Sign-In
+    setTimeout(() => {
+      if (window.google && signinContainerRef.current) {
+        try {
+          window.google.accounts.id.initialize({
+            client_id: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID,
+            callback: handleGoogleResponse,
+            auto_select: false,
+            cancel_on_tap_outside: true,
+          });
+
+          window.google.accounts.id.renderButton(signinContainerRef.current, {
+            theme: scrollProgress > 0.65 ? "filled_black" : "outline",
+            size: "large",
+            text: "continue_with",
+            shape: "rectangular",
+          });
+        } catch (error) {
+          console.error("Google Sign-In error:", error);
+          setStatus("Failed to load Google Sign-In. Please try again.");
+        }
+      }
+    }, 100);
   };
 
   return (
@@ -620,6 +754,7 @@ export default function Home() {
           </p>
 
           {/* Vim-style search bar */}
+
           <div className="mt-16 w-full max-w-4xl px-4">
             <VimSearch
               message={message}
@@ -627,6 +762,8 @@ export default function Home() {
               onSend={handleSendMessage}
               scrollProgress={scrollProgress}
               status={status}
+              showGoogleSignIn={showGoogleSignIn}
+              signinContainerRef={signinContainerRef}
             />
           </div>
         </motion.section>
