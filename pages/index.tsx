@@ -2,7 +2,6 @@ import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { Github, Linkedin, Instagram } from "lucide-react";
-import ContactModal from "@/components/ui/ContactModal";
 import ParticleBackground from "@/components/ui/ParticleBackground";
 import Link from "next/link";
 import TitleSections from "@/components/ui/TitleSections";
@@ -260,7 +259,6 @@ export default function Home() {
   }, []);
 
   const [isFirstVisit, setIsFirstVisit] = useState(true);
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [message, setMessage] = useState("");
   const [status, setStatus] = useState("");
   const [scrollProgress, setScrollProgress] = useState(0);
@@ -749,8 +747,8 @@ export default function Home() {
               lineHeight: "1.6",
             }}
           >
-            What does innovation mean to you? Share your thoughts and be a part
-            of shaping a future where ideas become timeless.
+            Ready to collaborate on innovative projects? Let's build tools that make a difference. 
+            Send me a message and let's create something amazing together.
           </p>
 
           {/* Vim-style search bar */}
@@ -821,24 +819,9 @@ export default function Home() {
                   }`}
                 />
               </a>
-              <Button
-                className={`px-6 py-2 rounded-lg transition-all duration-700 hover:scale-105 ${
-                  scrollProgress > 0.65
-                    ? "text-white bg-transparent border border-gray-400 hover:bg-white/10"
-                    : "text-black bg-transparent border border-gray-300 hover:bg-black/5"
-                }`}
-                onClick={() => setIsModalOpen(true)}
-              >
-                Contact
-              </Button>
+             
             </div>
           </div>
-          {isModalOpen && (
-            <ContactModal
-              onClose={() => setIsModalOpen(false)}
-              scrollProgress={scrollProgress}
-            />
-          )}
         </footer>
         {/* Add BackToTopButton */}
         <BackToTopButton scrollProgress={scrollProgress} />
