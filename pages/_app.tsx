@@ -2,8 +2,7 @@ import "../styles/globals.css";
 import type { AppProps } from "next/app";
 import { useState, useEffect } from "react";
 import Head from "next/head";
-// OLD: import LoadingPage from "@/components/ui/LoadingPage";
-import NewLoadingPage from "@/components/ui/NewLoadingPage"; // NEW sliding number loading page
+import MinimalLoading from "@/components/ui/MinimalLoading";
 import { AnimatePresence, motion } from "framer-motion";
 import { useRouter } from "next/router";
 
@@ -33,7 +32,8 @@ export default function App({ Component, pageProps }: AppProps) {
         setIsLoading(false);
         // Mark as loaded in session storage
         sessionStorage.setItem("portfolio-loaded", "true");
-      }, 3800);     return () => clearTimeout(timer);
+      }, 1500); // Reduced to 1.5 seconds for minimal loading
+      return () => clearTimeout(timer);
     } else {
       // Already loaded before in this session - skip loading screen
       setIsLoading(false);
@@ -45,9 +45,9 @@ export default function App({ Component, pageProps }: AppProps) {
       <motion.div
         initial={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        transition={{ duration: 1.5, ease: "easeOut" }}
+        transition={{ duration: 0.5, ease: "easeOut" }}
       >
-        <NewLoadingPage />
+        <MinimalLoading />
       </motion.div>
     );
   }
@@ -55,11 +55,10 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
     <>
       <Head>
-        <link rel="icon" href="/favicon.ico" sizes="any" />
-        <link rel="shortcut icon" href="/favicon.ico" />
-        <link rel="apple-touch-icon" href="/favicon.ico" />
-        <link rel="icon" href="/favicon.ico?v=2" type="image/x-icon" />
-        <title>Arsal's Portfolio</title>
+        <link rel="icon" href="/mashle-nb.png" type="image/png" />
+        <link rel="shortcut icon" href="/mashle-nb.png" />
+        <link rel="apple-touch-icon" href="/mashle-nb.png" />
+        <title>Arsalan's Portfolio</title>
       </Head>
 
       {isMaintenance && (

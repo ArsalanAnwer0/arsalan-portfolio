@@ -330,6 +330,11 @@ button {
   }
 }
 
+html,
+body {
+  overflow: hidden;
+}
+
 
 
 
