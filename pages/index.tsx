@@ -28,6 +28,7 @@ const HomePage = () => {
     { name: 'BankingApp', url: 'https://github.com/ArsalanAnwer0/Springboot-BankingApp' },
     { name: 'Smart Light Controller', url: 'https://github.com/ArsalanAnwer0/smart-light-controller' },
     { name: 'CostWatch', url: 'https://github.com/ArsalanAnwer0/CostWatch' },
+    { name: 'Carousel', url: 'https://github.com/ArsalanAnwer0/carousel' },
   ];
 
   // Certificate links data

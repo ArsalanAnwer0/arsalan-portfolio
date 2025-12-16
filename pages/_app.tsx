@@ -16,9 +16,6 @@ export default function App({ Component, pageProps }: AppProps) {
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
 
-  // This environment variable controls the maintenance banner.
-  const isMaintenance = process.env.NEXT_PUBLIC_MAINTENANCE_MODE === "true";
-
   useEffect(() => {
     // Check if loading screen has already been shown in this session
     const hasLoadedBefore = sessionStorage.getItem("portfolio-loaded");
@@ -60,26 +57,6 @@ export default function App({ Component, pageProps }: AppProps) {
         <link rel="apple-touch-icon" href="/mashle-nb.png" />
         <title>Arsalan's Portfolio</title>
       </Head>
-
-      {isMaintenance && (
-        <div
-          style={{
-            position: "fixed",
-            bottom: "20px",
-            left: "20px",
-            background: "linear-gradient(135deg, #e0c3fc, #8ec5fc)",
-            color: "#333",
-            padding: "12px 20px",
-            fontSize: "15px",
-            fontWeight: 500,
-            borderRadius: "8px",
-            boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-            zIndex: 9999,
-          }}
-        >
-          ⚠️ This site is under maintenance. Some features may not work.
-        </div>
-      )}
 
       <AnimatePresence mode="wait">
         <motion.div
