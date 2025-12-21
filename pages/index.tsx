@@ -17,10 +17,47 @@ const getTimeBasedGreeting = () => {
 const HomePage = () => {
   const [greeting, setGreeting] = useState('');
   const [hoveredSection, setHoveredSection] = useState<string | null>(null);
+  const [currentSnippet, setCurrentSnippet] = useState<{ text: string; content: string; link?: string } | null>(null);
+
+  // Rotating snippets - different insights shown on each visit
+  const snippets = [
+    {
+      text: 'I AM CURRENTLY READING ',
+      content: 'RESEARCH ON RECOGNIZING REQUIRED ITEMS BASED ON OPENCV AND MACHINE LEARNING',
+      link: 'https://doaj.org/article/00069ae971e64aee81c7e9df247a6965'
+    },
+    {
+      text: 'MY MOST RECENT ',
+      content: 'OPEN SOURCE CONTRIBUTION',
+      link: 'https://github.com/3C-SCSU/Avatar/commit/3b92efe3e9b0fdbb6ed463403942c82cd4a5ae94'
+    },
+    {
+      text: 'I AM LEARNING ABOUT AGENTIC AI, AGENTIC WORKFLOWS AND GENERATIVE AI ',
+      content: 'DURING MY LEISURE TIME'
+    },
+    {
+      text: 'MY FAVORITE ARTICLE RIGHT NOW IS ',
+      content: '"HOW I REVISE DSA EVERY SATURDAY (EVEN WHEN I WAKE UP AT 12)"',
+      link: 'https://medium.com/@himanshusingour7/how-i-revise-dsa-every-saturday-even-when-i-wake-up-at-12-3be5efdf43b4'
+    },
+    {
+      text: 'I AM CURRENTLY EXPLORING ',
+      content: 'INNGEST',
+      link: 'https://www.inngest.com/?utm_source=youtube&utm_medium=video&utm_campaign=yt-hc-3&utm_term=next.js'
+    },
+    {
+      text: 'WORKING ON WRITING A ',
+      content: 'MEDIUM ARTICLE ABOUT VPC AND VPC PEERING IN AWS'
+    }
+  ];
 
   useEffect(() => {
     // Set greeting on mount
     setGreeting(getTimeBasedGreeting());
+
+    // Pick a random snippet on mount
+    const randomIndex = Math.floor(Math.random() * snippets.length);
+    setCurrentSnippet(snippets[randomIndex]);
   }, []);
 
   // Project links data
@@ -39,7 +76,7 @@ const HomePage = () => {
   return (
     <div className="min-h-screen bg-white dark:bg-black text-black dark:text-white p-8 md:p-16 lg:p-24 flex items-center justify-center" style={{ fontFamily: "'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif" }}>
       <div className="max-w-7xl w-full">
-        {/* Left side content */}
+        {/* Main content */}
         <div className="mb-20">
           <h1 className="text-xl md:text-2xl lg:text-3xl mb-12 tracking-wide font-light">
             {greeting}
@@ -50,7 +87,7 @@ const HomePage = () => {
               I&apos;M ARSALAN. I LIKE TO ARCHITECT CLOUD APPLICATIONS AND OPTIMIZE DEPLOYMENT WORKFLOWS.
             </p>
             <p className="text-2xl md:text-3xl lg:text-4xl leading-relaxed max-w-4xl font-light">
-              I&apos;M CURRENTLY A COMPUTER SCIENCE STUDENT AT{' '}
+              I&apos;M A COMPUTER SCIENCE STUDENT AT{' '}
               <a
                 href="https://www.stcloudstate.edu/"
                 target="_blank"
@@ -117,7 +154,7 @@ const HomePage = () => {
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
                     transition={{ duration: 0.2 }}
-                    className="ml-6 text-lg md:text-xl lg:text-2xl font-light"
+                    className="ml-6 text-xl md:text-2xl lg:text-3xl font-light"
                   >
                     [
                     {projects.map((project, index) => (
@@ -157,7 +194,7 @@ const HomePage = () => {
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
                     transition={{ duration: 0.2 }}
-                    className="ml-6 text-lg md:text-xl lg:text-2xl font-light"
+                    className="ml-6 text-xl md:text-2xl lg:text-3xl font-light"
                   >
                     [
                     {certificates.map((cert, index) => (
@@ -180,6 +217,33 @@ const HomePage = () => {
               </AnimatePresence>
             </div>
           </div>
+
+          {/* PS - Rotating snippet at the bottom */}
+          {currentSnippet && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.8, delay: 0.5 }}
+              className="mt-20"
+            >
+              <p className="text-xl md:text-2xl lg:text-3xl font-light leading-relaxed max-w-4xl">
+                <span className="opacity-50">PS.</span> {currentSnippet.text}
+                {currentSnippet.link ? (
+                  <a
+                    href={currentSnippet.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="underline hover:opacity-60 transition-opacity"
+                  >
+                    {currentSnippet.content}
+                  </a>
+                ) : (
+                  <span>{currentSnippet.content}</span>
+                )}
+                .
+              </p>
+            </motion.div>
+          )}
         </div>
       </div>
     </div>
