@@ -77,13 +77,13 @@ const HomePage = () => {
   const experiences = [
     {
       name: 'Research Assistant',
-      org: 'SCSU - Avatar BCI',
-      url: '#'
+      org: 'Avatar BCI',
+      url: 'https://github.com/3C-SCSU'
     },
     {
       name: 'Administrative Support Assistant',
-      org: 'SCSU',
-      url: '#'
+      org: 'CIS, SGS',
+      url: 'https://www.stcloudstate.edu/internationalstudies/'
     },
   ];
 
