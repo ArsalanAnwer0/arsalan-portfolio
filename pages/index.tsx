@@ -66,6 +66,7 @@ const HomePage = () => {
     { name: 'Smart Light Controller', url: 'https://github.com/ArsalanAnwer0/smart-light-controller' },
     { name: 'CostWatch', url: 'https://github.com/ArsalanAnwer0/CostWatch' },
     { name: 'Carousel', url: 'https://github.com/ArsalanAnwer0/carousel' },
+    { name: 'Schedule Builder', url: 'https://github.com/ArsalanAnwer0/schedule-builder' },
   ];
 
   // Certificate links data
@@ -77,18 +78,19 @@ const HomePage = () => {
   const experiences = [
     {
       name: 'Research Assistant',
-      org: 'Avatar BCI',
-      url: 'https://github.com/3C-SCSU'
+      org: [{ name: 'Avatar BCI', url: 'https://github.com/3C-SCSU' }]
     },
     {
       name: 'Administrative Support Assistant',
-      org: 'CIS, SGS',
-      url: 'https://www.stcloudstate.edu/internationalstudies/'
+      org: [
+        { name: 'CIS', url: 'https://www.stcloudstate.edu/internationalstudies/' },
+        { name: 'SGS', url: 'https://www.stcloudstate.edu/graduatestudies/' }
+      ]
     },
   ];
 
   return (
-    <div className="min-h-screen bg-white dark:bg-black text-black dark:text-white p-8 md:p-16 lg:p-24 flex items-center justify-center" style={{ fontFamily: "'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif" }}>
+    <div className="min-h-screen bg-white dark:bg-black text-black dark:text-white p-8 md:p-12 lg:p-16 flex items-center justify-center" style={{ fontFamily: "'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif" }}>
       <div className="max-w-7xl w-full">
         {/* Main content */}
         <div className="mb-20">
@@ -96,7 +98,7 @@ const HomePage = () => {
             {greeting}
           </h1>
 
-          <div className="space-y-10 mb-16">
+          <div className="space-y-10 mb-8">
             <p className="text-2xl md:text-3xl lg:text-4xl leading-relaxed max-w-4xl font-light">
               I&apos;M ARSALAN. I LIKE TO ARCHITECT CLOUD APPLICATIONS AND OPTIMIZE DEPLOYMENT WORKFLOWS.
             </p>
@@ -218,16 +220,19 @@ const HomePage = () => {
                     [
                     {experiences.map((exp, index) => (
                       <span key={index}>
-                        &quot;
-                        <a
-                          href={exp.url}
-                          className="hover:underline"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          {exp.name} - {exp.org}
-                        </a>
-                        &quot;{index < experiences.length - 1 ? ', ' : ''}
+                        &quot;{exp.name} - {exp.org.map((orgItem, orgIndex) => (
+                          <span key={orgIndex}>
+                            <a
+                              href={orgItem.url}
+                              className="hover:underline"
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              {orgItem.name}
+                            </a>
+                            {orgIndex < exp.org.length - 1 ? ', ' : ''}
+                          </span>
+                        ))}&quot;{index < experiences.length - 1 ? ', ' : ''}
                       </span>
                     ))}
                     ]
