@@ -16,7 +16,7 @@ const getTimeBasedGreeting = () => {
 
 const HomePage = () => {
   const [greeting, setGreeting] = useState('');
-  const [hoveredSection, setHoveredSection] = useState<string | null>(null);
+  const [hoveredSection, setHoveredSection] = useState<'projects' | 'certs' | 'experience' | null>(null);
   const [currentSnippet, setCurrentSnippet] = useState<{ text: string; content: string; link?: string } | null>(null);
 
   // Rotating snippets - different insights shown on each visit
@@ -73,6 +73,20 @@ const HomePage = () => {
     { name: 'TIP02', url: 'https://www.linkedin.com/in/arsalan-anwer-cloud/overlay/1764706815586/single-media-viewer/?profileId=ACoAAE8F3HYB5wErnrxPReC9UQGztoiWN_A9VLo' },
   ];
 
+  // Experience data
+  const experiences = [
+    {
+      name: 'Research Assistant',
+      org: 'SCSU - Avatar BCI',
+      url: '#'
+    },
+    {
+      name: 'Administrative Support Assistant',
+      org: 'SCSU',
+      url: '#'
+    },
+  ];
+
   return (
     <div className="min-h-screen bg-white dark:bg-black text-black dark:text-white p-8 md:p-16 lg:p-24 flex items-center justify-center" style={{ fontFamily: "'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif" }}>
       <div className="max-w-7xl w-full">
@@ -100,42 +114,7 @@ const HomePage = () => {
             </p>
           </div>
 
-          <div className="mb-16 text-xl md:text-2xl lg:text-3xl font-light">
-            <p>
-              FIND ME ON{' '}
-              <a
-                href="https://www.linkedin.com/in/arsalan-anwer-cloud/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="underline hover:opacity-60 transition-opacity"
-              >
-                LINKEDIN↗
-              </a>
-              ,{' '}
-              <a
-                href="https://github.com/ArsalanAnwer0"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="underline hover:opacity-60 transition-opacity"
-              >
-                GITHUB↗
-              </a>
-              ,
-              <br />
-              AND READ MY{' '}
-              <a
-                href="https://medium.com/@arsalan.anwer9050"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="underline hover:opacity-60 transition-opacity"
-              >
-                MEDIUM↗
-              </a>{' '}
-              ARTICLES.
-            </p>
-          </div>
-
-          {/* Projects and Certs Section */}
+          {/* Projects, Certs, and Experience Section */}
           <div className="space-y-4 text-xl md:text-2xl lg:text-3xl font-light">
             {/* Projects Section */}
             <div
@@ -216,6 +195,81 @@ const HomePage = () => {
                 )}
               </AnimatePresence>
             </div>
+
+            {/* Experience Section */}
+            <div
+              className="relative"
+              onMouseEnter={() => setHoveredSection('experience')}
+              onMouseLeave={() => setHoveredSection(null)}
+            >
+              <span className="cursor-pointer hover:opacity-60 transition-opacity">
+                EXPERIENCE
+              </span>
+
+              <AnimatePresence>
+                {hoveredSection === 'experience' && (
+                  <motion.span
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.2 }}
+                    className="ml-6 text-xl md:text-2xl lg:text-3xl font-light"
+                  >
+                    [
+                    {experiences.map((exp, index) => (
+                      <span key={index}>
+                        &quot;
+                        <a
+                          href={exp.url}
+                          className="hover:underline"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          {exp.name} - {exp.org}
+                        </a>
+                        &quot;{index < experiences.length - 1 ? ', ' : ''}
+                      </span>
+                    ))}
+                    ]
+                  </motion.span>
+                )}
+              </AnimatePresence>
+            </div>
+          </div>
+
+          <div className="mb-16 mt-6 text-xl md:text-2xl lg:text-3xl font-light">
+            <p>
+              FIND ME ON{' '}
+              <a
+                href="https://www.linkedin.com/in/arsalan-anwer-cloud/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline hover:opacity-60 transition-opacity"
+              >
+                LINKEDIN↗
+              </a>
+              ,{' '}
+              <a
+                href="https://github.com/ArsalanAnwer0"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline hover:opacity-60 transition-opacity"
+              >
+                GITHUB↗
+              </a>
+              ,
+              <br />
+              AND READ MY{' '}
+              <a
+                href="https://medium.com/@arsalan.anwer9050"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline hover:opacity-60 transition-opacity"
+              >
+                MEDIUM↗
+              </a>{' '}
+              ARTICLES.
+            </p>
           </div>
 
           {/* PS - Rotating snippet at the bottom */}
