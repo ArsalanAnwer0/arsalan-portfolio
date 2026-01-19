@@ -169,10 +169,20 @@ const HomePage = () => {
     >
       {/* Edge gradient hints */}
       {personality === 'professional' && (
-        <div className="fixed top-0 right-0 h-full w-32 bg-gradient-to-l from-orange-500/20 to-transparent pointer-events-none" />
+        <div
+          className="fixed top-0 right-0 h-full w-32 pointer-events-none"
+          style={{
+            background: 'linear-gradient(to left, rgba(255, 87, 34, 0.6), rgba(255, 87, 34, 0.4), rgba(255, 87, 34, 0.2), rgba(255, 87, 34, 0.08), transparent)'
+          }}
+        />
       )}
       {personality === 'fun' && (
-        <div className="fixed top-0 left-0 h-full w-32 bg-gradient-to-r from-white/20 to-transparent pointer-events-none" />
+        <div
+          className="fixed top-0 left-0 h-full w-32 pointer-events-none"
+          style={{
+            background: 'linear-gradient(to right, rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.08), transparent)'
+          }}
+        />
       )}
 
       <div className="max-w-7xl w-full relative z-10">
@@ -411,10 +421,7 @@ const HomePage = () => {
 
               <div className="space-y-10 mb-8">
                 <p className="text-2xl md:text-3xl lg:text-4xl leading-relaxed max-w-4xl font-light">
-                  I&apos;M ARSALAN. I LIKE PLAYING GAMES AND WATCH ANIME.
-                </p>
-                <p className="text-2xl md:text-3xl lg:text-4xl leading-relaxed max-w-4xl font-light">
-                  I LOVE EXPLORING NEW WORLDS IN GAMES AND BINGE WATCHING MY FAVORITE SHOWS.
+                  I&apos;M ARSALAN. I BUILD STUFF BY DAY AND EXPLORE DIGITAL WORLDS BY NIGHT.
                 </p>
               </div>
 
