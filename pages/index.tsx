@@ -1,6 +1,9 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
+// Personality type
+type Personality = 'professional' | 'fun';
+
 // Get time-based greeting
 const getTimeBasedGreeting = () => {
   const hour = new Date().getHours();
@@ -16,8 +19,12 @@ const getTimeBasedGreeting = () => {
 
 const HomePage = () => {
   const [greeting, setGreeting] = useState('');
-  const [hoveredSection, setHoveredSection] = useState<'projects' | 'certs' | 'experience' | null>(null);
+  const [hoveredSection, setHoveredSection] = useState<'projects' | 'certs' | 'experience' | 'anime' | 'games' | 'creators' | 'nerdcorner' | null>(null);
   const [currentSnippet, setCurrentSnippet] = useState<{ text: string; content: string; link?: string } | null>(null);
+
+  // Dual-personality state
+  const [personality, setPersonality] = useState<Personality>('professional');
+  const [isTouchDevice, setIsTouchDevice] = useState(false);
 
   // Rotating snippets - different insights shown on each visit
   const snippets = [
@@ -58,7 +65,27 @@ const HomePage = () => {
     // Pick a random snippet on mount
     const randomIndex = Math.floor(Math.random() * snippets.length);
     setCurrentSnippet(snippets[randomIndex]);
-  }, []);
+
+    // Detect touch device
+    setIsTouchDevice('ontouchstart' in window || navigator.maxTouchPoints > 0);
+
+    // Mouse position detection for personality switching
+    const handleMouseMove = (e: MouseEvent) => {
+      const windowWidth = window.innerWidth;
+      const leftTrigger = windowWidth * 0.1; // Left 10%
+      const rightTrigger = windowWidth * 0.9; // Right 90%
+
+      // Only trigger if in edge zones and switching to different personality
+      if (e.clientX < leftTrigger && personality === 'fun') {
+        setPersonality('professional');
+      } else if (e.clientX > rightTrigger && personality === 'professional') {
+        setPersonality('fun');
+      }
+    };
+
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, [personality]);
 
   // Project links data
   const projects = [
@@ -89,11 +116,76 @@ const HomePage = () => {
     },
   ];
 
+  // Fun side data structures
+  const animeList = [
+    { name: 'AOT', url: 'https://myanimelist.net/anime/16498/Shingeki_no_Kyojin' },
+    { name: 'Monster', url: 'https://myanimelist.net/anime/19/Monster' },
+    { name: 'Assassination Classroom', url: 'https://myanimelist.net/anime/24833/Ansatsu_Kyoushitsu' },
+    { name: 'Kaguya-sama: Love Is War', url: 'https://myanimelist.net/anime/37999/Kaguya-sama_wa_Kokurasetai__Tensai-tachi_no_Renai_Zunousen' },
+    { name: 'Mashle', url: 'https://myanimelist.net/anime/52211/Mashle' },
+  ];
+
+  const gamesList = [
+    { name: 'RDR2', url: 'https://www.rockstargames.com/reddeadredemption2' },
+    { name: 'Marvel Rivals', url: 'https://www.marvelrivals.com/' },
+    { name: 'Battlefield', url: 'https://www.ea.com/games/battlefield' },
+    { name: 'Elden Ring', url: 'https://en.bandainamcoent.eu/elden-ring/elden-ring' },
+  ];
+
+  const contentCreators = [
+    { name: 'Takuya Matsuyama (craftzdog)', url: 'https://www.youtube.com/@devaslife' },
+    { name: 'Andres Vidoza', url: 'https://www.youtube.com/@AndresVideos' },
+    { name: 'bashbunni', url: 'https://www.youtube.com/@bashbunni' },
+    { name: 'Joma Tech', url: 'https://www.youtube.com/@JomaOppa' },
+  ];
+
+  const nerdCorner = [
+    { category: 'Keyboards', items: 'Keychron K2 HE, Keychron K8' },
+    { category: 'Mouse', items: 'Logitech MX Master 3S' },
+    { category: 'Monitor', items: 'MSI PRO MP275W' },
+    { category: 'Editor', items: 'Neovim' },
+  ];
+
+  // Animation variants for personality transitions
+  const personalityVariants = {
+    enter: {
+      opacity: 1,
+      transition: { duration: 0.7, ease: 'easeInOut' }
+    },
+    exit: {
+      opacity: 0,
+      transition: { duration: 0.4, ease: 'easeInOut' }
+    }
+  };
+
   return (
-    <div className="min-h-screen bg-white dark:bg-black text-black dark:text-white p-8 md:p-12 lg:p-16 flex items-center justify-center" style={{ fontFamily: "'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif" }}>
-      <div className="max-w-7xl w-full">
-        {/* Main content */}
-        <div className="mb-20">
+    <div
+      className="min-h-screen p-8 md:p-12 lg:p-16 flex items-center justify-center relative overflow-hidden transition-colors duration-700"
+      style={{
+        fontFamily: "'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif",
+        backgroundColor: personality === 'professional' ? 'white' : '#FF5722',
+        color: 'black'
+      }}
+    >
+      {/* Edge gradient hints */}
+      {personality === 'professional' && (
+        <div className="fixed top-0 right-0 h-full w-32 bg-gradient-to-l from-orange-500/20 to-transparent pointer-events-none" />
+      )}
+      {personality === 'fun' && (
+        <div className="fixed top-0 left-0 h-full w-32 bg-gradient-to-r from-white/20 to-transparent pointer-events-none" />
+      )}
+
+      <div className="max-w-7xl w-full relative z-10">
+        <AnimatePresence mode="wait">
+          {personality === 'professional' ? (
+            <motion.div
+              key="professional"
+              variants={personalityVariants}
+              initial="exit"
+              animate="enter"
+              exit="exit"
+              className="mb-20"
+            >
           <h1 className="text-xl md:text-2xl lg:text-3xl mb-12 tracking-wide font-light">
             {greeting}
           </h1>
@@ -303,7 +395,248 @@ const HomePage = () => {
               </p>
             </motion.div>
           )}
-        </div>
+            </motion.div>
+          ) : (
+            <motion.div
+              key="fun"
+              variants={personalityVariants}
+              initial="exit"
+              animate="enter"
+              exit="exit"
+              className="mb-20"
+            >
+              <h1 className="text-xl md:text-2xl lg:text-3xl mb-12 tracking-wide font-light">
+                HEY THERE, FELLOW NERD
+              </h1>
+
+              <div className="space-y-10 mb-8">
+                <p className="text-2xl md:text-3xl lg:text-4xl leading-relaxed max-w-4xl font-light">
+                  I&apos;M ARSALAN. I LIKE PLAYING GAMES AND WATCH ANIME.
+                </p>
+                <p className="text-2xl md:text-3xl lg:text-4xl leading-relaxed max-w-4xl font-light">
+                  I LOVE EXPLORING NEW WORLDS IN GAMES AND BINGE WATCHING MY FAVORITE SHOWS.
+                </p>
+              </div>
+
+              {/* Fun sections */}
+              <div className="space-y-4 text-xl md:text-2xl lg:text-3xl font-light">
+                {/* Favorite Anime Section */}
+                <div
+                  className="relative"
+                  onMouseEnter={() => setHoveredSection('anime')}
+                  onMouseLeave={() => setHoveredSection(null)}
+                >
+                  <span className="cursor-pointer hover:opacity-60 transition-opacity">
+                    FAV ANIME
+                  </span>
+
+                  <AnimatePresence>
+                    {hoveredSection === 'anime' && (
+                      <motion.span
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.2 }}
+                        className="ml-6 text-xl md:text-2xl lg:text-3xl font-light"
+                      >
+                        [
+                        {animeList.map((anime, index) => (
+                          <span key={index}>
+                            &quot;
+                            <a
+                              href={anime.url}
+                              className="hover:underline"
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              {anime.name}
+                            </a>
+                            &quot;{index < animeList.length - 1 ? ', ' : ''}
+                          </span>
+                        ))}
+                        ]
+                      </motion.span>
+                    )}
+                  </AnimatePresence>
+                </div>
+
+                {/* Games Section */}
+                <div
+                  className="relative"
+                  onMouseEnter={() => setHoveredSection('games')}
+                  onMouseLeave={() => setHoveredSection(null)}
+                >
+                  <span className="cursor-pointer hover:opacity-60 transition-opacity">
+                    GAMES
+                  </span>
+
+                  <AnimatePresence>
+                    {hoveredSection === 'games' && (
+                      <motion.span
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.2 }}
+                        className="ml-6 text-xl md:text-2xl lg:text-3xl font-light"
+                      >
+                        [
+                        {gamesList.map((game, index) => (
+                          <span key={index}>
+                            &quot;
+                            <a
+                              href={game.url}
+                              className="hover:underline"
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              {game.name}
+                            </a>
+                            &quot;{index < gamesList.length - 1 ? ', ' : ''}
+                          </span>
+                        ))}
+                        ]
+                      </motion.span>
+                    )}
+                  </AnimatePresence>
+                </div>
+
+                {/* Content Creators Section */}
+                <div
+                  className="relative"
+                  onMouseEnter={() => setHoveredSection('creators')}
+                  onMouseLeave={() => setHoveredSection(null)}
+                >
+                  <span className="cursor-pointer hover:opacity-60 transition-opacity">
+                    FAV CONTENT CREATORS
+                  </span>
+
+                  <AnimatePresence>
+                    {hoveredSection === 'creators' && (
+                      <motion.span
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.2 }}
+                        className="ml-6 text-xl md:text-2xl lg:text-3xl font-light"
+                      >
+                        [
+                        {contentCreators.map((creator, index) => (
+                          <span key={index}>
+                            &quot;
+                            <a
+                              href={creator.url}
+                              className="hover:underline"
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              {creator.name}
+                            </a>
+                            &quot;{index < contentCreators.length - 1 ? ', ' : ''}
+                          </span>
+                        ))}
+                        ]
+                      </motion.span>
+                    )}
+                  </AnimatePresence>
+                </div>
+
+                {/* Nerd Corner Section */}
+                <div
+                  className="relative"
+                  onMouseEnter={() => setHoveredSection('nerdcorner')}
+                  onMouseLeave={() => setHoveredSection(null)}
+                >
+                  <span className="cursor-pointer hover:opacity-60 transition-opacity">
+                    NERD CORNER
+                  </span>
+
+                  <AnimatePresence>
+                    {hoveredSection === 'nerdcorner' && (
+                      <motion.span
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.2 }}
+                        className="ml-6 text-xl md:text-2xl lg:text-3xl font-light"
+                      >
+                        [
+                        {nerdCorner.map((item, index) => (
+                          <span key={index}>
+                            &quot;{item.category}: {item.items}&quot;{index < nerdCorner.length - 1 ? ', ' : ''}
+                          </span>
+                        ))}
+                        ]
+                      </motion.span>
+                    )}
+                  </AnimatePresence>
+                </div>
+              </div>
+
+              <div className="mb-16 mt-6 text-xl md:text-2xl lg:text-3xl font-light">
+                <p>
+                  FIND ME ON{' '}
+                  <a
+                    href="https://x.com/ArsalanAnw38631"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="underline hover:opacity-60 transition-opacity"
+                  >
+                    X↗
+                  </a>
+                  ,{' '}
+                  <a
+                    href="https://mastodon.social/@pipefitter08"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="underline hover:opacity-60 transition-opacity"
+                  >
+                    MASTODON↗
+                  </a>
+                  ,
+                  <br />
+                  AND CHECK OUT MY{' '}
+                  <a
+                    href="https://myanimelist.net/animelist/pipefitter08"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="underline hover:opacity-60 transition-opacity"
+                  >
+                    MAL↗
+                  </a>
+                  .
+                </p>
+              </div>
+
+              {/* PS - Fun snippet */}
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.8, delay: 0.5 }}
+                className="mt-20"
+              >
+                <p className="text-xl md:text-2xl lg:text-3xl font-light leading-relaxed max-w-4xl">
+                  <span className="opacity-50">PS.</span> CURRENTLY GRINDING THROUGH ELDEN RING DLC AND REWATCHING MONSTER FOR THE THIRD TIME.
+                </p>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Mobile toggle button */}
+        {isTouchDevice && (
+          <motion.button
+            onClick={() => setPersonality(p => p === 'professional' ? 'fun' : 'professional')}
+            className="fixed bottom-8 right-8 z-50 p-4 rounded-full text-white shadow-lg"
+            style={{
+              backgroundColor: personality === 'professional' ? '#FF5722' : 'white',
+              color: personality === 'professional' ? 'white' : '#FF5722'
+            }}
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            {personality === 'professional' ? '🎮' : '💼'}
+          </motion.button>
+        )}
       </div>
     </div>
   );
