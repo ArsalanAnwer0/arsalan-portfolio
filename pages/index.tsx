@@ -1,5 +1,9 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import dynamic from 'next/dynamic';
+
+const DeskScene = dynamic(() => import('../components/ui/DeskScene'), { ssr: false });
+const PS5Scene = dynamic(() => import('../components/ui/PS5Scene'), { ssr: false });
 
 // Personality type
 type Personality = 'professional' | 'fun';
@@ -185,7 +189,9 @@ const HomePage = () => {
         />
       )}
 
-      <div className="max-w-7xl w-full relative z-10">
+      <div className="max-w-7xl w-full relative z-10 flex items-center gap-8 lg:gap-12">
+        {/* Left: text content */}
+        <div className="flex-1 min-w-0">
         <AnimatePresence mode="wait">
           {personality === 'professional' ? (
             <motion.div
@@ -628,6 +634,34 @@ const HomePage = () => {
             </motion.div>
           )}
         </AnimatePresence>
+        </div>
+
+        {/* Right: 3D scene — desktop only */}
+        <div className="hidden lg:flex flex-shrink-0 items-center justify-center">
+          <AnimatePresence mode="wait">
+            {personality === 'professional' ? (
+              <motion.div
+                key="desk-scene"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.7 }}
+              >
+                <DeskScene />
+              </motion.div>
+            ) : (
+              <motion.div
+                key="ps5-scene"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.7 }}
+              >
+                <PS5Scene />
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
 
         {/* Mobile toggle button */}
         {isTouchDevice && (
