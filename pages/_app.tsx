@@ -52,9 +52,9 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
     <>
       <Head>
-        <link rel="icon" href="/mashle-nb.png" type="image/png" />
-        <link rel="shortcut icon" href="/mashle-nb.png" />
-        <link rel="apple-touch-icon" href="/mashle-nb.png" />
+        <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+        <link rel="shortcut icon" href="/favicon.ico" />
+        <link rel="apple-touch-icon" href="/favicon.ico" />
         <title>Arsalan's Portfolio</title>
       </Head>
 
