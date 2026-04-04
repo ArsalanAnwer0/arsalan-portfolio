@@ -47,9 +47,9 @@ const DeskScene = () => {
 
     // Screen glows
     const monGlow1 = new THREE.PointLight(0x4488CC, 0.4, 3.5);
-    monGlow1.position.set(-0.42, 1.1, 0); scene.add(monGlow1);
+    monGlow1.position.set(-0.42, 1.4, 0); scene.add(monGlow1);
     const monGlow2 = new THREE.PointLight(0x4488CC, 0.4, 3.5);
-    monGlow2.position.set(0.42, 1.1, 0); scene.add(monGlow2);
+    monGlow2.position.set(0.42, 1.4, 0); scene.add(monGlow2);
 
     // ── MATERIALS ──
     const M = {
@@ -64,6 +64,14 @@ const DeskScene = () => {
 
     const bx = (w: number, h: number, d: number, m: THREE.Material, cs = true, rs = true) => {
       const mesh = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), m);
+      mesh.castShadow = cs; mesh.receiveShadow = rs; return mesh;
+    };
+    const cyl = (rT: number, rB: number, h: number, m: THREE.Material, seg = 16, cs = true, rs = true) => {
+      const mesh = new THREE.Mesh(new THREE.CylinderGeometry(rT, rB, h, seg), m);
+      mesh.castShadow = cs; mesh.receiveShadow = rs; return mesh;
+    };
+    const sph = (r: number, m: THREE.Material, seg = 12, cs = true, rs = true) => {
+      const mesh = new THREE.Mesh(new THREE.SphereGeometry(r, seg, seg), m);
       mesh.castShadow = cs; mesh.receiveShadow = rs; return mesh;
     };
     const put = (p: THREE.Object3D, m: THREE.Mesh, x: number, y: number, z: number) => {
@@ -113,25 +121,27 @@ const DeskScene = () => {
     // ═══════════════════════════
     const buildMon = (cx: number, scrColor: number) => {
       const mW = 0.82, mH = 0.58;
-      put(g, bx(mW, mH, 0.05, M.plastic(0x0E0E0E)), cx, 0.58 + mH / 2, -0.44);
-      put(g, bx(mW - 0.05, mH - 0.05, 0.02, M.screen(0x0C1A30, scrColor, 0.55)), cx, 0.58 + mH / 2, -0.42);
-      put(g, bx(mW, 0.04, 0.05, M.plastic(0x0E0E0E)), cx, 0.58, -0.44);
-      put(g, bx(0.12, 0.32, 0.12, M.metal(0x999999)), cx, 0.4, -0.44);
-      put(g, bx(0.5, 0.03, 0.28, M.metal(0xAAAAAA)), cx, 0.27, -0.44);
-      put(g, bx(0.44, 0.02, 0.22, M.metal(0x888888)), cx, 0.26, -0.44);
+      const liftY = 0.3; // lift monitors so stand sits on desk
+      put(g, bx(mW, mH, 0.05, M.plastic(0x0E0E0E)), cx, 0.58 + mH / 2 + liftY, -0.44);
+      put(g, bx(mW - 0.05, mH - 0.05, 0.02, M.screen(0x0C1A30, scrColor, 0.55)), cx, 0.58 + mH / 2 + liftY, -0.42);
+      put(g, bx(mW, 0.04, 0.05, M.plastic(0x0E0E0E)), cx, 0.58 + liftY, -0.44);
+      put(g, bx(0.12, 0.32, 0.12, M.metal(0x999999)), cx, 0.4 + liftY, -0.44);
+      put(g, bx(0.5, 0.03, 0.28, M.metal(0xAAAAAA)), cx, 0.575, -0.44);
+      put(g, bx(0.44, 0.02, 0.22, M.metal(0x888888)), cx, 0.565, -0.44);
     };
 
     // Left monitor — IDE (cx = -0.42)
+    const mLift = 0.3;
     buildMon(-0.42, 0x0F1B30);
-    put(g, bx(0.06, 0.48, 0.012, M.screen(0x1E1E2E, 0x1E1E2E, 0.2), false, false), -0.78, 0.87, -0.41);
+    put(g, bx(0.06, 0.48, 0.012, M.screen(0x1E1E2E, 0x1E1E2E, 0.2), false, false), -0.78, 0.87 + mLift, -0.41);
     for (let i = 0; i < 6; i++) {
-      put(g, bx(0.02, 0.012, 0.012, M.screen(0x5588CC, 0x5588CC, 0.3), false, false), -0.78, 1.05 - i * 0.04, -0.408);
+      put(g, bx(0.02, 0.012, 0.012, M.screen(0x5588CC, 0x5588CC, 0.3), false, false), -0.78, 1.05 + mLift - i * 0.04, -0.408);
     }
-    put(g, bx(0.7, 0.025, 0.012, M.screen(0x252535, 0x252535, 0.15), false, false), -0.42, 1.115, -0.41);
-    put(g, bx(0.12, 0.025, 0.012, M.screen(0x1E1E2E, 0x2A2A3A, 0.25), false, false), -0.62, 1.115, -0.408);
-    put(g, bx(0.7, 0.02, 0.012, M.screen(0x0066AA, 0x0055AA, 0.35), false, false), -0.42, 0.62, -0.41);
+    put(g, bx(0.7, 0.025, 0.012, M.screen(0x252535, 0x252535, 0.15), false, false), -0.42, 1.115 + mLift, -0.41);
+    put(g, bx(0.12, 0.025, 0.012, M.screen(0x1E1E2E, 0x2A2A3A, 0.25), false, false), -0.62, 1.115 + mLift, -0.408);
+    put(g, bx(0.7, 0.02, 0.012, M.screen(0x0066AA, 0x0055AA, 0.35), false, false), -0.42, 0.62 + mLift, -0.41);
     for (let row = 0; row < 8; row++) {
-      const lineY = 1.06 - row * 0.05;
+      const lineY = 1.06 + mLift - row * 0.05;
       const indent = (row % 3) * 0.04;
       const colors = [0x569CD6, 0x4EC9B0, 0xDCDCAA, 0xCE9178, 0x9CDCFE, 0xC586C0, 0x4FC1FF, 0xD4D4D4];
       const lw = 0.12 + Math.sin(row * 2.1) * 0.08;
@@ -150,12 +160,12 @@ const DeskScene = () => {
 
     // Right monitor — terminal (cx = 0.42)
     buildMon(0.42, 0x0A1A18);
-    put(g, bx(0.7, 0.025, 0.012, M.screen(0x1A2A28, 0x1A2A28, 0.15), false, false), 0.42, 1.115, -0.41);
+    put(g, bx(0.7, 0.025, 0.012, M.screen(0x1A2A28, 0x1A2A28, 0.15), false, false), 0.42, 1.115 + mLift, -0.41);
     [0xFF5F56, 0xFFBD2E, 0x27C93F].forEach((c, i) => {
-      put(g, bx(0.012, 0.012, 0.012, M.screen(c, c, 0.5), false, false), 0.10 + i * 0.02, 1.115, -0.408);
+      put(g, bx(0.012, 0.012, 0.012, M.screen(c, c, 0.5), false, false), 0.10 + i * 0.02, 1.115 + mLift, -0.408);
     });
     for (let row = 0; row < 8; row++) {
-      const lineY = 1.06 - row * 0.05;
+      const lineY = 1.06 + mLift - row * 0.05;
       const lw = 0.15 + Math.sin(row * 1.7) * 0.1;
       if (row % 3 === 0) {
         put(g, bx(0.02, 0.014, 0.012, M.screen(0x88AAFF, 0x88AAFF, 0.5), false, false), 0.12, lineY, -0.41);
@@ -168,18 +178,18 @@ const DeskScene = () => {
       }
     }
     // Cursor
-    const cursor = put(g, bx(0.008, 0.016, 0.012, M.screen(0x44CC66, 0x33FF55, 0.8), false, false), 0.14, 0.66, -0.41);
+    const cursor = put(g, bx(0.008, 0.016, 0.012, M.screen(0x44CC66, 0x33FF55, 0.8), false, false), 0.14, 0.66 + mLift, -0.41);
 
     // Webcam
-    put(g, bx(0.035, 0.025, 0.03, M.plastic(0x111111), false, false), -0.42, 1.19, -0.43);
-    put(g, bx(0.015, 0.015, 0.018, M.glow(0x22AA44, 0x22CC44, 0.6), false, false), -0.42, 1.19, -0.42);
+    put(g, cyl(0.016, 0.016, 0.03, M.plastic(0x111111), 12, false, false), -0.42, 1.19 + mLift, -0.43);
+    put(g, sph(0.008, M.glow(0x22AA44, 0x22CC44, 0.6), 8, false, false), -0.42, 1.19 + mLift, -0.42);
 
     // Monitor light bar
-    put(g, bx(0.6, 0.025, 0.04, M.plastic(0x222222)), -0.42, 1.2, -0.43);
-    put(g, bx(0.5, 0.008, 0.015, M.glow(0xFFEECC, 0xFFDDBB, 0.4), false, false), -0.42, 1.19, -0.41);
+    put(g, bx(0.6, 0.025, 0.04, M.plastic(0x222222)), -0.42, 1.2 + mLift, -0.43);
+    put(g, bx(0.5, 0.008, 0.015, M.glow(0xFFEECC, 0xFFDDBB, 0.4), false, false), -0.42, 1.19 + mLift, -0.41);
 
     // LED strip — softer for professional
-    put(g, bx(1.8, 0.015, 0.02, M.glow(0x5577CC, 0x4466BB, 0.4), false, false), 0, 0.57, -0.36);
+    put(g, bx(1.8, 0.015, 0.02, M.glow(0x5577CC, 0x4466BB, 0.4), false, false), 0, 0.57 + mLift, -0.36);
 
     // ═══════════════════════════
     //  LAPTOP
@@ -221,19 +231,26 @@ const DeskScene = () => {
     // ═══════════════════════════
     //  MOUSE
     // ═══════════════════════════
-    put(g, bx(0.09, 0.035, 0.15, M.plastic(0x1C1C1C)), 0.52, 0.575, 0.16);
+    // Mouse body — capsule-like shape
+    const mouseBody = new THREE.Mesh(
+      new THREE.CapsuleGeometry(0.04, 0.07, 4, 12),
+      M.plastic(0x1C1C1C)
+    );
+    mouseBody.rotation.x = Math.PI / 2;
+    mouseBody.position.set(0.52, 0.58, 0.16);
+    mouseBody.castShadow = true; mouseBody.receiveShadow = true; g.add(mouseBody);
     put(g, bx(0.09, 0.015, 0.08, M.plastic(0x252525)), 0.52, 0.595, 0.12);
-    put(g, bx(0.02, 0.02, 0.03, M.plastic(0x555555), false, false), 0.52, 0.6, 0.1);
+    put(g, cyl(0.01, 0.01, 0.02, M.plastic(0x555555), 8, false, false), 0.52, 0.6, 0.1);
     put(g, bx(0.003, 0.012, 0.06, M.plastic(0x333333), false, false), 0.52, 0.598, 0.12);
     put(g, bx(0.005, 0.01, 0.1, M.glow(0x44AAFF, 0x3388DD, 0.5), false, false), 0.565, 0.58, 0.15);
 
     // ═══════════════════════════
     //  COFFEE MUG
     // ═══════════════════════════
-    put(g, bx(0.16, 0.2, 0.16, M.plastic(0xF2EDE5)), -0.55, 0.66, 0.35);
-    put(g, bx(0.17, 0.02, 0.17, M.plastic(0xE8E0D5)), -0.55, 0.76, 0.35);
-    put(g, bx(0.06, 0.1, 0.07, M.plastic(0xE8E0D5)), -0.64, 0.67, 0.35);
-    put(g, bx(0.13, 0.015, 0.13, M.plastic(0x2A1200), false, false), -0.55, 0.75, 0.35);
+    put(g, cyl(0.08, 0.07, 0.2, M.plastic(0xF2EDE5)), -0.55, 0.66, 0.35);
+    put(g, cyl(0.09, 0.09, 0.02, M.plastic(0xE8E0D5)), -0.55, 0.76, 0.35);
+    put(g, bx(0.06, 0.1, 0.04, M.plastic(0xE8E0D5)), -0.64, 0.67, 0.35);
+    put(g, cyl(0.065, 0.065, 0.015, M.plastic(0x2A1200), 16, false, false), -0.55, 0.75, 0.35);
     put(g, bx(0.165, 0.04, 0.008, M.plastic(0x2A5B99), false, false), -0.55, 0.67, 0.27);
     // Steam — store refs for animation
     const steamWisps: THREE.Mesh[] = [];
@@ -242,23 +259,22 @@ const DeskScene = () => {
     [0, 0.04, -0.03].forEach((xOff, i) => {
       const yPos = 0.8 + i * 0.035;
       const xPos = -0.55 + xOff;
-      const wisp = put(g, bx(0.012, 0.05, 0.012,
+      const wisp = put(g, sph(0.018,
         new THREE.MeshStandardMaterial({ color: 0xFFFFFF, transparent: true, opacity: 0.12 + i * 0.03, roughness: 1 }),
-        false, false), xPos, yPos, 0.35);
+        8, false, false), xPos, yPos, 0.35);
       steamWisps.push(wisp);
       baseSteamY.push(yPos);
       baseSteamX.push(xPos);
     });
-    put(g, bx(0.2, 0.008, 0.2, M.wood(0x6B5A48)), -0.55, 0.555, 0.35);
+    put(g, cyl(0.1, 0.1, 0.008, M.wood(0x6B5A48), 16, false, true), -0.55, 0.555, 0.35);
 
     // ═══════════════════════════
     //  PLANT
     // ═══════════════════════════
-    put(g, bx(0.15, 0.04, 0.15, M.plastic(0xC07040)), 1.1, 0.555, -0.38);
-    put(g, bx(0.17, 0.06, 0.17, M.plastic(0xC87545)), 1.1, 0.59, -0.38);
-    put(g, bx(0.19, 0.04, 0.19, M.plastic(0xB86535)), 1.1, 0.62, -0.38);
-    put(g, bx(0.14, 0.015, 0.14, M.wood(0x3A2A1A), false, false), 1.1, 0.635, -0.38);
-    put(g, bx(0.04, 0.12, 0.04, M.wood(0x5A3A1A)), 1.1, 0.7, -0.38);
+    put(g, cyl(0.085, 0.065, 0.12, M.plastic(0xC87545)), 1.1, 0.59, -0.38);
+    put(g, cyl(0.095, 0.085, 0.02, M.plastic(0xB86535)), 1.1, 0.635, -0.38);
+    put(g, cyl(0.07, 0.07, 0.015, M.wood(0x3A2A1A), 16, false, false), 1.1, 0.645, -0.38);
+    put(g, cyl(0.02, 0.025, 0.12, M.wood(0x5A3A1A)), 1.1, 0.7, -0.38);
     const leafColors = [0x2A7518, 0x338820, 0x2E8848, 0x2E8A1E, 0x3C9A28];
     const leafPositions: [number, number, number][] = [
       [0, 0.1, 0], [0.08, 0.06, 0.05], [-0.07, 0.07, -0.04],
@@ -266,38 +282,38 @@ const DeskScene = () => {
       [0.06, 0.09, 0.03], [-0.04, 0.11, 0.02],
     ];
     leafPositions.forEach(([dx, dy, dz], i) => {
-      put(g, bx(0.08, 0.06, 0.08, M.plastic(leafColors[i % leafColors.length])),
+      put(g, sph(0.05, M.plastic(leafColors[i % leafColors.length])),
         1.1 + dx, 0.78 + dy, -0.38 + dz);
     });
 
     // ═══════════════════════════
-    //  BOOKS
+    //  BOOKS — in front of the plant
     // ═══════════════════════════
     [0x1E4488, 0xCC2233, 0x1A6644, 0x885522].forEach((c, i) => {
-      put(g, bx(0.22, 0.035, 0.16, M.plastic(c)), -0.35, 0.575 + i * 0.038, -0.42);
-      put(g, bx(0.2, 0.028, 0.01, M.plastic(0xF0E8D8), false, false), -0.35, 0.575 + i * 0.038, -0.35);
-      put(g, bx(0.1, 0.008, 0.012, M.plastic(0xDDDDDD), false, false), -0.35, 0.575 + i * 0.038, -0.5);
+      put(g, bx(0.22, 0.035, 0.16, M.plastic(c)), 1.1, 0.575 + i * 0.038, -0.10);
+      put(g, bx(0.2, 0.028, 0.01, M.plastic(0xF0E8D8), false, false), 1.1, 0.575 + i * 0.038, -0.03);
+      put(g, bx(0.1, 0.008, 0.012, M.plastic(0xDDDDDD), false, false), 1.1, 0.575 + i * 0.038, -0.18);
     });
 
-    // Sticky notes — moved between monitor stands
+    // Sticky notes — between monitor stands
     put(g, bx(0.11, 0.11, 0.005, M.plastic(0xFFE66B), false, false), 0.3, 0.7, -0.35);
     put(g, bx(0.09, 0.09, 0.005, M.plastic(0xFF88AA), false, false), 0.38, 0.68, -0.35);
     put(g, bx(0.06, 0.008, 0.005, M.plastic(0x333333), false, false), 0.3, 0.72, -0.348);
     put(g, bx(0.04, 0.008, 0.005, M.plastic(0x333333), false, false), 0.3, 0.7, -0.348);
 
-    // Pen holder — grouped with books
-    put(g, bx(0.11, 0.15, 0.11, M.metal(0x666666)), -0.50, 0.64, -0.30);
+    // Pen holder — in front of the plant
+    put(g, cyl(0.055, 0.05, 0.15, M.metal(0x666666)), 1.1, 0.64, 0.05);
     [0x2244AA, 0xCC2222, 0x111111].forEach((c, i) => {
-      const pen = bx(0.018, 0.13, 0.018, M.plastic(c), false, false);
-      pen.position.set(-0.50 + (i - 1) * 0.028, 0.75, -0.30);
+      const pen = cyl(0.008, 0.008, 0.13, M.plastic(c), 8, false, false);
+      pen.position.set(1.1 + (i - 1) * 0.028, 0.75, 0.05);
       pen.rotation.z = (i - 1) * 0.1; g.add(pen);
     });
 
     // ═══════════════════════════
     //  HEADPHONE STAND
     // ═══════════════════════════
-    put(g, bx(0.12, 0.02, 0.12, M.wood(0x4A3828)), -0.85, 0.56, -0.35);
-    put(g, bx(0.03, 0.28, 0.03, M.metal(0x888888)), -0.85, 0.7, -0.35);
+    put(g, cyl(0.06, 0.06, 0.02, M.wood(0x4A3828)), -0.85, 0.56, -0.35);
+    put(g, cyl(0.015, 0.015, 0.28, M.metal(0x888888)), -0.85, 0.7, -0.35);
     put(g, bx(0.08, 0.04, 0.06, M.metal(0x999999)), -0.85, 0.86, -0.35);
 
     // ═══════════════════════════
@@ -315,7 +331,7 @@ const DeskScene = () => {
       put(g, bx(0.04, 0.2, 0.04, M.plastic(0x333333)), x, 0.36, 0.78);
       put(g, bx(0.08, 0.035, 0.26, M.plastic(0x2A2A2A)), x, 0.48, 0.76);
     });
-    put(g, bx(0.06, 0.3, 0.06, M.metal(0x555555)), 0.06, 0.14, 0.78);
+    put(g, cyl(0.025, 0.025, 0.3, M.metal(0x555555)), 0.06, 0.14, 0.78);
 
     // ═══════════════════════════════════
     //  CHARACTER
@@ -380,9 +396,9 @@ const DeskScene = () => {
 
     [-0.06, 0.18].forEach(x => {
       put(head, bx(0.08, 0.07, 0.02, M.plastic(0xFFFFFF), false, false), x, 0.97, 0.47);
-      put(head, bx(0.05, 0.055, 0.02, M.plastic(0x3A2510), false, false), x, 0.965, 0.465);
-      put(head, bx(0.03, 0.035, 0.02, M.plastic(0x0A0A0A), false, false), x, 0.96, 0.46);
-      put(head, bx(0.016, 0.016, 0.015, M.plastic(0xFFFFFF), false, false), x + 0.015, 0.98, 0.455);
+      put(head, sph(0.025, M.plastic(0x3A2510), 10, false, false), x, 0.965, 0.46);
+      put(head, sph(0.016, M.plastic(0x0A0A0A), 10, false, false), x, 0.96, 0.455);
+      put(head, sph(0.008, M.plastic(0xFFFFFF), 8, false, false), x + 0.015, 0.975, 0.45);
       put(head, bx(0.07, 0.008, 0.015, M.skin(0xDCA080), false, false), x, 0.935, 0.465);
     });
     [-0.06, 0.18].forEach(x => {
@@ -413,9 +429,15 @@ const DeskScene = () => {
       put(head, bx(0.04, 0.22, 0.045, M.metal(0x999999)), x, 1.06, 0.66);
     });
     [-0.23, 0.35].forEach(x => {
-      put(head, bx(0.07, 0.14, 0.14, M.plastic(0x888888)), x, 0.96, 0.66);
-      put(head, bx(0.05, 0.12, 0.12, M.fabric(0xAAAAAA)), x, 0.96, 0.66);
-      put(head, bx(0.018, 0.13, 0.13, M.metal(0xBBBBBB), false, false), x + (x > 0 ? 0.025 : -0.025), 0.96, 0.66);
+      const cup = cyl(0.07, 0.07, 0.07, M.plastic(0x888888), 12);
+      cup.rotation.z = Math.PI / 2;
+      cup.position.set(x, 0.96, 0.66); head.add(cup);
+      const pad = cyl(0.06, 0.06, 0.05, M.fabric(0xAAAAAA), 12);
+      pad.rotation.z = Math.PI / 2;
+      pad.position.set(x, 0.96, 0.66); head.add(pad);
+      const ring = cyl(0.065, 0.065, 0.018, M.metal(0xBBBBBB), 12, false, false);
+      ring.rotation.z = Math.PI / 2;
+      ring.position.set(x + (x > 0 ? 0.025 : -0.025), 0.96, 0.66); head.add(ring);
     });
 
     ch.add(head);

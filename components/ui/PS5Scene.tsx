@@ -42,8 +42,8 @@ const PS5Scene = () => {
     const rimLight = new THREE.DirectionalLight(0xffe0c0, 0.15);
     rimLight.position.set(-3, 2, 5); scene.add(rimLight);
 
-    // TV glow — bumped intensity
-    const tvGlow = new THREE.PointLight(0x44AA55, 0.7, 4.5);
+    // TV glow — vivid green from FIFA pitch
+    const tvGlow = new THREE.PointLight(0x33CC44, 0.9, 5.0);
     tvGlow.position.set(0, 1.0, -0.15); scene.add(tvGlow);
     // PS5 LED
     const ps5Glow = new THREE.PointLight(0x0066FF, 0.35, 2);
@@ -65,6 +65,14 @@ const PS5Scene = () => {
 
     const bx = (w: number, h: number, d: number, m: THREE.Material, cs = true, rs = true) => {
       const mesh = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), m);
+      mesh.castShadow = cs; mesh.receiveShadow = rs; return mesh;
+    };
+    const cyl = (rT: number, rB: number, h: number, m: THREE.Material, seg = 16, cs = true, rs = true) => {
+      const mesh = new THREE.Mesh(new THREE.CylinderGeometry(rT, rB, h, seg), m);
+      mesh.castShadow = cs; mesh.receiveShadow = rs; return mesh;
+    };
+    const sph = (r: number, m: THREE.Material, seg = 12, cs = true, rs = true) => {
+      const mesh = new THREE.Mesh(new THREE.SphereGeometry(r, seg, seg), m);
       mesh.castShadow = cs; mesh.receiveShadow = rs; return mesh;
     };
     const put = (p: THREE.Object3D, m: THREE.Mesh, x: number, y: number, z: number) => {
@@ -136,132 +144,173 @@ const PS5Scene = () => {
     put(g, bx(tW - tb * 2, tH - tb * 2, 0.018, M.screen(0x1A4A1A, 0x1A5A1A, 0.4)), 0, 0.44 + tH / 2, -0.58);
 
     // ── FIFA ON SCREEN ──
-    // Pitch base
-    put(g, bx(1.6, 0.85, 0.015, M.screen(0x1A6B2A, 0x1A7A2A, 0.45), false, false), 0, 0.94, -0.57);
-    // Mowing stripes — 10 alternating strips for realism
-    for (let i = 0; i < 10; i++) {
-      const shade = i % 2 === 0 ? 0x1E7A30 : 0x166622;
-      put(g, bx(1.55, 0.075, 0.012, M.screen(shade, shade, 0.15), false, false), 0, 0.56 + i * 0.078, -0.568);
+    // Stadium crowd/stands — dark band around pitch edges
+    put(g, bx(1.7, 0.92, 0.013, M.screen(0x1A2A1A, 0x0A1A0A, 0.2), false, false), 0, 0.94, -0.572);
+    // Crowd rows — top and bottom
+    for (let i = 0; i < 3; i++) {
+      const crowdY = [0.53, 0.54, 0.55][i];
+      const crowdC = [0x553322, 0x443333, 0x334455][i];
+      put(g, bx(1.6, 0.012, 0.012, M.screen(crowdC, crowdC, 0.15), false, false), 0, crowdY, -0.571);
+      put(g, bx(1.6, 0.012, 0.012, M.screen(crowdC, crowdC, 0.15), false, false), 0, 1.34 + (i * 0.01), -0.571);
     }
-    // Darker edges for depth
-    put(g, bx(1.58, 0.03, 0.012, M.screen(0x145518, 0x145518, 0.12), false, false), 0, 0.54, -0.568);
-    put(g, bx(1.58, 0.03, 0.012, M.screen(0x145518, 0x145518, 0.12), false, false), 0, 1.34, -0.568);
 
-    // Center circle — more segments for smoother look
-    const circleSegs = 24;
+    // Pitch base — vibrant green
+    put(g, bx(1.6, 0.85, 0.015, M.screen(0x1E8030, 0x1E8830, 0.55), false, false), 0, 0.94, -0.57);
+    // Mowing stripes — higher contrast
+    for (let i = 0; i < 12; i++) {
+      const shade = i % 2 === 0 ? 0x22902E : 0x186820;
+      put(g, bx(1.55, 0.062, 0.012, M.screen(shade, shade, 0.2), false, false), 0, 0.555 + i * 0.065, -0.568);
+    }
+
+    // Center circle — smoother
+    const circleSegs = 32;
     for (let i = 0; i < circleSegs; i++) {
       const a = (i / circleSegs) * Math.PI * 2;
-      put(g, bx(0.015, 0.015, 0.012, M.screen(0xFFFFFF, 0xFFFFFF, 0.35), false, false),
-        Math.cos(a) * 0.12, 0.94 + Math.sin(a) * 0.12, -0.565);
+      put(g, bx(0.012, 0.012, 0.012, M.screen(0xFFFFFF, 0xFFFFFF, 0.5), false, false),
+        Math.cos(a) * 0.13, 0.94 + Math.sin(a) * 0.13, -0.565);
     }
     // Center line + spot
-    put(g, bx(0.012, 0.75, 0.012, M.screen(0xFFFFFF, 0xFFFFFF, 0.25), false, false), 0, 0.94, -0.565);
-    put(g, bx(0.02, 0.02, 0.012, M.screen(0xFFFFFF, 0xFFFFFF, 0.4), false, false), 0, 0.94, -0.565);
-    // Touchlines + goal lines
-    put(g, bx(1.5, 0.012, 0.012, M.screen(0xFFFFFF, 0xFFFFFF, 0.25), false, false), 0, 1.33, -0.565);
-    put(g, bx(1.5, 0.012, 0.012, M.screen(0xFFFFFF, 0xFFFFFF, 0.25), false, false), 0, 0.55, -0.565);
-    put(g, bx(0.012, 0.78, 0.012, M.screen(0xFFFFFF, 0xFFFFFF, 0.25), false, false), -0.75, 0.94, -0.565);
-    put(g, bx(0.012, 0.78, 0.012, M.screen(0xFFFFFF, 0xFFFFFF, 0.25), false, false), 0.75, 0.94, -0.565);
+    put(g, bx(0.015, 0.78, 0.012, M.screen(0xFFFFFF, 0xFFFFFF, 0.4), false, false), 0, 0.94, -0.565);
+    put(g, sph(0.008, M.screen(0xFFFFFF, 0xFFFFFF, 0.6), 6, false, false), 0, 0.94, -0.564);
+    // Touchlines + goal lines — thicker, brighter
+    put(g, bx(1.52, 0.015, 0.012, M.screen(0xFFFFFF, 0xFFFFFF, 0.45), false, false), 0, 1.33, -0.565);
+    put(g, bx(1.52, 0.015, 0.012, M.screen(0xFFFFFF, 0xFFFFFF, 0.45), false, false), 0, 0.55, -0.565);
+    put(g, bx(0.015, 0.78, 0.012, M.screen(0xFFFFFF, 0xFFFFFF, 0.45), false, false), -0.76, 0.94, -0.565);
+    put(g, bx(0.015, 0.78, 0.012, M.screen(0xFFFFFF, 0xFFFFFF, 0.45), false, false), 0.76, 0.94, -0.565);
     // Penalty areas + goal areas
-    [-0.75, 0.75].forEach(side => {
+    [-0.76, 0.76].forEach(side => {
       const s = side > 0 ? 1 : -1;
       // Penalty box
-      put(g, bx(0.012, 0.4, 0.012, M.screen(0xFFFFFF, 0xFFFFFF, 0.22), false, false), side, 0.94, -0.565);
-      put(g, bx(0.22, 0.012, 0.012, M.screen(0xFFFFFF, 0xFFFFFF, 0.22), false, false), side - s * 0.11, 1.14, -0.565);
-      put(g, bx(0.22, 0.012, 0.012, M.screen(0xFFFFFF, 0xFFFFFF, 0.22), false, false), side - s * 0.11, 0.74, -0.565);
+      put(g, bx(0.015, 0.42, 0.012, M.screen(0xFFFFFF, 0xFFFFFF, 0.35), false, false), side, 0.94, -0.565);
+      put(g, bx(0.24, 0.015, 0.012, M.screen(0xFFFFFF, 0xFFFFFF, 0.35), false, false), side - s * 0.12, 1.15, -0.565);
+      put(g, bx(0.24, 0.015, 0.012, M.screen(0xFFFFFF, 0xFFFFFF, 0.35), false, false), side - s * 0.12, 0.73, -0.565);
       // Six-yard box
-      put(g, bx(0.012, 0.22, 0.012, M.screen(0xFFFFFF, 0xFFFFFF, 0.22), false, false), side - s * 0.08, 0.94, -0.565);
-      put(g, bx(0.08, 0.012, 0.012, M.screen(0xFFFFFF, 0xFFFFFF, 0.22), false, false), side - s * 0.04, 1.05, -0.565);
-      put(g, bx(0.08, 0.012, 0.012, M.screen(0xFFFFFF, 0xFFFFFF, 0.22), false, false), side - s * 0.04, 0.83, -0.565);
+      put(g, bx(0.015, 0.24, 0.012, M.screen(0xFFFFFF, 0xFFFFFF, 0.35), false, false), side - s * 0.08, 0.94, -0.565);
+      put(g, bx(0.08, 0.015, 0.012, M.screen(0xFFFFFF, 0xFFFFFF, 0.35), false, false), side - s * 0.04, 1.06, -0.565);
+      put(g, bx(0.08, 0.015, 0.012, M.screen(0xFFFFFF, 0xFFFFFF, 0.35), false, false), side - s * 0.04, 0.82, -0.565);
       // Penalty spot
-      put(g, bx(0.012, 0.012, 0.012, M.screen(0xFFFFFF, 0xFFFFFF, 0.4), false, false), side - s * 0.16, 0.94, -0.565);
-      // Goal net (subtle)
-      put(g, bx(0.025, 0.15, 0.012, M.screen(0xCCCCCC, 0xBBBBBB, 0.15), false, false), side + s * 0.01, 0.94, -0.565);
+      put(g, sph(0.006, M.screen(0xFFFFFF, 0xFFFFFF, 0.6), 6, false, false), side - s * 0.16, 0.94, -0.564);
+      // Goal net — mesh effect
+      for (let j = 0; j < 3; j++) {
+        put(g, bx(0.005, 0.16, 0.012, M.screen(0xDDDDDD, 0xCCCCCC, 0.12), false, false), side + s * (0.01 + j * 0.008), 0.94, -0.565);
+        put(g, bx(0.025, 0.005, 0.012, M.screen(0xDDDDDD, 0xCCCCCC, 0.12), false, false), side + s * 0.015, 0.86 + j * 0.08, -0.565);
+      }
     });
-    // Corner arcs (quarter circles, 5 segments each)
-    [[-0.75, 1.33], [0.75, 1.33], [-0.75, 0.55], [0.75, 0.55]].forEach(([cx, cy]) => {
+    // Corner arcs (quarter circles, 6 segments each)
+    [[-0.76, 1.33], [0.76, 1.33], [-0.76, 0.55], [0.76, 0.55]].forEach(([cx, cy]) => {
       const sx = cx < 0 ? 1 : -1, sy = cy > 0.94 ? -1 : 1;
-      for (let i = 0; i <= 4; i++) {
-        const a = (i / 4) * Math.PI / 2;
-        put(g, bx(0.01, 0.01, 0.012, M.screen(0xFFFFFF, 0xFFFFFF, 0.25), false, false),
-          cx + Math.cos(a) * 0.035 * sx, cy + Math.sin(a) * 0.035 * sy, -0.565);
+      for (let i = 0; i <= 5; i++) {
+        const a = (i / 5) * Math.PI / 2;
+        put(g, bx(0.01, 0.01, 0.012, M.screen(0xFFFFFF, 0xFFFFFF, 0.35), false, false),
+          cx + Math.cos(a) * 0.04 * sx, cy + Math.sin(a) * 0.04 * sy, -0.565);
       }
     });
 
-    // Players — more detailed with legs + shadows
-    const mkPlayer = (x: number, y: number, jersey: number, jerseyE: number, shorts: number) => {
-      // Shadow
-      put(g, bx(0.03, 0.008, 0.012, M.screen(0x0A3A0A, 0x0A3A0A, 0.15), false, false), x, y - 0.025, -0.564);
-      // Legs
-      put(g, bx(0.008, 0.018, 0.012, M.screen(0xEEBB88, 0xDDAA77, 0.3), false, false), x - 0.006, y - 0.016, -0.562);
-      put(g, bx(0.008, 0.018, 0.012, M.screen(0xEEBB88, 0xDDAA77, 0.3), false, false), x + 0.006, y - 0.016, -0.562);
-      // Shorts
-      put(g, bx(0.022, 0.012, 0.012, M.screen(shorts, shorts, 0.4), false, false), x, y - 0.002, -0.562);
-      // Jersey
-      put(g, bx(0.025, 0.03, 0.012, M.screen(jersey, jerseyE, 0.6), false, false), x, y + 0.015, -0.562);
-      // Head
-      put(g, bx(0.016, 0.016, 0.012, M.screen(0xEEBB88, 0xDDAA77, 0.35), false, false), x, y + 0.038, -0.562);
-      // Hair
-      put(g, bx(0.016, 0.006, 0.012, M.screen(0x221100, 0x221100, 0.2), false, false), x, y + 0.048, -0.562);
-    };
-    // Red team (home) — 4-3-3 ish formation
-    [[-0.65, 0.94], [-0.45, 1.15], [-0.45, 0.73], [-0.42, 0.94],
-     [-0.28, 1.08], [-0.28, 0.80], [-0.15, 0.94],
-     [-0.35, 1.25], [-0.5, 0.65], [-0.2, 1.18]].forEach(([x, y]) => {
-      mkPlayer(x, y, 0xDD2222, 0xCC1111, 0xEEEEEE);
-    });
-    // Blue team (away) — 4-3-3 ish
-    [[0.65, 0.94], [0.45, 1.15], [0.45, 0.73], [0.42, 0.94],
-     [0.28, 1.08], [0.28, 0.80], [0.15, 0.94],
-     [0.35, 1.25], [0.5, 0.65], [0.2, 0.72]].forEach(([x, y]) => {
-      mkPlayer(x, y, 0x2244DD, 0x1133CC, 0xEEEEEE);
-    });
-    // Goalkeepers
-    mkPlayer(-0.72, 0.94, 0xFFCC00, 0xDDAA00, 0x222222);
-    mkPlayer(0.72, 0.94, 0x44CC44, 0x33AA33, 0x222222);
-    // Referee
-    mkPlayer(0.02, 1.1, 0x111111, 0x111111, 0x111111);
+    // Players — movable groups for game simulation
+    interface PlayerData { group: THREE.Group; baseX: number; baseY: number; }
+    const redPlayers: PlayerData[] = [];
+    const bluePlayers: PlayerData[] = [];
 
-    // Ball — store ref for animation
-    const ball = put(g, bx(0.02, 0.02, 0.012, M.screen(0xFFFFFF, 0xFFFFFF, 0.9), false, false), -0.05, 0.92, -0.56);
-    // Ball shadow
-    put(g, bx(0.015, 0.008, 0.012, M.screen(0x0A3A0A, 0x0A3A0A, 0.2), false, false), -0.05, 0.905, -0.563);
-    const baseBallX = -0.05, baseBallY = 0.92;
+    const mkPlayer = (x: number, y: number, jersey: number, jerseyE: number, shorts: number, team: PlayerData[]) => {
+      const pg = new THREE.Group();
+      pg.position.set(x, y, 0);
+      // Shadow
+      put(pg, bx(0.035, 0.01, 0.012, M.screen(0x0A3A0A, 0x0A3A0A, 0.18), false, false), 0, -0.03, -0.564);
+      // Boots
+      put(pg, bx(0.01, 0.008, 0.012, M.screen(0x111111, 0x111111, 0.35), false, false), -0.007, -0.028, -0.562);
+      put(pg, bx(0.01, 0.008, 0.012, M.screen(0x111111, 0x111111, 0.35), false, false), 0.007, -0.028, -0.562);
+      // Legs
+      put(pg, bx(0.008, 0.02, 0.012, M.screen(0xEEBB88, 0xDDAA77, 0.35), false, false), -0.007, -0.015, -0.562);
+      put(pg, bx(0.008, 0.02, 0.012, M.screen(0xEEBB88, 0xDDAA77, 0.35), false, false), 0.007, -0.015, -0.562);
+      // Shorts
+      put(pg, bx(0.024, 0.014, 0.012, M.screen(shorts, shorts, 0.45), false, false), 0, 0, -0.562);
+      // Jersey
+      put(pg, bx(0.028, 0.035, 0.012, M.screen(jersey, jerseyE, 0.65), false, false), 0, 0.02, -0.562);
+      put(pg, bx(0.012, 0.012, 0.012, M.screen(0xFFFFFF, 0xFFFFFF, 0.25), false, false), 0, 0.025, -0.561);
+      // Arms
+      put(pg, bx(0.006, 0.02, 0.012, M.screen(jersey, jerseyE, 0.5), false, false), -0.018, 0.018, -0.562);
+      put(pg, bx(0.006, 0.02, 0.012, M.screen(jersey, jerseyE, 0.5), false, false), 0.018, 0.018, -0.562);
+      // Head
+      put(pg, sph(0.01, M.screen(0xEEBB88, 0xDDAA77, 0.4), 6, false, false), 0, 0.045, -0.561);
+      // Hair
+      put(pg, bx(0.018, 0.007, 0.012, M.screen(0x221100, 0x221100, 0.25), false, false), 0, 0.053, -0.562);
+      g.add(pg);
+      team.push({ group: pg, baseX: x, baseY: y });
+    };
+
+    // Red team — attacking formations (base positions)
+    const redBasePos: [number, number][] = [
+      [-0.65, 0.94], [-0.45, 1.15], [-0.45, 0.73], [-0.42, 0.94],
+      [-0.28, 1.08], [-0.28, 0.80], [-0.15, 0.94],
+      [-0.35, 1.25], [-0.5, 0.65], [-0.2, 1.18]
+    ];
+    redBasePos.forEach(([x, y]) => mkPlayer(x, y, 0xDD2222, 0xCC1111, 0xEEEEEE, redPlayers));
+
+    // Blue team
+    const blueBasePos: [number, number][] = [
+      [0.65, 0.94], [0.45, 1.15], [0.45, 0.73], [0.42, 0.94],
+      [0.28, 1.08], [0.28, 0.80], [0.15, 0.94],
+      [0.35, 1.25], [0.5, 0.65], [0.2, 0.72]
+    ];
+    blueBasePos.forEach(([x, y]) => mkPlayer(x, y, 0x2244DD, 0x1133CC, 0xEEEEEE, bluePlayers));
+
+    // Goalkeepers (static)
+    const gkDummy: PlayerData[] = [];
+    mkPlayer(-0.72, 0.94, 0xFFCC00, 0xDDAA00, 0x222222, gkDummy);
+    mkPlayer(0.72, 0.94, 0x44CC44, 0x33AA33, 0x222222, gkDummy);
+    mkPlayer(0.02, 1.1, 0x111111, 0x111111, 0x111111, gkDummy);
+
+    // Ball
+    const ball = put(g, sph(0.014, M.screen(0xFFFFFF, 0xFFFFFF, 1.0), 8, false, false), -0.05, 0.92, -0.558);
+    const ballShadow = put(g, bx(0.018, 0.008, 0.012, M.screen(0x0A3A0A, 0x0A3A0A, 0.25), false, false), -0.05, 0.905, -0.563);
+
+    // Game simulation — possession phases
+    // Each phase: team pushes forward, passes around, then other team gets possession
+    const phaseLength = 10.0; // seconds per possession phase
+    const passSpeed = 1.6; // seconds per pass
 
     // HUD — EA FC style scoreboard
-    // Main scoreboard bar
-    put(g, bx(0.6, 0.055, 0.012, M.screen(0x111111, 0x0A0A0A, 0.3), false, false), 0, 1.38, -0.564);
+    // Main scoreboard bar — wider, sleeker
+    put(g, bx(0.7, 0.06, 0.012, M.screen(0x0A0A0A, 0x050505, 0.45), false, false), 0, 1.38, -0.564);
+    // Gradient accent on scoreboard
+    put(g, bx(0.7, 0.004, 0.012, M.screen(0xFFCC00, 0xFFAA00, 0.6), false, false), 0, 1.35, -0.563);
     // Home team badge + name
-    put(g, bx(0.1, 0.04, 0.012, M.screen(0xDD2222, 0xCC1111, 0.55), false, false), -0.2, 1.38, -0.562);
-    put(g, bx(0.04, 0.025, 0.012, M.screen(0xFFFFFF, 0xFFFFFF, 0.3), false, false), -0.16, 1.38, -0.561);
-    // Score
-    put(g, bx(0.035, 0.04, 0.012, M.screen(0x1A1A1A, 0x0A0A0A, 0.4), false, false), -0.08, 1.38, -0.562);
-    put(g, bx(0.015, 0.025, 0.012, M.screen(0xFFFFFF, 0xFFFFFF, 0.7), false, false), -0.08, 1.38, -0.561);
-    put(g, bx(0.008, 0.008, 0.012, M.screen(0xFFFFFF, 0xFFFFFF, 0.5), false, false), -0.045, 1.385, -0.561);
-    put(g, bx(0.008, 0.008, 0.012, M.screen(0xFFFFFF, 0xFFFFFF, 0.5), false, false), -0.045, 1.375, -0.561);
-    put(g, bx(0.035, 0.04, 0.012, M.screen(0x1A1A1A, 0x0A0A0A, 0.4), false, false), -0.01, 1.38, -0.562);
-    put(g, bx(0.015, 0.025, 0.012, M.screen(0xFFFFFF, 0xFFFFFF, 0.7), false, false), -0.01, 1.38, -0.561);
+    put(g, bx(0.12, 0.045, 0.012, M.screen(0xDD2222, 0xCC1111, 0.6), false, false), -0.22, 1.38, -0.562);
+    put(g, bx(0.05, 0.03, 0.012, M.screen(0xFFFFFF, 0xFFFFFF, 0.35), false, false), -0.17, 1.38, -0.561);
+    // Score boxes
+    put(g, bx(0.04, 0.045, 0.012, M.screen(0x1A1A1A, 0x0A0A0A, 0.5), false, false), -0.08, 1.38, -0.562);
+    put(g, bx(0.018, 0.028, 0.012, M.screen(0xFFFFFF, 0xFFFFFF, 0.8), false, false), -0.08, 1.38, -0.561);
+    // Colon dots
+    put(g, sph(0.004, M.screen(0xFFFFFF, 0xFFFFFF, 0.6), 4, false, false), -0.045, 1.386, -0.561);
+    put(g, sph(0.004, M.screen(0xFFFFFF, 0xFFFFFF, 0.6), 4, false, false), -0.045, 1.374, -0.561);
+    put(g, bx(0.04, 0.045, 0.012, M.screen(0x1A1A1A, 0x0A0A0A, 0.5), false, false), -0.01, 1.38, -0.562);
+    put(g, bx(0.018, 0.028, 0.012, M.screen(0xFFFFFF, 0xFFFFFF, 0.8), false, false), -0.01, 1.38, -0.561);
     // Away team badge + name
-    put(g, bx(0.1, 0.04, 0.012, M.screen(0x2244DD, 0x1133CC, 0.55), false, false), 0.1, 1.38, -0.562);
-    put(g, bx(0.04, 0.025, 0.012, M.screen(0xFFFFFF, 0xFFFFFF, 0.3), false, false), 0.06, 1.38, -0.561);
+    put(g, bx(0.12, 0.045, 0.012, M.screen(0x2244DD, 0x1133CC, 0.6), false, false), 0.12, 1.38, -0.562);
+    put(g, bx(0.05, 0.03, 0.012, M.screen(0xFFFFFF, 0xFFFFFF, 0.35), false, false), 0.07, 1.38, -0.561);
     // Timer
-    put(g, bx(0.06, 0.03, 0.012, M.screen(0x222222, 0x111111, 0.35), false, false), 0.25, 1.38, -0.562);
-    put(g, bx(0.04, 0.018, 0.012, M.screen(0x44FF44, 0x33DD33, 0.5), false, false), 0.25, 1.38, -0.561);
-    // EA FC logo placeholder
-    put(g, bx(0.08, 0.025, 0.012, M.screen(0xFFCC00, 0xFFBB00, 0.4), false, false), -0.7, 1.38, -0.562);
-    // Minimap
-    put(g, bx(0.2, 0.1, 0.012, M.screen(0x0A3A0A, 0x0A3A0A, 0.3), false, false), 0.6, 0.56, -0.564);
-    put(g, bx(0.18, 0.088, 0.012, M.screen(0x166622, 0x145518, 0.2), false, false), 0.6, 0.56, -0.563);
+    put(g, bx(0.07, 0.035, 0.012, M.screen(0x1A1A1A, 0x0A0A0A, 0.45), false, false), 0.27, 1.38, -0.562);
+    put(g, bx(0.05, 0.02, 0.012, M.screen(0x44FF44, 0x33DD33, 0.55), false, false), 0.27, 1.38, -0.561);
+    // EA FC logo
+    put(g, bx(0.09, 0.03, 0.012, M.screen(0xFFCC00, 0xFFBB00, 0.5), false, false), -0.7, 1.38, -0.562);
+    put(g, bx(0.04, 0.015, 0.012, M.screen(0x111111, 0x111111, 0.4), false, false), -0.7, 1.38, -0.561);
+
+    // Minimap — bottom right
+    put(g, bx(0.22, 0.11, 0.012, M.screen(0x0A3A0A, 0x0A3A0A, 0.35), false, false), 0.6, 0.56, -0.564);
+    put(g, bx(0.2, 0.095, 0.012, M.screen(0x1A7828, 0x167020, 0.22), false, false), 0.6, 0.56, -0.563);
+    // Minimap pitch lines
+    put(g, bx(0.19, 0.001, 0.012, M.screen(0xFFFFFF, 0xFFFFFF, 0.15), false, false), 0.6, 0.56, -0.562);
+    put(g, bx(0.001, 0.085, 0.012, M.screen(0xFFFFFF, 0xFFFFFF, 0.15), false, false), 0.6, 0.56, -0.562);
     // Minimap dots — home
-    [[-0.04, 0.02], [-0.02, -0.02], [-0.03, 0.035], [-0.01, 0.0]].forEach(([dx, dy]) => {
-      put(g, bx(0.008, 0.008, 0.012, M.screen(0xDD2222, 0xCC1111, 0.6), false, false), 0.6 + dx, 0.56 + dy, -0.562);
+    [[-0.04, 0.02], [-0.02, -0.02], [-0.03, 0.035], [-0.01, 0.0], [-0.06, 0], [-0.05, -0.03]].forEach(([dx, dy]) => {
+      put(g, sph(0.004, M.screen(0xDD2222, 0xCC1111, 0.7), 4, false, false), 0.6 + dx, 0.56 + dy, -0.561);
     });
     // Minimap dots — away
-    [[0.04, -0.02], [0.02, 0.02], [0.03, -0.035], [0.01, 0.0]].forEach(([dx, dy]) => {
-      put(g, bx(0.008, 0.008, 0.012, M.screen(0x2244DD, 0x1133CC, 0.6), false, false), 0.6 + dx, 0.56 + dy, -0.562);
+    [[0.04, -0.02], [0.02, 0.02], [0.03, -0.035], [0.01, 0.0], [0.06, 0], [0.05, 0.03]].forEach(([dx, dy]) => {
+      put(g, sph(0.004, M.screen(0x2244DD, 0x1133CC, 0.7), 4, false, false), 0.6 + dx, 0.56 + dy, -0.561);
     });
     // Minimap ball
-    put(g, bx(0.006, 0.006, 0.012, M.screen(0xFFFFFF, 0xFFFFFF, 0.8), false, false), 0.6, 0.56, -0.561);
+    put(g, sph(0.003, M.screen(0xFFFFFF, 0xFFFFFF, 0.9), 4, false, false), 0.6, 0.56, -0.56);
 
     // TV stand legs
     [-0.35, 0.35].forEach(x => {
@@ -285,7 +334,10 @@ const PS5Scene = () => {
     // SOUNDBAR
     put(g, bx(1.2, 0.06, 0.1, M.plastic(0x111111)), 0, 0.46, -0.38);
     for (let i = 0; i < 8; i++) {
-      put(g, bx(0.015, 0.015, 0.008, M.plastic(0x333333), false, false), -0.4 + i * 0.11, 0.46, -0.33);
+      const spkr = cyl(0.008, 0.008, 0.008, M.plastic(0x333333), 8, false, false);
+      spkr.rotation.x = Math.PI / 2;
+      spkr.position.set(-0.4 + i * 0.11, 0.46, -0.33);
+      g.add(spkr);
     }
     put(g, bx(0.4, 0.008, 0.008, M.glow(0x22CCFF, 0x11BBEE, 0.6), false, false), 0, 0.435, -0.33);
 
@@ -321,11 +373,11 @@ const PS5Scene = () => {
 
     // ── TABLE ITEMS — rearranged ──
     // Energy drink
-    put(g, bx(0.08, 0.17, 0.08, M.plastic(0x111111)), 0.35, 0.44, 0.14);
-    put(g, bx(0.08, 0.055, 0.08, M.plastic(0x3344CC)), 0.35, 0.41, 0.14);
-    put(g, bx(0.08, 0.035, 0.08, M.plastic(0x22AA44)), 0.35, 0.48, 0.14);
-    put(g, bx(0.065, 0.013, 0.065, M.metal(0xBBBBBB), false, false), 0.35, 0.53, 0.14);
-    put(g, bx(0.14, 0.013, 0.14, M.wood(0x4A3A2A)), 0.35, 0.365, 0.14);
+    put(g, cyl(0.04, 0.04, 0.17, M.plastic(0x111111)), 0.35, 0.44, 0.14);
+    put(g, cyl(0.042, 0.042, 0.055, M.plastic(0x3344CC), 16, false, false), 0.35, 0.41, 0.14);
+    put(g, cyl(0.042, 0.042, 0.035, M.plastic(0x22AA44), 16, false, false), 0.35, 0.48, 0.14);
+    put(g, cyl(0.032, 0.032, 0.013, M.metal(0xBBBBBB), 16, false, false), 0.35, 0.53, 0.14);
+    put(g, cyl(0.07, 0.07, 0.013, M.wood(0x4A3A2A)), 0.35, 0.365, 0.14);
 
     // Game cases — angled casually
     [0x004488, 0x111111, 0xAA1111].forEach((c, i) => {
@@ -340,8 +392,11 @@ const PS5Scene = () => {
     });
 
     // Snack bowl
-    put(g, bx(0.16, 0.06, 0.16, M.plastic(0xDDCCBB)), 0.08, 0.39, 0.26);
-    put(g, bx(0.12, 0.03, 0.12, M.plastic(0xF0A040), false, false), 0.08, 0.41, 0.26);
+    put(g, cyl(0.08, 0.06, 0.06, M.plastic(0xDDCCBB)), 0.08, 0.39, 0.26);
+    // Snack pieces
+    [[-0.02, 0.01], [0.02, -0.01], [0, 0.02], [-0.01, -0.02], [0.03, 0]].forEach(([dx, dz]) => {
+      put(g, sph(0.015, M.plastic(0xF0A040), 6, false, false), 0.08 + dx, 0.42, 0.26 + dz);
+    });
 
     // TV remote — moved closer to character
     put(g, bx(0.07, 0.02, 0.2, M.plastic(0x1A1A1A)), 0.12, 0.375, 0.08);
@@ -405,19 +460,26 @@ const PS5Scene = () => {
     [[-1.48, 0.65], [-1.22, 0.65], [-1.48, 0.95], [-1.22, 0.95]].forEach(([x, z]) => {
       put(g, bx(0.035, 0.5, 0.035, M.metal(0x555555)), x, 0.26, z);
     });
-    put(g, bx(0.1, 0.02, 0.1, M.metal(0x444444)), -1.35, 0.545, 0.8);
-    put(g, bx(0.025, 0.2, 0.025, M.metal(0x555555)), -1.35, 0.65, 0.8);
-    const lampShade = put(g, bx(0.14, 0.1, 0.14, M.fabric(0x555544)), -1.35, 0.79, 0.8);
-    const lampBulb = put(g, bx(0.06, 0.04, 0.06, M.glow(0xFFDD88, 0xFFCC66, 0.6), false, false), -1.35, 0.76, 0.8);
+    put(g, cyl(0.05, 0.05, 0.02, M.metal(0x444444)), -1.35, 0.545, 0.8);
+    put(g, cyl(0.012, 0.012, 0.2, M.metal(0x555555)), -1.35, 0.65, 0.8);
+    const lampShade = put(g, cyl(0.08, 0.05, 0.1, M.fabric(0x555544)), -1.35, 0.79, 0.8);
+    const lampBulb = put(g, sph(0.025, M.glow(0xFFDD88, 0xFFCC66, 0.6), 10, false, false), -1.35, 0.76, 0.8);
 
     // Headset stand
-    put(g, bx(0.08, 0.02, 0.08, M.metal(0x444444)), -1.35, 0.545, 0.68);
-    put(g, bx(0.025, 0.2, 0.025, M.metal(0x666666)), -1.35, 0.65, 0.68);
+    put(g, cyl(0.04, 0.04, 0.02, M.metal(0x444444)), -1.35, 0.545, 0.68);
+    put(g, cyl(0.012, 0.012, 0.2, M.metal(0x666666)), -1.35, 0.65, 0.68);
     put(g, bx(0.06, 0.03, 0.04, M.metal(0x777777)), -1.35, 0.76, 0.68);
 
     // Slippers
     [-0.15, 0.15].forEach(x => {
-      put(g, bx(0.1, 0.03, 0.18, M.fabric(0x5544AA)), x + 0.3, 0.015, 0.35);
+      const slipper = new THREE.Mesh(
+        new THREE.CapsuleGeometry(0.04, 0.08, 4, 8),
+        M.fabric(0x5544AA)
+      );
+      slipper.rotation.x = Math.PI / 2;
+      slipper.scale.y = 0.4;
+      slipper.position.set(x + 0.3, 0.025, 0.35);
+      slipper.castShadow = true; slipper.receiveShadow = true; g.add(slipper);
     });
 
     // ═══════════════════════════════════
@@ -514,9 +576,9 @@ const PS5Scene = () => {
     });
     [-0.075, 0.075].forEach(x => {
       put(head, bx(0.08, 0.07, 0.02, M.plastic(0xFFFFFF), false, false), x, 1.01, 0.55);
-      put(head, bx(0.05, 0.055, 0.02, M.plastic(0x2A1A0A), false, false), x, 1.005, 0.545);
-      put(head, bx(0.025, 0.03, 0.02, M.plastic(0x0A0A0A), false, false), x, 1.0, 0.54);
-      put(head, bx(0.015, 0.015, 0.015, M.plastic(0xFFFFFF), false, false), x + 0.015, 1.02, 0.535);
+      put(head, sph(0.025, M.plastic(0x2A1A0A), 10, false, false), x, 1.005, 0.54);
+      put(head, sph(0.016, M.plastic(0x0A0A0A), 10, false, false), x, 1.0, 0.535);
+      put(head, sph(0.008, M.plastic(0xFFFFFF), 8, false, false), x + 0.015, 1.015, 0.53);
       put(head, bx(0.07, 0.008, 0.015, M.skin(0xDCA080), false, false), x, 0.975, 0.545);
     });
     put(head, bx(0.08, 0.02, 0.025, M.skin(0x120A04), false, false), -0.075, 1.05, 0.555);
@@ -547,10 +609,16 @@ const PS5Scene = () => {
       put(head, bx(0.04, 0.22, 0.045, M.metal(0x999999)), x, 1.1, 0.74);
     });
     [-0.24, 0.24].forEach(x => {
-      put(head, bx(0.07, 0.14, 0.14, M.plastic(0x888888)), x, 1.0, 0.74);
-      put(head, bx(0.05, 0.12, 0.12, M.fabric(0xAAAAAA)), x, 1.0, 0.74);
-      put(head, bx(0.018, 0.13, 0.13, M.metal(0xBBBBBB), false, false), x + (x > 0 ? 0.025 : -0.025), 1.0, 0.74);
-      put(head, bx(0.025, 0.03, 0.018, M.glow(0x22CCAA, 0x22CCAA, 0.9), false, false), x + (x > 0 ? 0.038 : -0.038), 1.0, 0.69);
+      const cup = cyl(0.07, 0.07, 0.07, M.plastic(0x888888), 12);
+      cup.rotation.z = Math.PI / 2;
+      cup.position.set(x, 1.0, 0.74); head.add(cup);
+      const pad = cyl(0.06, 0.06, 0.05, M.fabric(0xAAAAAA), 12);
+      pad.rotation.z = Math.PI / 2;
+      pad.position.set(x, 1.0, 0.74); head.add(pad);
+      const ring = cyl(0.065, 0.065, 0.018, M.metal(0xBBBBBB), 12, false, false);
+      ring.rotation.z = Math.PI / 2;
+      ring.position.set(x + (x > 0 ? 0.025 : -0.025), 1.0, 0.74); head.add(ring);
+      put(head, sph(0.012, M.glow(0x22CCAA, 0x22CCAA, 0.9), 8, false, false), x + (x > 0 ? 0.038 : -0.038), 1.0, 0.69);
     });
     put(head, bx(0.015, 0.08, 0.015, M.plastic(0x777777)), -0.26, 0.94, 0.68);
     put(head, bx(0.025, 0.025, 0.025, M.plastic(0x555555)), -0.26, 0.9, 0.68);
@@ -618,9 +686,63 @@ const PS5Scene = () => {
       // Breathing
       hoodieBody.scale.y = 1.0 + Math.sin(t * 1.0) * 0.01;
 
-      // FIFA ball movement — slow figure-8
-      ball.position.x = baseBallX + Math.sin(t * 0.6) * 0.3;
-      ball.position.y = baseBallY + Math.sin(t * 0.9) * 0.15;
+      // ── GAME SIMULATION ──
+      const fullCycle = phaseLength * 2; // red possession + blue possession
+      const tCycle = t % fullCycle;
+      const redHasBall = tCycle < phaseLength;
+      const phaseT = redHasBall ? tCycle : tCycle - phaseLength;
+      const phaseProgress = phaseT / phaseLength; // 0 → 1
+
+      // Team movement — attacking team pushes forward, defending team falls back
+      const attackShift = Math.sin(phaseProgress * Math.PI) * 0.18; // push forward then back
+      const defendShift = Math.sin(phaseProgress * Math.PI) * 0.08; // slight retreat
+
+      redPlayers.forEach((p, i) => {
+        const runJitter = Math.sin(t * 3.5 + i * 1.3) * 0.012;
+        const lateralJitter = Math.sin(t * 2.1 + i * 2.0) * 0.015;
+        if (redHasBall) {
+          // Red attacking — push right
+          p.group.position.x = p.baseX + attackShift + lateralJitter;
+          p.group.position.y = p.baseY + runJitter;
+        } else {
+          // Red defending — fall back left
+          p.group.position.x = p.baseX - defendShift + lateralJitter;
+          p.group.position.y = p.baseY + runJitter;
+        }
+      });
+
+      bluePlayers.forEach((p, i) => {
+        const runJitter = Math.sin(t * 3.5 + i * 1.7) * 0.012;
+        const lateralJitter = Math.sin(t * 2.3 + i * 1.8) * 0.015;
+        if (!redHasBall) {
+          // Blue attacking — push left
+          p.group.position.x = p.baseX - attackShift + lateralJitter;
+          p.group.position.y = p.baseY + runJitter;
+        } else {
+          // Blue defending — fall back right
+          p.group.position.x = p.baseX + defendShift + lateralJitter;
+          p.group.position.y = p.baseY + runJitter;
+        }
+      });
+
+      // Ball passes between current possessing team's players
+      const attackTeam = redHasBall ? redPlayers : bluePlayers;
+      const passCount = attackTeam.length;
+      const passesInPhase = Math.floor(phaseT / passSpeed);
+      const passProgress = (phaseT % passSpeed) / passSpeed;
+      const eased = passProgress < 0.5
+        ? 2 * passProgress * passProgress
+        : 1 - Math.pow(-2 * passProgress + 2, 2) / 2;
+      // Pass order — cycle through team players
+      const passOrder = [6, 4, 3, 5, 8, 9, 7, 4, 6, 3, 0, 2, 1, 3, 5, 6];
+      const fromP = passOrder[passesInPhase % passOrder.length] % passCount;
+      const toP = passOrder[(passesInPhase + 1) % passOrder.length] % passCount;
+      const fromG = attackTeam[fromP].group.position;
+      const toG = attackTeam[toP].group.position;
+      ball.position.x = fromG.x + (toG.x - fromG.x) * eased;
+      ball.position.y = fromG.y + (toG.y - fromG.y) * eased;
+      ballShadow.position.x = ball.position.x;
+      ballShadow.position.y = ball.position.y - 0.015;
 
       // Lamp glow flicker
       (lampBulb.material as THREE.MeshStandardMaterial).emissiveIntensity = 0.5 + Math.sin(t * 0.4) * 0.1;
