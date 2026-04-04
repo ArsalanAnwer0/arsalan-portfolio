@@ -93,11 +93,9 @@ const HomePage = () => {
 
   // Project links data
   const projects = [
-    { name: 'BankingApp', url: 'https://github.com/ArsalanAnwer0/Springboot-BankingApp' },
-    { name: 'Smart Light Controller', url: 'https://github.com/ArsalanAnwer0/smart-light-controller' },
-    { name: 'CostWatch', url: 'https://github.com/ArsalanAnwer0/CostWatch' },
-    { name: 'Carousel', url: 'https://github.com/ArsalanAnwer0/carousel' },
     { name: 'Schedule Builder', url: 'https://github.com/ArsalanAnwer0/schedule-builder' },
+    { name: 'Agora', url: 'https://github.com/Agora-Connect/Agora' },
+    { name: 'BankingApp', url: 'https://github.com/ArsalanAnwer0/Springboot-BankingApp' },
   ];
 
   // Certificate links data
@@ -111,13 +109,6 @@ const HomePage = () => {
       name: 'Research Assistant',
       org: [{ name: 'Avatar BCI', url: 'https://github.com/3C-SCSU' }]
     },
-    {
-      name: 'Administrative Support Assistant',
-      org: [
-        { name: 'CIS', url: 'https://www.stcloudstate.edu/internationalstudies/' },
-        { name: 'SGS', url: 'https://www.stcloudstate.edu/graduatestudies/' }
-      ]
-    },
   ];
 
   // Fun side data structures
@@ -126,7 +117,6 @@ const HomePage = () => {
     { name: 'Monster', url: 'https://myanimelist.net/anime/19/Monster' },
     { name: 'Assassination Classroom', url: 'https://myanimelist.net/anime/24833/Ansatsu_Kyoushitsu' },
     { name: 'Kaguya-sama: Love Is War', url: 'https://myanimelist.net/anime/37999/Kaguya-sama_wa_Kokurasetai__Tensai-tachi_no_Renai_Zunousen' },
-    { name: 'Mashle', url: 'https://myanimelist.net/anime/52211/Mashle' },
   ];
 
   const gamesList = [
