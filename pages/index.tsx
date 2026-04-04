@@ -191,7 +191,7 @@ const HomePage = () => {
 
       <div className="max-w-7xl w-full relative z-10 flex items-center gap-8 lg:gap-12">
         {/* Left: text content */}
-        <div className="flex-1 min-w-0">
+        <div className="flex-1 min-w-0 lg:-ml-16">
         <AnimatePresence mode="wait">
           {personality === 'professional' ? (
             <motion.div
@@ -202,15 +202,15 @@ const HomePage = () => {
               exit="exit"
               className="mb-20"
             >
-          <h1 className="text-xl md:text-2xl lg:text-3xl mb-12 tracking-wide font-light">
+          <h1 className="text-lg md:text-xl lg:text-2xl mb-12 tracking-wide font-light">
             {greeting}
           </h1>
 
           <div className="space-y-10 mb-8">
-            <p className="text-2xl md:text-3xl lg:text-4xl leading-relaxed max-w-4xl font-light">
+            <p className="text-xl md:text-2xl lg:text-3xl leading-relaxed max-w-4xl font-light">
               I&apos;M ARSALAN. I LIKE TO ARCHITECT CLOUD APPLICATIONS AND OPTIMIZE DEPLOYMENT WORKFLOWS.
             </p>
-            <p className="text-2xl md:text-3xl lg:text-4xl leading-relaxed max-w-4xl font-light">
+            <p className="text-xl md:text-2xl lg:text-3xl leading-relaxed max-w-4xl font-light">
               I&apos;M A COMPUTER SCIENCE STUDENT AT{' '}
               <a
                 href="https://www.stcloudstate.edu/"
@@ -225,7 +225,7 @@ const HomePage = () => {
           </div>
 
           {/* Projects, Certs, and Experience Section */}
-          <div className="space-y-4 text-xl md:text-2xl lg:text-3xl font-light">
+          <div className="space-y-4 text-lg md:text-xl lg:text-2xl font-light">
             {/* Projects Section */}
             <div
               className="relative"
@@ -243,7 +243,7 @@ const HomePage = () => {
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
                     transition={{ duration: 0.2 }}
-                    className="ml-6 text-xl md:text-2xl lg:text-3xl font-light"
+                    className="ml-6 text-lg md:text-xl lg:text-2xl font-light"
                   >
                     [
                     {projects.map((project, index) => (
@@ -283,7 +283,7 @@ const HomePage = () => {
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
                     transition={{ duration: 0.2 }}
-                    className="ml-6 text-xl md:text-2xl lg:text-3xl font-light"
+                    className="ml-6 text-lg md:text-xl lg:text-2xl font-light"
                   >
                     [
                     {certificates.map((cert, index) => (
@@ -323,7 +323,7 @@ const HomePage = () => {
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
                     transition={{ duration: 0.2 }}
-                    className="ml-6 text-xl md:text-2xl lg:text-3xl font-light"
+                    className="ml-6 text-lg md:text-xl lg:text-2xl font-light"
                   >
                     [
                     {experiences.map((exp, index) => (
@@ -350,7 +350,7 @@ const HomePage = () => {
             </div>
           </div>
 
-          <div className="mb-16 mt-6 text-xl md:text-2xl lg:text-3xl font-light">
+          <div className="mb-16 mt-6 text-lg md:text-xl lg:text-2xl font-light">
             <p>
               FIND ME ON{' '}
               <a
@@ -393,7 +393,7 @@ const HomePage = () => {
               transition={{ duration: 0.8, delay: 0.5 }}
               className="mt-20"
             >
-              <p className="text-xl md:text-2xl lg:text-3xl font-light leading-relaxed max-w-4xl">
+              <p className="text-lg md:text-xl lg:text-2xl font-light leading-relaxed max-w-4xl">
                 <span className="opacity-50">PS.</span> {currentSnippet.text}
                 {currentSnippet.link ? (
                   <a
@@ -421,18 +421,18 @@ const HomePage = () => {
               exit="exit"
               className="mb-20"
             >
-              <h1 className="text-xl md:text-2xl lg:text-3xl mb-12 tracking-wide font-light">
+              <h1 className="text-lg md:text-xl lg:text-2xl mb-12 tracking-wide font-light">
                 HEY THERE, FELLOW NERD
               </h1>
 
               <div className="space-y-10 mb-8">
-                <p className="text-2xl md:text-3xl lg:text-4xl leading-relaxed max-w-4xl font-light">
+                <p className="text-xl md:text-2xl lg:text-3xl leading-relaxed max-w-4xl font-light">
                   I&apos;M ARSALAN. I BUILD STUFF BY DAY AND EXPLORE DIGITAL WORLDS BY NIGHT.
                 </p>
               </div>
 
               {/* Fun sections */}
-              <div className="space-y-4 text-xl md:text-2xl lg:text-3xl font-light">
+              <div className="space-y-4 text-lg md:text-xl lg:text-2xl font-light">
                 {/* Favorite Anime Section */}
                 <div
                   className="relative"
@@ -450,7 +450,7 @@ const HomePage = () => {
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
                         transition={{ duration: 0.2 }}
-                        className="ml-6 text-xl md:text-2xl lg:text-3xl font-light"
+                        className="ml-6 text-lg md:text-xl lg:text-2xl font-light"
                       >
                         [
                         {animeList.map((anime, index) => (
@@ -490,7 +490,7 @@ const HomePage = () => {
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
                         transition={{ duration: 0.2 }}
-                        className="ml-6 text-xl md:text-2xl lg:text-3xl font-light"
+                        className="ml-6 text-lg md:text-xl lg:text-2xl font-light"
                       >
                         [
                         {gamesList.map((game, index) => (
@@ -530,7 +530,7 @@ const HomePage = () => {
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
                         transition={{ duration: 0.2 }}
-                        className="ml-6 text-xl md:text-2xl lg:text-3xl font-light"
+                        className="ml-6 text-lg md:text-xl lg:text-2xl font-light"
                       >
                         [
                         {contentCreators.map((creator, index) => (
@@ -570,7 +570,7 @@ const HomePage = () => {
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
                         transition={{ duration: 0.2 }}
-                        className="ml-6 text-xl md:text-2xl lg:text-3xl font-light"
+                        className="ml-6 text-lg md:text-xl lg:text-2xl font-light"
                       >
                         [
                         {nerdCorner.map((item, index) => (
@@ -585,7 +585,7 @@ const HomePage = () => {
                 </div>
               </div>
 
-              <div className="mb-16 mt-6 text-xl md:text-2xl lg:text-3xl font-light">
+              <div className="mb-16 mt-6 text-lg md:text-xl lg:text-2xl font-light">
                 <p>
                   FIND ME ON{' '}
                   <a
@@ -627,7 +627,7 @@ const HomePage = () => {
                 transition={{ duration: 0.8, delay: 0.5 }}
                 className="mt-20"
               >
-                <p className="text-xl md:text-2xl lg:text-3xl font-light leading-relaxed max-w-4xl">
+                <p className="text-lg md:text-xl lg:text-2xl font-light leading-relaxed max-w-4xl">
                   <span className="opacity-50">PS.</span> CURRENTLY GRINDING THROUGH ELDEN RING DLC AND REWATCHING MONSTER FOR THE THIRD TIME.
                 </p>
               </motion.div>
