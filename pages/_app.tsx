@@ -40,9 +40,9 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
     <>
       <Head>
-        <link rel="icon" href="/mashle-circle.png?v=3" type="image/png" />
-        <link rel="shortcut icon" href="/mashle-circle.png?v=3" type="image/png" />
-        <link rel="apple-touch-icon" href="/mashle-circle.png?v=3" />
+        <link rel="icon" href="/icon.png?v=4" type="image/png" />
+        <link rel="shortcut icon" href="/icon.png?v=4" type="image/png" />
+        <link rel="apple-touch-icon" href="/icon.png?v=4" />
         <title>Arsalan's Portfolio</title>
       </Head>
 
