@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import dynamic from 'next/dynamic';
 
-const DeskScene = dynamic(() => import('../components/scenes/DeskScene'), { ssr: false });
-const PS5Scene = dynamic(() => import('../components/scenes/PS5Scene'), { ssr: false });
+// 3D avatars are temporarily disabled but kept in components/scenes for later use.
+// import dynamic from 'next/dynamic';
+// const DeskScene = dynamic(() => import('../components/scenes/DeskScene'), { ssr: false });
+// const PS5Scene = dynamic(() => import('../components/scenes/PS5Scene'), { ssr: false });
 
 // Personality type
 type Personality = 'professional' | 'fun';
@@ -626,7 +627,7 @@ const HomePage = () => {
         </AnimatePresence>
         </div>
 
-        {/* Right: 3D scene — desktop only */}
+        {/* Right-side 3D avatars are temporarily disabled.
         <div className="hidden lg:flex flex-shrink-0 items-center justify-center">
           <AnimatePresence mode="wait">
             {personality === 'professional' ? (
@@ -652,6 +653,7 @@ const HomePage = () => {
             )}
           </AnimatePresence>
         </div>
+        */}
 
         {/* Mobile toggle button */}
         {isTouchDevice && (
