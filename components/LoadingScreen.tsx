@@ -3,7 +3,7 @@
 import { motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
 
-export default function MinimalLoading() {
+export default function LoadingScreen() {
   const [dots, setDots] = useState('.');
 
   useEffect(() => {

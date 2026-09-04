@@ -2,8 +2,8 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import dynamic from 'next/dynamic';
 
-const DeskScene = dynamic(() => import('../components/ui/DeskScene'), { ssr: false });
-const PS5Scene = dynamic(() => import('../components/ui/PS5Scene'), { ssr: false });
+const DeskScene = dynamic(() => import('../components/scenes/DeskScene'), { ssr: false });
+const PS5Scene = dynamic(() => import('../components/scenes/PS5Scene'), { ssr: false });
 
 // Personality type
 type Personality = 'professional' | 'fun';

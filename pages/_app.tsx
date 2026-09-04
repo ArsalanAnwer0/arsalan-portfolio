@@ -2,7 +2,7 @@ import "../styles/globals.css";
 import type { AppProps } from "next/app";
 import { useState, useEffect } from "react";
 import Head from "next/head";
-import MinimalLoading from "@/components/ui/MinimalLoading";
+import LoadingScreen from "@/components/LoadingScreen";
 import { AnimatePresence, motion } from "framer-motion";
 import { useRouter } from "next/router";
 
@@ -44,7 +44,7 @@ export default function App({ Component, pageProps }: AppProps) {
         exit={{ opacity: 0 }}
         transition={{ duration: 0.5, ease: "easeOut" }}
       >
-        <MinimalLoading />
+        <LoadingScreen />
       </motion.div>
     );
   }
