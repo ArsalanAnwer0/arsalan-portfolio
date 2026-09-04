@@ -37,39 +37,37 @@ export default function App({ Component, pageProps }: AppProps) {
     }
   }, []);
 
-  if (isLoading) {
-    return (
-      <motion.div
-        initial={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        transition={{ duration: 0.5, ease: "easeOut" }}
-      >
-        <LoadingScreen />
-      </motion.div>
-    );
-  }
-
   return (
     <>
       <Head>
-        <link rel="icon" href="/mashle.jpeg" type="image/jpeg" />
-        <link rel="shortcut icon" href="/mashle.jpeg" type="image/jpeg" />
-        <link rel="apple-touch-icon" href="/mashle.jpeg" />
+        <link rel="icon" href="/mashle-circle.png?v=3" type="image/png" />
+        <link rel="shortcut icon" href="/mashle-circle.png?v=3" type="image/png" />
+        <link rel="apple-touch-icon" href="/mashle-circle.png?v=3" />
         <title>Arsalan's Portfolio</title>
       </Head>
 
-      <AnimatePresence mode="wait">
+      {isLoading ? (
         <motion.div
-          key={router.pathname}
-          variants={pageVariants}
-          initial="hidden"
-          animate="enter"
-          exit="exit"
-          transition={{ type: "tween", duration: 1.2, ease: "easeOut" }}
+          initial={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.5, ease: "easeOut" }}
         >
-          <Component {...pageProps} />
+          <LoadingScreen />
         </motion.div>
-      </AnimatePresence>
+      ) : (
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={router.pathname}
+            variants={pageVariants}
+            initial="hidden"
+            animate="enter"
+            exit="exit"
+            transition={{ type: "tween", duration: 1.2, ease: "easeOut" }}
+          >
+            <Component {...pageProps} />
+          </motion.div>
+        </AnimatePresence>
+      )}
     </>
   );
 }
