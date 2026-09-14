@@ -6,3 +6,21 @@ out/
 .env.*.local
 .DS_Store
 tsconfig.tsbuildinfo
+
+# Terraform
+**/.terraform/*
+*.tfstate
+*.tfstate.*
+*.tfplan
+.terraform.tfstate.lock.info
+crash.log
+crash.*.log
+*.tfvars
+!*.tfvars.example
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# Terraform local backend configuration
+**/backend.hcl
