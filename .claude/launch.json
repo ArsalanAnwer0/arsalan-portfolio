@@ -7,7 +7,7 @@
       "runtimeArgs": ["node_modules/.bin/next", "dev"],
       "port": 3000,
       "autoPort": true,
-      "env": {"PATH": "/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin"}
+      "env": { "PATH": "/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin" }
     }
   ]
 }
