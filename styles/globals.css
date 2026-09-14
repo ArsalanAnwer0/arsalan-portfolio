@@ -18,3 +18,19 @@ body {
 *::after {
   box-sizing: border-box;
 }
+
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 4px;
+}
+
+.personality-toggle {
+  display: block;
+}
+
+@media (min-width: 1024px) and (pointer: fine) {
+  .personality-toggle {
+    display: none;
+  }
+}

@@ -1,10 +1,14 @@
-import "../styles/globals.css";
-import type { AppProps } from "next/app";
 import { useState, useEffect } from "react";
-import Head from "next/head";
-import LoadingScreen from "@/components/LoadingScreen";
 import { AnimatePresence, motion } from "framer-motion";
+import Head from "next/head";
+import type { AppProps } from "next/app";
 import { useRouter } from "next/router";
+
+import LoadingScreen from "@/components/LoadingScreen";
+
+import "../styles/globals.css";
+
+const LOADING_DURATION_MS = 1500;
 
 const pageVariants = {
   hidden: { opacity: 0, y: 20 },
@@ -17,24 +21,17 @@ export default function App({ Component, pageProps }: AppProps) {
   const router = useRouter();
 
   useEffect(() => {
-    // Check if loading screen has already been shown in this session
     const hasLoadedBefore = sessionStorage.getItem("portfolio-loaded");
+    const loadingDelay = hasLoadedBefore ? 0 : LOADING_DURATION_MS;
 
-    if (!hasLoadedBefore) {
-      // Clear the landing page visit flag so Arsalan animates after loading
-      sessionStorage.removeItem("hasVisitedLanding");
-      
-      // First time loading - show the loading screen
-      const timer = setTimeout(() => {
-        setIsLoading(false);
-        // Mark as loaded in session storage
-        sessionStorage.setItem("portfolio-loaded", "true");
-      }, 1500); // Reduced to 1.5 seconds for minimal loading
-      return () => clearTimeout(timer);
-    } else {
-      // Already loaded before in this session - skip loading screen
+    const timer = window.setTimeout(() => {
       setIsLoading(false);
-    }
+      if (!hasLoadedBefore) {
+        sessionStorage.setItem("portfolio-loaded", "true");
+      }
+    }, loadingDelay);
+
+    return () => window.clearTimeout(timer);
   }, []);
 
   return (
@@ -43,7 +40,12 @@ export default function App({ Component, pageProps }: AppProps) {
         <link rel="icon" href="/icon.png?v=4" type="image/png" />
         <link rel="shortcut icon" href="/icon.png?v=4" type="image/png" />
         <link rel="apple-touch-icon" href="/icon.png?v=4" />
-        <title>Arsalan's Portfolio</title>
+        <meta
+          name="description"
+          content="Portfolio of Arsalan Anwer, a backend, cloud, DevOps, and infrastructure engineer."
+        />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Arsalan&apos;s Portfolio</title>
       </Head>
 
       {isLoading ? (
