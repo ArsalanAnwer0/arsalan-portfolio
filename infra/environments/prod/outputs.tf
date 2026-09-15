@@ -17,3 +17,8 @@ output "website_url" {
   description = "Temporary HTTPS URL before the custom domain is configured."
   value       = "https://${aws_cloudfront_distribution.site.domain_name}"
 }
+
+output "github_deploy_role_arn" {
+  description = "IAM role assumed by the production GitHub Actions workflow."
+  value       = aws_iam_role.github_deploy.arn
+}
