@@ -1,0 +1,90 @@
+name: Deploy production
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+
+concurrency:
+  group: production-deployment
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: Deploy portfolio
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      NEXT_TELEMETRY_DISABLED: 1
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 22
+          package-manager-cache: false
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run checks and build
+        run: npm run check
+
+      - name: Authenticate to AWS using OIDC
+        uses: aws-actions/configure-aws-credentials@e3dd6a429d7300a6a4c196c26e071d42e0343502 # v6.3.0
+        with:
+          role-to-assume: ${{ secrets.AWS_DEPLOY_ROLE_ARN }}
+          role-session-name: portfolio-deploy-${{ github.run_id }}
+          aws-region: ${{ vars.AWS_REGION }}
+          mask-aws-account-id: true
+
+      - name: Upload regular website files
+        env:
+          PORTFOLIO_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET_NAME }}
+        run: |
+          aws s3 sync out/ "s3://${PORTFOLIO_S3_BUCKET}" \
+            --delete \
+            --exclude "_next/static/*" \
+            --cache-control "public,max-age=0,must-revalidate"
+
+      - name: Upload immutable Next.js files
+        env:
+          PORTFOLIO_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET_NAME }}
+        run: |
+          aws s3 sync out/_next/static/ \
+            "s3://${PORTFOLIO_S3_BUCKET}/_next/static/" \
+            --delete \
+            --cache-control "public,max-age=31536000,immutable"
+
+      - name: Invalidate CloudFront cache
+        env:
+          PORTFOLIO_CLOUDFRONT_DISTRIBUTION_ID: ${{ secrets.AWS_CLOUDFRONT_DISTRIBUTION_ID }}
+        run: |
+          invalidation_id="$(
+            aws cloudfront create-invalidation \
+              --distribution-id "${PORTFOLIO_CLOUDFRONT_DISTRIBUTION_ID}" \
+              --paths "/*" \
+              --query "Invalidation.Id" \
+              --output text
+          )"
+
+          aws cloudfront wait invalidation-completed \
+            --distribution-id "${PORTFOLIO_CLOUDFRONT_DISTRIBUTION_ID}" \
+            --id "${invalidation_id}"
+
+          echo "CloudFront invalidation completed: ${invalidation_id}"
+
+      - name: Write deployment summary
+        run: |
+          echo "### Production deployment completed" >> "${GITHUB_STEP_SUMMARY}"
+          echo "Deployed commit: \`${GITHUB_SHA}\`" >> "${GITHUB_STEP_SUMMARY}"

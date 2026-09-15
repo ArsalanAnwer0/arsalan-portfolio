@@ -1,0 +1,8 @@
+.git
+.github
+.next
+out
+node_modules
+infra
+*.log
+.DS_Store

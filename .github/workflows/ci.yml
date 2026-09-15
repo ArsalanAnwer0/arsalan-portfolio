@@ -1,0 +1,114 @@
+name: CI
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  application:
+    name: Application checks
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      NEXT_TELEMETRY_DISABLED: 1
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run application checks
+        run: npm run check
+
+  terraform:
+    name: Terraform checks
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@dfe3c3f87815947d99a8997f908cb6525fc44e9e # v4.0.1
+        with:
+          terraform_version: 1.15.9
+          terraform_wrapper: false
+
+      - name: Check Terraform formatting
+        run: terraform fmt -check -recursive infra
+
+      - name: Initialize bootstrap without remote backend
+        run: terraform -chdir=infra/bootstrap init -backend=false -input=false
+
+      - name: Validate bootstrap
+        run: terraform -chdir=infra/bootstrap validate
+
+      - name: Initialize production without remote backend
+        run: terraform -chdir=infra/environments/prod init -backend=false -input=false
+
+      - name: Validate production
+        run: terraform -chdir=infra/environments/prod validate
+
+  container:
+    name: Container checks
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Build container image
+        run: docker build --tag arsalan-portfolio:ci .
+
+      - name: Start container
+        run: |
+          docker run \
+            --detach \
+            --name portfolio-ci \
+            --publish 8080:8080 \
+            arsalan-portfolio:ci
+
+      - name: Test container
+        run: |
+          for attempt in {1..30}; do
+            if curl --fail --silent http://127.0.0.1:8080/ > /dev/null; then
+              exit 0
+            fi
+
+            sleep 1
+          done
+
+          docker logs portfolio-ci
+          exit 1
+
+      - name: Confirm non-root runtime
+        run: |
+          test "$(docker inspect --format '{{.Config.User}}' portfolio-ci)" = "nginx"
+
+      - name: Stop container
+        if: always()
+        run: docker rm --force portfolio-ci || true
