@@ -21,3 +21,9 @@ variable "github_deployment_branch" {
   type        = string
   default     = "main"
 }
+
+variable "domain_name" {
+  description = "Public domain used by the portfolio."
+  type        = string
+  default     = "arsalan.xyz"
+}

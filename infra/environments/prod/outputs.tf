@@ -22,3 +22,13 @@ output "github_deploy_role_arn" {
   description = "IAM role assumed by the production GitHub Actions workflow."
   value       = aws_iam_role.github_deploy.arn
 }
+
+output "route53_zone_id" {
+  description = "Route 53 hosted zone ID for the portfolio domain."
+  value       = aws_route53_zone.primary.zone_id
+}
+
+output "route53_name_servers" {
+  description = "Authoritative nameservers that must be configured at the registrar."
+  value       = aws_route53_zone.primary.name_servers
+}
